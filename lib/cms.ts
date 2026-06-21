@@ -27,8 +27,11 @@ const settingsQuery = `*[_type == "siteSettings"][0]{
   location,
   availability,
   email,
+  phoneNumber,
   githubUrl,
   linkedinUrl,
+  xUrl,
+  threadsUrl,
   resumeUrl,
   facebookUrl,
   instagramUrl

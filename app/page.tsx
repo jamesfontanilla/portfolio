@@ -49,12 +49,20 @@ function StatChip({
 export default async function HomePage() {
   const { settings, projects, certifications, events } = await getHomeData();
   const featuredProject = projects[0];
-  const quickLinks = [
-    { label: "GitHub", href: settings.githubUrl },
-    { label: "LinkedIn", href: settings.linkedinUrl },
+  const contactLinks = [
     { label: "Email", href: `mailto:${settings.email}` },
-    { label: "Resume", href: settings.resumeUrl },
-  ].filter((item): item is { label: string; href: string } => Boolean(item.href));
+    { label: "LinkedIn", href: settings.linkedinUrl },
+    { label: "GitHub", href: settings.githubUrl },
+    settings.phoneNumber ? { label: "Phone", href: `tel:${settings.phoneNumber}` } : null,
+    settings.xUrl ? { label: "X", href: settings.xUrl } : null,
+    settings.threadsUrl ? { label: "Threads", href: settings.threadsUrl } : null,
+    settings.instagramUrl ? { label: "Instagram", href: settings.instagramUrl } : null,
+    settings.facebookUrl ? { label: "Facebook", href: settings.facebookUrl } : null,
+  ].filter((item): item is { label: string; href: string } => Boolean(item));
+
+  const quickLinks = contactLinks.slice(0, 4);
+
+  const formatQuickLinkValue = (href: string) => href.replace(/^mailto:/, "").replace(/^tel:/, "");
 
   const stats = [
     { label: "Projects", value: String(projects.length), description: "Featured and recent work" },
@@ -170,7 +178,7 @@ export default async function HomePage() {
               {quickLinks.map((item) => (
                 <a key={item.label} href={item.href} className="quick-item">
                   <span>{item.label}</span>
-                  <small>{item.href.replace(/^mailto:/, "")}</small>
+                  <small>{formatQuickLinkValue(item.href)}</small>
                 </a>
               ))}
             </div>
@@ -373,7 +381,7 @@ export default async function HomePage() {
             <article className="glass-card contact-card">
               <h3>Quick links</h3>
               <div className="contact-links">
-                {quickLinks.map((item) => (
+                {contactLinks.map((item) => (
                   <a key={item.label} href={item.href}>
                     {item.label}
                   </a>

@@ -8,8 +8,11 @@ export type SiteSettings = {
   location: string;
   availability: string;
   email: string;
+  phoneNumber?: string;
   githubUrl: string;
   linkedinUrl: string;
+  xUrl?: string;
+  threadsUrl?: string;
   resumeUrl: string;
   facebookUrl?: string;
   instagramUrl?: string;

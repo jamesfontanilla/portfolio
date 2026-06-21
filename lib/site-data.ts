@@ -12,11 +12,14 @@ export const fallbackHomeData: HomeData = {
     location: "Philippines / Remote",
     availability: "Available for freelance and collaboration",
     email: "idezjames14@gmail.com",
+    phoneNumber: "+639282180937",
     githubUrl: "https://github.com/",
     linkedinUrl: "https://linkedin.com/",
+    xUrl: "https://x.com/",
+    threadsUrl: "https://www.threads.com/@",
     resumeUrl: "#",
-    instagramUrl: "https://instagram.com/",
-    facebookUrl: "https://facebook.com/",
+    facebookUrl: "https://www.facebook.com/",
+    instagramUrl: "https://www.instagram.com/",
   },
   projects: [
     {
