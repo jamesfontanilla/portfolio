@@ -4,6 +4,16 @@ export const siteSettingsSchema = defineType({
   name: "siteSettings",
   title: "Site Settings",
   type: "document",
+  initialValue: {
+    email: "jamesfontanilla@outlook.ph",
+    phoneNumber: "+639282180937",
+    githubUrl: "https://github.com/jamesfontanilla",
+    linkedinUrl: "https://www.linkedin.com/in/jamesrfontanilla/",
+    xUrl: "https://x.com/thinkaboutjaime",
+    threadsUrl: "https://www.threads.com/@jxmsfnt",
+    facebookUrl: "https://www.facebook.com/jamesrfontanilla/",
+    instagramUrl: "https://www.instagram.com/jxmsnft/",
+  },
   fields: [
     defineField({ name: "name", title: "Name", type: "string" }),
     defineField({ name: "role", title: "Role", type: "string" }),
