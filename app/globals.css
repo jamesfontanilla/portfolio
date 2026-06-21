@@ -35,7 +35,7 @@ body {
     radial-gradient(circle at 84% 86%, rgba(67, 102, 110, 0.18), transparent 28%),
     linear-gradient(135deg, #040404 0%, #0b0b0b 34%, #101214 100%);
   color: var(--text);
-  font-family: "Aptos", "Segoe UI", "Trebuchet MS", sans-serif;
+  font-family: "Manrope", "Aptos", "Segoe UI", sans-serif;
 }
 
 body::before {
@@ -136,7 +136,7 @@ img {
 .section-head h2,
 .admin-header h1 {
   margin: 0;
-  font-family: "Aptos Display", "Aptos", "Segoe UI", sans-serif;
+  font-family: "Space Grotesk", "Manrope", "Aptos", "Segoe UI", sans-serif;
   font-weight: 500;
   letter-spacing: -0.04em;
 }
@@ -350,7 +350,7 @@ img {
 .admin-panel h3,
 .control-card h3 {
   margin: 0;
-  font-family: "Aptos Display", "Aptos", "Segoe UI", sans-serif;
+  font-family: "Space Grotesk", "Manrope", "Aptos", "Segoe UI", sans-serif;
   font-weight: 500;
   letter-spacing: -0.03em;
 }
@@ -384,7 +384,7 @@ img {
 .stat-value {
   display: block;
   font-size: 2rem;
-  font-family: "Aptos Display", "Aptos", "Segoe UI", sans-serif;
+  font-family: "Space Grotesk", "Manrope", "Aptos", "Segoe UI", sans-serif;
   color: var(--sand);
   margin-bottom: 2px;
 }
