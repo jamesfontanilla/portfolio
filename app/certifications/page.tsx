@@ -46,14 +46,17 @@ export default async function CertificationsPage() {
           <Link href="/" className="nav-link">
             Home
           </Link>
+          <Link href="/projects" className="nav-link">
+            Projects
+          </Link>
           <Link href="/certifications" className="nav-link is-active">
             Certifications
           </Link>
           <Link href="/events" className="nav-link">
             Tech Events
           </Link>
-          <Link href="/studio" className="nav-link">
-            Studio
+          <Link href="/#contact" className="nav-link">
+            Contact
           </Link>
         </nav>
 
@@ -70,8 +73,8 @@ export default async function CertificationsPage() {
           <Link href="/" className="button button-ghost">
             Back Home
           </Link>
-          <Link href="/studio" className="button button-solid">
-            Open Studio
+          <Link href="/events" className="button button-solid">
+            See Events
           </Link>
         </div>
       </aside>
@@ -98,8 +101,8 @@ export default async function CertificationsPage() {
             <Link href="/" className="button button-ghost">
               Back home
             </Link>
-            <Link href="/studio" className="button button-solid">
-              Open Studio
+            <Link href="/projects" className="button button-solid">
+              See Projects
             </Link>
           </div>
         </section>
@@ -110,8 +113,8 @@ export default async function CertificationsPage() {
             title="Proof of growth"
             note="Each entry keeps the issuer, date earned, and verification link visible."
             action={
-              <Link href="/studio" className="text-link">
-                Add new credential
+              <Link href="/projects" className="text-link">
+                See Projects
               </Link>
             }
           />
@@ -151,7 +154,7 @@ export default async function CertificationsPage() {
 
         <div className="rail-card">
           <p className="eyebrow">Featured Action</p>
-          <h3>Update in Studio</h3>
+          <h3>Keep proof current</h3>
           <p className="muted">Add issuer details, verification links, and earned dates from the CMS.</p>
         </div>
 
@@ -160,7 +163,7 @@ export default async function CertificationsPage() {
           <ul className="stack-list">
             <li>Homepage summary</li>
             <li>Public credential archive</li>
-            <li>Private publishing workflow</li>
+            <li>Projects and event archives</li>
           </ul>
         </div>
       </aside>

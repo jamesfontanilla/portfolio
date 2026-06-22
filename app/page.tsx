@@ -109,9 +109,9 @@ export default async function HomePage() {
         </div>
 
         <div className="sidebar-actions">
-          <Link href="/studio" className="button button-ghost">
-            Open Studio
-          </Link>
+          <a href="#projects" className="button button-ghost">
+            See Projects
+          </a>
           <a href="#contact" className="button button-solid">
             Contact Me
           </a>
@@ -129,9 +129,9 @@ export default async function HomePage() {
               <a href="#projects" className="button button-solid">
                 View Projects
               </a>
-              <Link href="/studio" className="button button-ghost">
-                Private Admin
-              </Link>
+              <a href="#contact" className="button button-ghost">
+                Contact Me
+              </a>
             </div>
 
             <div className="hero-meta">
@@ -208,8 +208,8 @@ export default async function HomePage() {
             eyebrow="Projects"
             title="Featured work"
             action={
-              <Link href="/studio" className="text-link">
-                Add new project
+              <Link href="/projects" className="text-link">
+                See All
               </Link>
             }
           />
@@ -400,15 +400,9 @@ export default async function HomePage() {
             </article>
 
             <article className="glass-card contact-card contact-highlight">
-              <p className="eyebrow">Hidden Admin</p>
-              <h3>Studio access</h3>
-              <p>
-                Keep the public site clean and manage new projects, certifications, and events from
-                a private workspace.
-              </p>
-              <Link href="/studio" className="button button-solid">
-                Open Studio
-              </Link>
+              <p className="eyebrow">Direct contact</p>
+              <h3>Reach me fast</h3>
+              <p>Use the quick links for email, phone, and social profiles.</p>
             </article>
           </div>
         </section>
@@ -425,7 +419,7 @@ export default async function HomePage() {
           <p className="eyebrow">Suggested Stack</p>
           <ul className="stack-list">
             <li>Next.js App Router</li>
-            <li>Sanity Studio at /studio</li>
+            <li>Sanity-powered content</li>
             <li>Structured content collections</li>
             <li>Private publishing workflow</li>
           </ul>

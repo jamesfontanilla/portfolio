@@ -48,14 +48,17 @@ export default async function EventsPage() {
           <Link href="/" className="nav-link">
             Home
           </Link>
+          <Link href="/projects" className="nav-link">
+            Projects
+          </Link>
           <Link href="/certifications" className="nav-link">
             Certifications
           </Link>
           <Link href="/events" className="nav-link is-active">
             Tech Events
           </Link>
-          <Link href="/studio" className="nav-link">
-            Studio
+          <Link href="/#contact" className="nav-link">
+            Contact
           </Link>
         </nav>
 
@@ -72,8 +75,8 @@ export default async function EventsPage() {
           <Link href="/" className="button button-ghost">
             Back Home
           </Link>
-          <Link href="/studio" className="button button-solid">
-            Open Studio
+          <Link href="/projects" className="button button-solid">
+            See Projects
           </Link>
         </div>
       </aside>
@@ -100,8 +103,8 @@ export default async function EventsPage() {
             <Link href="/" className="button button-ghost">
               Back home
             </Link>
-            <Link href="/studio" className="button button-solid">
-              Open Studio
+            <Link href="/certifications" className="button button-solid">
+              See Certifications
             </Link>
           </div>
         </section>
@@ -112,8 +115,8 @@ export default async function EventsPage() {
             title="Timeline and highlights"
             note="Use media, tags, and summaries to make each event entry feel alive."
             action={
-              <Link href="/studio" className="text-link">
-                Add new event
+              <Link href="/projects" className="text-link">
+                See Projects
               </Link>
             }
           />
