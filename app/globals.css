@@ -507,12 +507,12 @@ img {
   align-items: end;
   justify-content: space-between;
   gap: 20px;
-  padding: 28px;
+  padding: 18px 24px 22px;
 }
 
 .archive-hero-copy {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .archive-hero h1 {
