@@ -296,6 +296,11 @@ export default async function HomePage() {
             eyebrow="Certifications"
             title="Achievements"
             note="Structured like unlocked badges, not a flat list."
+            action={
+              <Link href="/certifications" className="text-link">
+                See All
+              </Link>
+            }
           />
 
           <div className="achievement-grid">
@@ -325,6 +330,11 @@ export default async function HomePage() {
             eyebrow="Tech Events"
             title="Attendance, media, and highlights"
             note="Use this area like a visual timeline."
+            action={
+              <Link href="/events" className="text-link">
+                See All
+              </Link>
+            }
           />
 
           <div className="events-layout">

@@ -494,6 +494,100 @@ img {
   font-weight: 700;
 }
 
+.archive-page {
+  display: grid;
+  gap: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.archive-hero {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 28px;
+}
+
+.archive-hero-copy {
+  display: grid;
+  gap: 10px;
+}
+
+.archive-hero h1 {
+  margin: 0;
+  font-family: "Space Grotesk", "Manrope", "Aptos", "Segoe UI", sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  font-size: clamp(2.6rem, 4vw, 4.8rem);
+  max-width: 10ch;
+}
+
+.archive-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.archive-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.certifications-archive,
+.events-archive {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.archive-card {
+  display: grid;
+  gap: 14px;
+}
+
+.archive-card h2,
+.archive-card h3 {
+  margin: 0;
+  font-family: "Space Grotesk", "Manrope", "Aptos", "Segoe UI", sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+.archive-card h2 {
+  font-size: 1.6rem;
+}
+
+.archive-card h3 {
+  font-size: 1.35rem;
+}
+
+.archive-media {
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.archive-media img {
+  aspect-ratio: 16 / 9;
+}
+
+.archive-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.archive-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .card-grid {
   display: grid;
   gap: 16px;
@@ -821,6 +915,11 @@ img {
   .control-grid {
     grid-template-columns: 1fr;
   }
+
+  .certifications-archive,
+  .events-archive {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 980px) {
@@ -850,6 +949,19 @@ img {
   .admin-header {
     align-items: start;
     flex-direction: column;
+  }
+
+  .archive-page {
+    padding: 16px;
+  }
+
+  .archive-hero {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .archive-actions {
+    justify-content: flex-start;
   }
 
   .admin-body {
