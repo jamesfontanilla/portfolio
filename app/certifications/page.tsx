@@ -55,8 +55,8 @@ export default async function CertificationsPage() {
           <Link href="/events" className="nav-link">
             Tech Events
           </Link>
-          <Link href="/#contact" className="nav-link">
-            Contact
+          <Link href="/contacts" className="nav-link">
+            Contacts
           </Link>
         </nav>
 

@@ -94,9 +94,9 @@ export default async function HomePage() {
           <a href="#events" className="nav-link">
             Tech Events
           </a>
-          <a href="#contact" className="nav-link">
-            Contact
-          </a>
+          <Link href="/contacts" className="nav-link">
+            Contacts
+          </Link>
         </nav>
 
         <div className="sidebar-card">
@@ -385,6 +385,11 @@ export default async function HomePage() {
             eyebrow="Contact"
             title="Link in bio, but cleaner"
             note="This is where you make it easy to reach you."
+            action={
+              <Link href="/contacts" className="text-link">
+                See All
+              </Link>
+            }
           />
 
           <div className="contact-layout">

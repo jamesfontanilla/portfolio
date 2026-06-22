@@ -57,8 +57,8 @@ export default async function EventsPage() {
           <Link href="/events" className="nav-link is-active">
             Tech Events
           </Link>
-          <Link href="/#contact" className="nav-link">
-            Contact
+          <Link href="/contacts" className="nav-link">
+            Contacts
           </Link>
         </nav>
 

@@ -580,6 +580,62 @@ img {
   gap: 8px;
 }
 
+.contacts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.contact-tile {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  border-radius: 24px;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.contact-tile:hover {
+  transform: translateY(-1px);
+  border-color: rgba(231, 194, 90, 0.22);
+}
+
+.contact-tile-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.contact-badge {
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  color: #fff;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
+}
+
+.contact-badge svg {
+  width: 26px;
+  height: 26px;
+}
+
+.contact-tile h3 {
+  font-size: 1.1rem;
+  margin: 0 0 4px;
+  overflow-wrap: anywhere;
+}
+
+.contact-open {
+  white-space: nowrap;
+  align-self: center;
+}
+
 .archive-footer {
   display: flex;
   flex-wrap: wrap;
@@ -601,6 +657,7 @@ img {
 .achievement-card,
 .event-item,
 .archive-card,
+.contact-tile,
 .contact-card,
 .admin-panel,
 .control-card {
@@ -921,6 +978,10 @@ img {
   .events-archive {
     grid-template-columns: 1fr;
   }
+
+  .contacts-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 980px) {
@@ -963,6 +1024,10 @@ img {
 
   .archive-actions {
     justify-content: flex-start;
+  }
+
+  .contact-tile {
+    grid-template-columns: 1fr;
   }
 
   .admin-body {
