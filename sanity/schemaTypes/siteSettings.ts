@@ -5,6 +5,7 @@ export const siteSettingsSchema = defineType({
   title: "Site Settings",
   type: "document",
   initialValue: {
+    role: "Full-Stack Developer",
     email: "jamesfontanilla@outlook.ph",
     phoneNumber: "+639282180937",
     githubUrl: "https://github.com/jamesfontanilla",

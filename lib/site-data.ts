@@ -3,7 +3,7 @@ import type { HomeData } from "@/lib/types";
 export const fallbackHomeData: HomeData = {
   settings: {
     name: "Jaime Fontanilla",
-    role: "Frontend Developer",
+    role: "Full-Stack Developer",
     tagline: "Premium, app-like portfolio for projects, proof, and contact.",
     summary:
       "A desktop-optimized portfolio inspired by sleek mobile dashboards, rebuilt as a clear workspace for your work, certifications, events, and private publishing.",
