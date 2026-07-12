@@ -56,9 +56,25 @@ export type PortfolioEvent = {
   };
 };
 
+export type BlogPost = {
+  title: string;
+  slug: string;
+  excerpt: string;
+  body?: unknown[];
+  coverImage?: {
+    url?: string;
+    asset?: unknown;
+    alt: string;
+  };
+  tags: string[];
+  publishedAt: string;
+  featured?: boolean;
+};
+
 export type HomeData = {
   settings: SiteSettings;
   projects: Project[];
   certifications: Certification[];
   events: PortfolioEvent[];
+  blogPosts?: BlogPost[];
 };

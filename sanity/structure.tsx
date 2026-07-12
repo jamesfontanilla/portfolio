@@ -56,6 +56,9 @@ export const studioStructure: StructureResolver = (S) =>
         .title("Projects")
         .child(S.documentTypeList("project").title("Projects")),
       S.listItem()
+        .title("Blog")
+        .child(S.documentTypeList("blogPost").title("Blog Posts")),
+      S.listItem()
         .title("Certifications")
         .child(S.documentTypeList("certification").title("Certifications")),
       S.listItem()

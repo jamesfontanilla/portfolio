@@ -1,7 +1,18 @@
 import Link from "next/link";
 import { getHomeData } from "@/lib/cms";
+import type { Metadata } from "next";
 
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: "Jaime Fontanilla — Contact",
+  description: "Get in touch with Jaime Fontanilla. Email, phone, LinkedIn, GitHub, and social links.",
+  openGraph: {
+    title: "Jaime Fontanilla — Contact",
+    description: "Get in touch with Jaime Fontanilla. Full-Stack Developer based in Philippines. Available for freelance and collaboration.",
+    type: "website",
+  },
+};
 
 function SectionHeader({
   eyebrow,

@@ -30,10 +30,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 12% 12%, rgba(228, 191, 74, 0.18), transparent 24%),
-    radial-gradient(circle at 84% 86%, rgba(67, 102, 110, 0.18), transparent 28%),
-    linear-gradient(135deg, #040404 0%, #0b0b0b 34%, #101214 100%);
+  background: #050505;
   color: var(--text);
   font-family: "Manrope", "Aptos", "Segoe UI", sans-serif;
 }
@@ -44,10 +41,10 @@ body::before {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 32px 32px;
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.9));
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,0,0,0.3) 0%, transparent 70%);
 }
 
 a {
@@ -1033,4 +1030,123 @@ img {
   .admin-body {
     padding: 16px;
   }
+}
+
+/* ============================================================
+   OS UI — Desktop Surface
+   ============================================================ */
+.os-desktop {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* ============================================================
+   OS UI — Wallpaper Orbs
+   ============================================================ */
+.wallpaper-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform, filter;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+/* ============================================================
+   OS UI — Window Panel
+   ============================================================ */
+.os-window {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  will-change: transform, opacity;
+  transition:
+    border-color 150ms ease,
+    backdrop-filter 150ms ease,
+    -webkit-backdrop-filter 150ms ease;
+}
+
+/* ============================================================
+   OS UI — Dock Bar
+   ============================================================ */
+.os-dock {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: var(--panel);
+  backdrop-filter: blur(26px);
+  -webkit-backdrop-filter: blur(26px);
+  box-shadow: var(--shadow);
+}
+
+/* ============================================================
+   OS UI — Resize Handle
+   ============================================================ */
+.resize-handle {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  width: 16px;
+  height: 16px;
+  cursor: se-resize;
+  display: grid;
+  grid-template-columns: repeat(3, 4px);
+  gap: 3px;
+  align-items: center;
+  justify-items: center;
+}
+
+.resize-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+/* ============================================================
+   OS UI — @supports fallback (no backdrop-filter)
+   ============================================================ */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-panel,
+  .glass-card,
+  .os-window,
+  .os-dock {
+    background: var(--panel-strong);
+  }
+}
+
+/* ============================================================
+   OS UI — Focus indicators
+   ============================================================ */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   OS UI — Reduced motion
+   ============================================================ */
+[data-reduced-motion="true"] * {
+  transition-duration: 0ms !important;
+  animation-duration: 0ms !important;
+}
+
+/* ============================================================
+   OS UI — Wallpaper orb float keyframe
+   ============================================================ */
+@keyframes orbFloat {
+  from { transform: translateY(0) scale(1); }
+  to   { transform: translateY(-40px) scale(1.05); }
 }

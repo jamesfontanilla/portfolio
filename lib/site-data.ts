@@ -106,4 +106,14 @@ export const fallbackHomeData: HomeData = {
       tags: ["Learning", "Media"],
     },
   ],
+  blogPosts: [
+    {
+      title: "Building an OS-style portfolio with Next.js",
+      slug: "building-os-portfolio",
+      excerpt: "How I built a browser-based desktop OS experience using React, CSS glassmorphism, and the Web Animations API.",
+      tags: ["Next.js", "React", "CSS"],
+      publishedAt: "2026-07-10",
+      featured: true,
+    },
+  ],
 };

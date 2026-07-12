@@ -1,95 +1,177 @@
-# Portfolio
+# Portfolio OS
 
-A personal portfolio website built with Next.js and Sanity.
+A browser-based desktop OS experience built as a personal portfolio. Visitors interact with draggable glassmorphism windows, a centered taskbar, animated wallpapers, and desktop widgets — all powered by Sanity CMS.
 
-The Next.js app lives in the nested `portfolio/` folder in this repository.
+## Preview
 
-It presents:
-
-- Projects
-- Certifications
-- Tech events, including media
-- Contact links and personal info
-- A hidden Sanity Studio for content updates
-
-The design is intentionally dark, glassy, and mobile-friendly, with a desktop layout that scales up cleanly.
+- **Desktop:** Full windowing system with drag, resize, minimize (Genie effect), maximize, and snap-to-top
+- **Mobile:** Phone-style home screen with app grid, back navigation, and full-screen content panels
+- **CMS:** Hidden Sanity Studio at `/studio` for content management
 
 ## Tech Stack
 
-- Next.js App Router
-- React 19
-- Sanity Studio
-- TypeScript
-- Groq / Sanity client
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16 (App Router, standalone output) |
+| UI | React 19, TypeScript 5.8 (strict) |
+| CMS | Sanity v5, GROQ queries |
+| Styling | Pure CSS glassmorphism, CSS custom properties |
+| Animation | Web Animations API (WAAPI), CSS transitions |
+| Fonts | Manrope, Space Grotesk (Google Fonts) |
+| Testing | Vitest, Testing Library, fast-check (property-based) |
+
+No Tailwind. No Framer Motion. No external animation libraries.
 
 ## Features
 
-- CMS-driven homepage content
-- Featured project section
-- Certifications timeline
-- Tech event gallery with images
-- Contact section with external links
-- Hidden admin studio at `/studio`
-- Fallback content when Sanity is not configured
+### OS-Style Desktop UI
 
-## Content Model
+- **Draggable, resizable windows** with glassmorphism (`backdrop-filter: blur`) and gold border accents
+- **macOS Genie effect** on minimize/restore using 3D perspective transforms
+- **Windows 11 centered taskbar** with live thumbnail previews on hover
+- **Desktop icons** (double-click or Enter to open) arranged in a vertical column
+- **macOS traffic light controls** (close, minimize, maximize) with hover glyphs
+- **Snap-to-maximize** when dragging a window to the top edge
+- **Staggered window positioning** — each new window cascades by 30px offset
 
-The Sanity studio uses these document types:
+### Desktop Widgets (CMS-driven)
 
-- `siteSettings`
-- `project`
-- `certification`
-- `event`
+- Welcome card with name, role, availability status, and social links
+- Live clock + date (top-right)
+- Quick stats (project/cert/event counts)
+- Highlights widget (latest project, cert, event — clickable)
+- Location badge
+- Current Focus note
+- Keyboard shortcuts popup
 
-### Site Settings
+### Wallpaper System
 
-Use `Site Settings` for:
+4 switchable themes via right-click context menu:
+- **Gold & Teal** (default)
+- **Deep Ocean**
+- **Warm Sunset**
+- **Northern Lights**
 
-- name
-- role
-- tagline
-- summary
-- intro
-- bio
-- location
-- availability
-- contact links
+Each theme uses layered radial/conic gradients, animated floating orbs, noise texture overlay, and a soft vignette.
 
-### Projects
+### Context Menu
 
-Each project can include:
+Right-click the desktop for:
+- Refresh
+- Wallpaper theme picker (submenu)
+- About This Portfolio (modal)
 
-- title
-- summary
-- status
-- stack
-- impact
-- cover image
-- demo URL
-- repo URL
-- featured flag
+### Boot Screen
 
-### Certifications
+Session-gated intro animation (300ms fade-in → hold → 300ms fade-out). Shows owner name in gold. Skipped on repeat visits and when `prefers-reduced-motion` is active.
 
-Each certification can include:
+### Keyboard Shortcuts
 
-- title
-- issuer
-- earned date
-- verification URL
+| Key | Action |
+|-----|--------|
+| `1` | Open About |
+| `2` | Open Projects |
+| `3` | Open Certifications |
+| `4` | Open Events |
+| `5` | Open Contacts |
+| `6` | Open Blog |
+| `Esc` | Close active window |
 
-### Tech Events
+### Responsive Design
 
-Each event can include:
+| Viewport | Behavior |
+|----------|----------|
+| ≥ 1024px (desktop) | Full windowing system with drag, resize, taskbar |
+| 768–1023px (tablet) | Windows centered and clamped to 90vw × 80vh, drag disabled |
+| < 768px (mobile) | Home screen with app grid, bottom nav, full-screen panels |
 
-- title
-- type
-- role
-- date
-- location
-- summary
-- tags
-- media image
+### Accessibility
+
+- Focus trapping within active windows (Tab/Shift+Tab)
+- `role="dialog"` + `aria-modal="true"` on windows
+- `aria-live="polite"` on notifications and boot screen
+- `:focus-visible` gold outline indicators
+- `prefers-reduced-motion` support (all animations disabled)
+- Semantic navigation landmarks
+- 44×44px minimum touch targets on mobile
+
+## Content Model (Sanity CMS)
+
+| Document Type | Fields |
+|---------------|--------|
+| `siteSettings` | name, role, tagline, summary, intro, bio, location, availability, email, phone, social URLs |
+| `project` | title, summary, status, stack[], impact, coverImage, demoUrl, repoUrl, featured |
+| `certification` | title, issuer, earnedOn, verificationUrl |
+| `event` | title, type, role, date, location, summary, tags[], media |
+| `blogPost` | title, slug, excerpt, body (rich text + images + code), coverImage, tags[], publishedAt, featured |
+
+## Project Structure
+
+```
+portfolio/
+├── app/                    # Next.js App Router pages
+│   ├── layout.tsx          # Root layout (server component, conditional OS wrapper)
+│   ├── page.tsx            # Home page (SEO content)
+│   ├── blog/              # Blog listing (indexable)
+│   ├── contacts/          # Contact page (indexable, NFC-ready)
+│   ├── projects/          # Projects archive
+│   ├── certifications/    # Certifications archive
+│   ├── events/            # Events archive
+│   └── studio/            # Sanity Studio (no OS wrapper)
+├── components/os-ui/       # OS desktop UI system
+│   ├── OSUIProvider.tsx    # Top-level client boundary + window manager
+│   ├── Window.tsx          # Draggable/resizable glassmorphism panel
+│   ├── Taskbar.tsx         # Windows 11 style centered taskbar
+│   ├── DesktopIcons.tsx    # Desktop shortcut icons
+│   ├── DesktopWidgets.tsx  # CMS-driven info widgets
+│   ├── Wallpaper.tsx       # Multi-theme animated wallpapers
+│   ├── ContextMenu.tsx     # Right-click desktop menu
+│   ├── BootScreen.tsx      # Session-gated intro animation
+│   ├── MobileHomeScreen.tsx # Phone-style home screen
+│   ├── MobileNav.tsx       # Mobile bottom navigation
+│   ├── WindowTitleBar.tsx  # Title bar + traffic lights
+│   ├── TrafficLightControls.tsx # macOS-style window buttons
+│   ├── ResizeHandle.tsx    # Bottom-right resize grip
+│   ├── Desktop.tsx         # Fixed full-viewport background
+│   ├── Dock.tsx            # Legacy dock (replaced by Taskbar)
+│   ├── AppIcon.tsx         # Icon component with labels
+│   └── content-views/     # Lazy-loaded window content
+│       ├── AboutView.tsx
+│       ├── ProjectsView.tsx
+│       ├── CertificationsView.tsx
+│       ├── EventsView.tsx
+│       ├── ContactsView.tsx
+│       ├── BlogView.tsx
+│       ├── SkeletonView.tsx
+│       └── ErrorView.tsx
+├── store/                  # State management
+│   └── windowManagerStore.ts  # Pure reducer (open/close/focus/drag/resize/minimize/maximize)
+├── hooks/                  # Custom React hooks
+│   ├── useDrag.ts          # Pointer-event drag with RAF throttle
+│   ├── useResize.ts        # Resize handle logic
+│   ├── useKeyboardNav.ts   # Focus trap + Escape handler
+│   ├── useReducedMotion.ts # prefers-reduced-motion detection
+│   └── useSanityData.ts    # Generic CMS data fetcher with caching
+├── lib/                    # Utilities
+│   ├── cms.ts              # Sanity client + GROQ queries
+│   ├── types.ts            # TypeScript types for all content
+│   ├── site-data.ts        # Fallback content (no CMS required)
+│   └── format.ts           # Date formatting helpers
+├── sanity/                 # Sanity CMS configuration
+│   ├── schemaTypes/        # Document schemas
+│   │   ├── siteSettings.ts
+│   │   ├── project.ts
+│   │   ├── certification.ts
+│   │   ├── event.ts
+│   │   └── blogPost.ts
+│   ├── structure.tsx       # Studio sidebar structure
+│   └── lib/image.ts        # Image URL builder
+├── middleware.ts           # Injects x-pathname header for RSC routing
+├── sanity.config.ts        # Sanity Studio configuration
+├── next.config.ts          # Next.js config (standalone output)
+├── vitest.config.ts        # Test configuration
+└── package.json
+```
 
 ## Local Setup
 
@@ -103,7 +185,7 @@ npm install
 2. Create your environment file:
 
 ```bash
-Copy-Item .env.example .env.local
+cp .env.example .env.local
 ```
 
 3. Fill in the Sanity values in `.env.local`:
@@ -114,53 +196,77 @@ NEXT_PUBLIC_SANITY_DATASET=production
 NEXT_PUBLIC_SANITY_API_VERSION=2026-06-22
 ```
 
+> If you don't configure Sanity, the site uses built-in fallback content. Everything still works.
+
 4. Start the development server:
 
 ```bash
 npm run dev
 ```
 
-Open:
+- Portfolio: `http://localhost:3000`
+- CMS Studio: `http://localhost:3000/studio`
 
-- `http://localhost:3000` for the portfolio
-- `http://localhost:3000/studio` for the CMS
+## Scripts
 
-## Build
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Production build |
+| `npm run start` | Run standalone production server |
+| `npm run test` | Run tests (Vitest) |
+| `npm run test:watch` | Watch mode |
+| `npm run test:coverage` | Coverage report (v8) |
 
-```bash
-npm run build
-npm run start
+## Architecture
+
+```
+Browser Request
+     │
+     ▼
+middleware.ts ──► injects x-pathname header
+     │
+     ▼
+app/layout.tsx (RSC) ──► reads x-pathname
+     │
+     ├── /studio → renders children directly (Sanity Studio)
+     │
+     └── all other routes → wraps in <OSUIProvider>
+              │
+              ├── Desktop + Wallpaper (background)
+              ├── DesktopIcons + DesktopWidgets (desktop only)
+              ├── Window[] (draggable panels with lazy content)
+              ├── Taskbar or MobileNav (navigation)
+              └── children (hidden, preserved for SEO)
 ```
 
-This project is configured with `output: "standalone"`, so the production start script runs the standalone Next.js server.
+Page routes (`/projects`, `/contacts`, `/blog`, etc.) are server-rendered for SEO but visually suppressed when the OS UI is active. Content is served exclusively through Window content views that fetch from Sanity.
 
-## Sanity Studio
+## SEO & Indexing
 
-The Studio is mounted at `/studio` and organized around:
+Each content section has a corresponding route page that renders server-side HTML for crawlers:
 
-- Overview
-- Projects
-- Certifications
-- Tech Events
-- Site Settings
+- `/` — Home (about, stats)
+- `/projects` — All projects
+- `/certifications` — All certifications
+- `/events` — All events
+- `/contacts` — Contact links (NFC card-ready)
+- `/blog` — Blog posts
 
-The homepage reads content from Sanity when the project ID is available. If Sanity is not configured, the site uses built-in fallback content instead.
+These pages include proper `<meta>` tags and render real content. The OS UI wraps them visually but doesn't block indexing.
 
 ## Deployment
 
-This project is ready for Vercel deployment.
+Ready for Vercel (or any Node.js host supporting standalone Next.js).
 
-Set these environment variables in Vercel:
+Set these environment variables:
 
 - `NEXT_PUBLIC_SANITY_PROJECT_ID`
 - `NEXT_PUBLIC_SANITY_DATASET`
 - `NEXT_PUBLIC_SANITY_API_VERSION`
 
-The current codebase does not require a read token for public content fetching.
-`SANITY_API_READ_TOKEN` is present in `.env.example` for future authenticated workflows, but it is not used by the current app code.
+`SANITY_API_READ_TOKEN` is reserved for future authenticated workflows but not currently used.
 
-## Notes
+## License
 
-- The hidden admin area is still protected by Sanity auth, not just by being hard to find.
-- If you change your profile details or role in Sanity, the public site updates from the same data source.
-- If a field is missing in Sanity, the site falls back to safe defaults so the page still renders.
+Private project. All rights reserved.

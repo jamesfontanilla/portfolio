@@ -73,6 +73,20 @@ const eventsQuery = `*[_type == "event"] | order(date desc, _createdAt desc){
   }
 }`;
 
+const blogPostsQuery = `*[_type == "blogPost"] | order(publishedAt desc, _createdAt desc){
+  title,
+  "slug": slug.current,
+  excerpt,
+  body,
+  coverImage{
+    alt,
+    asset
+  },
+  tags,
+  publishedAt,
+  featured
+}`;
+
 function toStringArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
 }
@@ -179,15 +193,40 @@ function normalizeEvents(values: unknown): HomeData["events"] {
   });
 }
 
+function normalizeBlogPosts(values: unknown): HomeData["blogPosts"] {
+  if (!Array.isArray(values) || !values.length) return [];
+
+  return values.map((value) => {
+    const record = value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+    return {
+      title: toOptionalString(record.title) ?? "Untitled post",
+      slug: toOptionalString(record.slug) ?? "untitled",
+      excerpt: toOptionalString(record.excerpt) ?? "",
+      body: Array.isArray(record.body) ? record.body : undefined,
+      coverImage:
+        record.coverImage && typeof record.coverImage === "object"
+          ? {
+              alt: toOptionalString((record.coverImage as Record<string, unknown>).alt) ?? "Blog post image",
+              asset: (record.coverImage as Record<string, unknown>).asset,
+            }
+          : undefined,
+      tags: toStringArray(record.tags),
+      publishedAt: toOptionalString(record.publishedAt) ?? new Date().toISOString(),
+      featured: Boolean(record.featured),
+    };
+  });
+}
+
 export async function getHomeData(): Promise<HomeData> {
   if (!sanityClient) return fallbackHomeData;
 
   try {
-    const [settings, projects, certifications, events] = await Promise.all([
+    const [settings, projects, certifications, events, blogPosts] = await Promise.all([
       sanityClient.fetch(settingsQuery),
       sanityClient.fetch(projectsQuery),
       sanityClient.fetch(certificationsQuery),
       sanityClient.fetch(eventsQuery),
+      sanityClient.fetch(blogPostsQuery),
     ]);
 
     return {
@@ -195,6 +234,7 @@ export async function getHomeData(): Promise<HomeData> {
       projects: normalizeProjects(projects),
       certifications: normalizeCertifications(certifications),
       events: normalizeEvents(events),
+      blogPosts: normalizeBlogPosts(blogPosts),
     };
   } catch {
     return fallbackHomeData;
