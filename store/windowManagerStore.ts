@@ -43,6 +43,12 @@ export type WindowAction =
   | { type: 'DRAG_WINDOW'; id: string; dx: number; dy: number; viewportWidth: number; viewportHeight: number; dockHeight: number }
   | { type: 'RESIZE_WINDOW'; id: string; dw: number; dh: number }
   | { type: 'SNAP_MAXIMIZE'; id: string; viewportWidth: number; viewportHeight: number; dockHeight: number }
+  | { type: 'SNAP_LEFT'; id: string; viewportWidth: number; viewportHeight: number; dockHeight: number }
+  | { type: 'SNAP_RIGHT'; id: string; viewportWidth: number; viewportHeight: number; dockHeight: number }
+  | { type: 'SNAP_TOP_LEFT'; id: string; viewportWidth: number; viewportHeight: number; dockHeight: number }
+  | { type: 'SNAP_TOP_RIGHT'; id: string; viewportWidth: number; viewportHeight: number; dockHeight: number }
+  | { type: 'SNAP_BOTTOM_LEFT'; id: string; viewportWidth: number; viewportHeight: number; dockHeight: number }
+  | { type: 'SNAP_BOTTOM_RIGHT'; id: string; viewportWidth: number; viewportHeight: number; dockHeight: number }
   | { type: 'CACHE_DATA'; contentType: ContentType; data: unknown }
   | { type: 'DISMISS_NOTIFICATION'; id: string };
 
@@ -274,6 +280,130 @@ export function windowManagerReducer(
                 width: vw,
                 height: vh - dockHeight,
                 isMaximized: true,
+              }
+            : w,
+        ),
+      };
+    }
+
+    case 'SNAP_LEFT': {
+      const { viewportWidth: vw, viewportHeight: vh, dockHeight } = action;
+      return {
+        ...state,
+        windows: state.windows.map((w) =>
+          w.id === action.id
+            ? {
+                ...w,
+                preMaximizedRect: w.preMaximizedRect ?? { x: w.x, y: w.y, width: w.width, height: w.height },
+                x: 0,
+                y: 0,
+                width: Math.floor(vw / 2),
+                height: vh - dockHeight,
+                isMaximized: false,
+              }
+            : w,
+        ),
+      };
+    }
+
+    case 'SNAP_RIGHT': {
+      const { viewportWidth: vw, viewportHeight: vh, dockHeight } = action;
+      return {
+        ...state,
+        windows: state.windows.map((w) =>
+          w.id === action.id
+            ? {
+                ...w,
+                preMaximizedRect: w.preMaximizedRect ?? { x: w.x, y: w.y, width: w.width, height: w.height },
+                x: Math.ceil(vw / 2),
+                y: 0,
+                width: Math.floor(vw / 2),
+                height: vh - dockHeight,
+                isMaximized: false,
+              }
+            : w,
+        ),
+      };
+    }
+
+    case 'SNAP_TOP_LEFT': {
+      const { viewportWidth: vw, viewportHeight: vh, dockHeight } = action;
+      const h = Math.floor((vh - dockHeight) / 2);
+      return {
+        ...state,
+        windows: state.windows.map((w) =>
+          w.id === action.id
+            ? {
+                ...w,
+                preMaximizedRect: w.preMaximizedRect ?? { x: w.x, y: w.y, width: w.width, height: w.height },
+                x: 0,
+                y: 0,
+                width: Math.floor(vw / 2),
+                height: h,
+                isMaximized: false,
+              }
+            : w,
+        ),
+      };
+    }
+
+    case 'SNAP_TOP_RIGHT': {
+      const { viewportWidth: vw, viewportHeight: vh, dockHeight } = action;
+      const h = Math.floor((vh - dockHeight) / 2);
+      return {
+        ...state,
+        windows: state.windows.map((w) =>
+          w.id === action.id
+            ? {
+                ...w,
+                preMaximizedRect: w.preMaximizedRect ?? { x: w.x, y: w.y, width: w.width, height: w.height },
+                x: Math.ceil(vw / 2),
+                y: 0,
+                width: Math.floor(vw / 2),
+                height: h,
+                isMaximized: false,
+              }
+            : w,
+        ),
+      };
+    }
+
+    case 'SNAP_BOTTOM_LEFT': {
+      const { viewportWidth: vw, viewportHeight: vh, dockHeight } = action;
+      const h = Math.floor((vh - dockHeight) / 2);
+      return {
+        ...state,
+        windows: state.windows.map((w) =>
+          w.id === action.id
+            ? {
+                ...w,
+                preMaximizedRect: w.preMaximizedRect ?? { x: w.x, y: w.y, width: w.width, height: w.height },
+                x: 0,
+                y: h,
+                width: Math.floor(vw / 2),
+                height: h,
+                isMaximized: false,
+              }
+            : w,
+        ),
+      };
+    }
+
+    case 'SNAP_BOTTOM_RIGHT': {
+      const { viewportWidth: vw, viewportHeight: vh, dockHeight } = action;
+      const h = Math.floor((vh - dockHeight) / 2);
+      return {
+        ...state,
+        windows: state.windows.map((w) =>
+          w.id === action.id
+            ? {
+                ...w,
+                preMaximizedRect: w.preMaximizedRect ?? { x: w.x, y: w.y, width: w.width, height: w.height },
+                x: Math.ceil(vw / 2),
+                y: h,
+                width: Math.floor(vw / 2),
+                height: h,
+                isMaximized: false,
               }
             : w,
         ),

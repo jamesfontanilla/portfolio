@@ -106,6 +106,15 @@ export function Window({
 
   const prevMinimizedRef = useRef(state.isMinimized);
   const [visuallyHidden, setVisuallyHidden] = useState(state.isMinimized);
+  const activeAnimRef = useRef<Animation | null>(null);
+
+  // Cancel any persisted animation when position/size changes (maximize/restore/drag)
+  useEffect(() => {
+    if (activeAnimRef.current && !state.isMinimized) {
+      activeAnimRef.current.cancel();
+      activeAnimRef.current = null;
+    }
+  }, [x, y, width, height, state.isMaximized]);
 
   useEffect(() => {
     const wasMinimized = prevMinimizedRef.current;
@@ -114,6 +123,12 @@ export function Window({
 
     const el = containerRef.current;
     if (!el) return;
+
+    // Cancel any prior animation before starting a new one
+    if (activeAnimRef.current) {
+      activeAnimRef.current.cancel();
+      activeAnimRef.current = null;
+    }
 
     // Genie effect: window funnels down toward the taskbar icon
     if (!wasMinimized && isMinimized) {
@@ -154,6 +169,8 @@ export function Window({
         }
       );
 
+      activeAnimRef.current = anim;
+
       anim.onfinish = () => {
         setVisuallyHidden(true);
       };
@@ -170,7 +187,7 @@ export function Window({
 
       el.style.transformOrigin = 'bottom center';
 
-      el.animate(
+      const anim = el.animate(
         [
           {
             offset: 0,
@@ -199,6 +216,13 @@ export function Window({
           fill: 'forwards',
         }
       );
+
+      activeAnimRef.current = anim;
+
+      anim.onfinish = () => {
+        // Clear the animation ref once done so it doesn't block future transforms
+        activeAnimRef.current = null;
+      };
     }
   }, [state.isMinimized, x, y, dockIconRef, reducedMotion]);
 
@@ -224,33 +248,43 @@ export function Window({
     onReturnFocus,
   });
 
-  // ── Snap-to-maximize on title bar drag to top edge ────────────────────────
+  // ── Snap zones on title bar drag release ────────────────────────────────
 
-  // Handled in useDrag by checking y < 8 on pointerup; trigger SNAP_MAXIMIZE.
-  // We hook into pointermove on the title bar to detect the snap condition.
+  const SNAP_THRESHOLD = 12; // pixels from edge to trigger snap
+
   const handleTitleBarPointerDown = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
       onTitleBarPointerDown(e as React.PointerEvent<HTMLElement>);
 
-      // Listen for pointerup to check snap condition
-      function onPointerUp() {
-        const el = containerRef.current;
-        if (!el) return;
-        // Check current y from transform
-        const transform = el.style.transform;
-        const match = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
-        if (match) {
-          const currentY = parseFloat(match[2]);
-          if (currentY < 8) {
-            dispatch({
-              type: 'SNAP_MAXIMIZE',
-              id,
-              viewportWidth: window.innerWidth,
-              viewportHeight: window.innerHeight,
-              dockHeight: TASKBAR_HEIGHT,
-            });
-          }
+      function onPointerUp(upEvent: PointerEvent) {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const px = upEvent.clientX;
+        const py = upEvent.clientY;
+
+        const nearTop = py < SNAP_THRESHOLD;
+        const nearBottom = py > vh - SNAP_THRESHOLD;
+        const nearLeft = px < SNAP_THRESHOLD;
+        const nearRight = px > vw - SNAP_THRESHOLD;
+
+        const snapPayload = { id, viewportWidth: vw, viewportHeight: vh, dockHeight: TASKBAR_HEIGHT };
+
+        if (nearTop && nearLeft) {
+          dispatch({ type: 'SNAP_TOP_LEFT', ...snapPayload });
+        } else if (nearTop && nearRight) {
+          dispatch({ type: 'SNAP_TOP_RIGHT', ...snapPayload });
+        } else if (nearBottom && nearLeft) {
+          dispatch({ type: 'SNAP_BOTTOM_LEFT', ...snapPayload });
+        } else if (nearBottom && nearRight) {
+          dispatch({ type: 'SNAP_BOTTOM_RIGHT', ...snapPayload });
+        } else if (nearLeft) {
+          dispatch({ type: 'SNAP_LEFT', ...snapPayload });
+        } else if (nearRight) {
+          dispatch({ type: 'SNAP_RIGHT', ...snapPayload });
+        } else if (nearTop) {
+          dispatch({ type: 'SNAP_MAXIMIZE', ...snapPayload });
         }
+
         window.removeEventListener('pointerup', onPointerUp);
       }
       window.addEventListener('pointerup', onPointerUp);
