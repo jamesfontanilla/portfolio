@@ -394,7 +394,31 @@ describe('TrafficLightControls: clicking triggers correct handlers', () => {
 // ─── Snap layout flyout ───────────────────────────────────────────────────────
 
 describe('Snap layout flyout', () => {
-  it('opens on maximize hover and dispatches a snap action when a layout is selected', () => {
+  it('opens on maximize hover in every visible window state', () => {
+    for (const windowState of [
+      makeWindowState(),
+      makeWindowState({ isMaximized: true }),
+      makeWindowState({ x: 0, y: 0, width: 640, height: 360 }),
+    ]) {
+      const { unmount } = render(
+        <Window
+          state={windowState}
+          isActive={true}
+          layoutMode="desktop"
+          dockIconRef={makeDockIconRef()}
+          onFocus={vi.fn()}
+          dispatch={vi.fn() as React.Dispatch<WindowAction>}
+        />,
+      );
+
+      fireEvent.pointerEnter(screen.getByRole('button', { name: 'Maximize window' }));
+
+      expect(screen.getByRole('dialog', { name: 'Snap layouts' })).toBeTruthy();
+      unmount();
+    }
+  });
+
+  it('dispatches a snap action when a layout is selected', () => {
     const dispatch = vi.fn();
     const ref = makeDockIconRef();
     const state = makeWindowState();

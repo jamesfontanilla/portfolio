@@ -18,6 +18,7 @@
  */
 
 import React, { useRef, useCallback, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { WindowState, WindowAction, ContentType } from '@/store/windowManagerStore';
 import { useDrag } from '@/hooks/useDrag';
 import { useKeyboardNav } from '@/hooks/useKeyboardNav';
@@ -367,14 +368,18 @@ export function Window({
         onMaximizeHoverEnd={requestSnapFlyoutClose}
       />
 
-      {snapFlyoutOpen && (
-        <SnapLayoutFlyout
-          anchorRect={snapFlyoutAnchor}
-          onSelect={handleSnapLayoutSelect}
-          onPointerEnter={clearSnapFlyoutTimer}
-          onPointerLeave={requestSnapFlyoutClose}
-        />
-      )}
+      {snapFlyoutOpen &&
+        snapFlyoutAnchor &&
+        typeof document !== 'undefined' &&
+        createPortal(
+          <SnapLayoutFlyout
+            anchorRect={snapFlyoutAnchor}
+            onSelect={handleSnapLayoutSelect}
+            onPointerEnter={clearSnapFlyoutTimer}
+            onPointerLeave={requestSnapFlyoutClose}
+          />,
+          document.body,
+        )}
 
       <div
         role="region"
