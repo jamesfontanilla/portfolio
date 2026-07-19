@@ -14,6 +14,7 @@
 
 import { useEffect, useCallback } from 'react';
 import type { WindowState, WindowAction } from '@/store/windowManagerStore';
+import { getKeyboardSnapTarget, getSnapActionForTarget, type SnapViewport } from '@/lib/windowSnap';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -115,6 +116,10 @@ interface UseKeyboardNavOptions {
   windowId: string;
   /** Whether this window is currently the active (focused) window. */
   isActive: boolean;
+  /** Current window state, used for snap shortcut resolution. */
+  windowState: Pick<WindowState, 'x' | 'y' | 'width' | 'height' | 'isMaximized'>;
+  /** Current viewport measurements, used for snap shortcut resolution. */
+  snapViewport: SnapViewport;
   /** Ref to the window container element for focus trapping. */
   containerRef: React.RefObject<HTMLElement | null>;
   /** Reducer dispatch for CLOSE_WINDOW. */
@@ -131,6 +136,8 @@ interface UseKeyboardNavOptions {
 export function useKeyboardNav({
   windowId,
   isActive,
+  windowState,
+  snapViewport,
   containerRef,
   dispatch,
   onReturnFocus,
@@ -142,12 +149,34 @@ export function useKeyboardNav({
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (!isActive) return;
+
+      const target = e.target as HTMLElement | null;
+      if (target) {
+        const tag = target.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target.isContentEditable) {
+          return;
+        }
+      }
+
+      if ((e.metaKey || (e.ctrlKey && e.altKey)) && e.key === 'ArrowDown' && windowState.isMaximized) {
+        e.preventDefault();
+        dispatch({ type: 'RESTORE_MAX_WINDOW', id: windowId });
+        return;
+      }
+
+      const snapTarget = getKeyboardSnapTarget(e, windowState, snapViewport);
+      if (snapTarget) {
+        e.preventDefault();
+        dispatch(getSnapActionForTarget(snapTarget, windowId, snapViewport));
+        return;
+      }
+
       if (e.key !== 'Escape') return;
 
       dispatch({ type: 'CLOSE_WINDOW', id: windowId });
       onReturnFocus();
     },
-    [isActive, windowId, dispatch, onReturnFocus],
+    [isActive, windowId, dispatch, onReturnFocus, snapViewport, windowState],
   );
 
   useEffect(() => {

@@ -42,6 +42,7 @@ import { DesktopIcons } from './DesktopIcons';
 import { DesktopWidgets } from './DesktopWidgets';
 import { ContextMenu, type WallpaperTheme } from './ContextMenu';
 import { Taskbar, TASKBAR_HEIGHT } from './Taskbar';
+import { SnapPreviewOverlay } from './SnapPreviewOverlay';
 import { MobileNav, useMobileNav } from './MobileNav';
 import { MobileHomeScreen } from './MobileHomeScreen';
 import { Window } from './Window';
@@ -302,6 +303,11 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute }
 
         {/* Boot screen — shown once per session */}
         <BootScreen />
+
+        {/* Global snap preview overlay */}
+        {mounted && layoutMode !== 'mobile' && (
+          <SnapPreviewOverlay preview={state.snapPreview} />
+        )}
 
         {/* Window manager — renders all windows (including minimized for genie animation) */}
         {mounted && layoutMode !== 'mobile' && renderedWindows.map(win => (

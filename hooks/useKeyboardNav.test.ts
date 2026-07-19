@@ -5,14 +5,17 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { renderHook } from '@testing-library/react';
+import { cleanup, renderHook } from '@testing-library/react';
 import { useKeyboardNav } from './useKeyboardNav';
 import type { WindowAction } from '@/store/windowManagerStore';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function pressKey(key: string, shiftKey = false) {
-  const event = new KeyboardEvent('keydown', { key, shiftKey, bubbles: true });
+function pressKey(
+  key: string,
+  options: Pick<KeyboardEventInit, 'shiftKey' | 'ctrlKey' | 'altKey' | 'metaKey'> = {},
+) {
+  const event = new KeyboardEvent('keydown', { key, bubbles: true, ...options });
   window.dispatchEvent(event);
   return event;
 }
@@ -40,26 +43,30 @@ describe('useKeyboardNav', () => {
   let onReturnFocus: any;
   let container: HTMLElement;
   let containerRef: React.RefObject<HTMLElement | null>;
+  let windowState: { x: number; y: number; width: number; height: number; isMaximized: boolean };
+  const snapViewport = { viewportWidth: 1280, viewportHeight: 800, dockHeight: 68 };
 
   beforeEach(() => {
     dispatch = vi.fn();
     onReturnFocus = vi.fn();
     container = makeContainer();
     containerRef = { current: container } as React.RefObject<HTMLElement | null>;
+    windowState = { x: 100, y: 100, width: 640, height: 480, isMaximized: false };
   });
 
   afterEach(() => {
+    cleanup();
     document.body.removeChild(container);
     vi.restoreAllMocks();
   });
-
-  // ─── Escape key ─────────────────────────────────────────────────────────────
 
   it('pressing Escape when window is active dispatches CLOSE_WINDOW and calls onReturnFocus', () => {
     renderHook(() =>
       useKeyboardNav({
         windowId: 'win-1',
         isActive: true,
+        windowState,
+        snapViewport,
         containerRef,
         dispatch: dispatch as React.Dispatch<WindowAction>,
         onReturnFocus,
@@ -78,6 +85,8 @@ describe('useKeyboardNav', () => {
       useKeyboardNav({
         windowId: 'win-1',
         isActive: false,
+        windowState,
+        snapViewport,
         containerRef,
         dispatch: dispatch as React.Dispatch<WindowAction>,
         onReturnFocus,
@@ -90,8 +99,6 @@ describe('useKeyboardNav', () => {
     expect(onReturnFocus).not.toHaveBeenCalled();
   });
 
-  // ─── Focus trap — Tab wrapping ───────────────────────────────────────────────
-
   it('Tab key wraps from last focusable element to first within the active window', () => {
     const btn1 = addButton(container, 'First');
     const btn2 = addButton(container, 'Second');
@@ -101,13 +108,14 @@ describe('useKeyboardNav', () => {
       useKeyboardNav({
         windowId: 'win-1',
         isActive: true,
+        windowState,
+        snapViewport,
         containerRef,
         dispatch: dispatch as React.Dispatch<WindowAction>,
         onReturnFocus,
       }),
     );
 
-    // Focus the last button then press Tab — should wrap to first
     btn3.focus();
     expect(document.activeElement).toBe(btn3);
 
@@ -115,9 +123,6 @@ describe('useKeyboardNav', () => {
     document.dispatchEvent(tabEvent);
 
     expect(document.activeElement).toBe(btn1);
-
-    // Escape key dispatch is unrelated to Tab — clear
-    void btn1;
     void btn2;
   });
 
@@ -130,13 +135,14 @@ describe('useKeyboardNav', () => {
       useKeyboardNav({
         windowId: 'win-1',
         isActive: true,
+        windowState,
+        snapViewport,
         containerRef,
         dispatch: dispatch as React.Dispatch<WindowAction>,
         onReturnFocus,
       }),
     );
 
-    // Focus the first button then press Shift+Tab — should wrap to last
     btn1.focus();
     expect(document.activeElement).toBe(btn1);
 
@@ -150,7 +156,7 @@ describe('useKeyboardNav', () => {
     expect(document.activeElement).toBe(btn3);
   });
 
-  it('focus trap is not active when isActive is false — Tab does not wrap', () => {
+  it('focus trap is not active when isActive is false - Tab does not wrap', () => {
     const btn1 = addButton(container, 'First');
     addButton(container, 'Second');
     const btn3 = addButton(container, 'Last');
@@ -159,18 +165,79 @@ describe('useKeyboardNav', () => {
       useKeyboardNav({
         windowId: 'win-1',
         isActive: false,
+        windowState,
+        snapViewport,
         containerRef,
         dispatch: dispatch as React.Dispatch<WindowAction>,
         onReturnFocus,
       }),
     );
 
-    // Focus last button, press Tab — focus should NOT be intercepted
     btn3.focus();
     const tabEvent = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: false, bubbles: true });
     document.dispatchEvent(tabEvent);
 
-    // Focus should remain on btn3 (not wrapped to btn1)
     expect(document.activeElement).toBe(btn3);
+    void btn1;
+  });
+
+  it('Ctrl+Alt+ArrowLeft snaps the active window to the left half', () => {
+    renderHook(() =>
+      useKeyboardNav({
+        windowId: 'win-1',
+        isActive: true,
+        windowState,
+        snapViewport,
+        containerRef,
+        dispatch: dispatch as React.Dispatch<WindowAction>,
+        onReturnFocus,
+      }),
+    );
+
+    pressKey('ArrowLeft', { ctrlKey: true, altKey: true });
+
+    expect(dispatch).toHaveBeenCalledWith(
+      expect.objectContaining({ type: 'SNAP_LEFT', id: 'win-1' }),
+    );
+  });
+
+  it('Ctrl+Alt+ArrowUp snaps an unsnapped window to maximize', () => {
+    renderHook(() =>
+      useKeyboardNav({
+        windowId: 'win-1',
+        isActive: true,
+        windowState,
+        snapViewport,
+        containerRef,
+        dispatch: dispatch as React.Dispatch<WindowAction>,
+        onReturnFocus,
+      }),
+    );
+
+    pressKey('ArrowUp', { ctrlKey: true, altKey: true });
+
+    expect(dispatch).toHaveBeenCalledWith(
+      expect.objectContaining({ type: 'SNAP_MAXIMIZE', id: 'win-1' }),
+    );
+  });
+
+  it('Ctrl+Alt+ArrowDown restores a maximized window', () => {
+    windowState = { x: 0, y: 0, width: 1280, height: 732, isMaximized: true };
+
+    renderHook(() =>
+      useKeyboardNav({
+        windowId: 'win-1',
+        isActive: true,
+        windowState,
+        snapViewport,
+        containerRef,
+        dispatch: dispatch as React.Dispatch<WindowAction>,
+        onReturnFocus,
+      }),
+    );
+
+    pressKey('ArrowDown', { ctrlKey: true, altKey: true });
+
+    expect(dispatch).toHaveBeenCalledWith({ type: 'RESTORE_MAX_WINDOW', id: 'win-1' });
   });
 });

@@ -1,18 +1,18 @@
 'use client';
 
 /**
- * Window — draggable, resizable glassmorphism panel.
+ * Window - draggable, resizable glassmorphism panel.
  *
  * Features:
- *  - position:fixed, transform:translate(x,y) for compositor-accelerated positioning
- *  - backdrop-filter: blur(26px) active / blur(16px) inactive, 150ms transition
- *  - border: --border-strong active / --border inactive, 150ms transition
+ *  - position: fixed, transform: translate(x, y) for compositor-accelerated positioning
+ *  - backdrop-filter blur with active/inactive transitions
  *  - WindowTitleBar (drag handle + traffic lights)
+ *  - Snap layout flyout on maximize hover
  *  - Scrollable content area with role="region"
  *  - ResizeHandle (bottom-right corner)
  *  - role="dialog", aria-modal="true"
  *  - useKeyboardNav focus trap + Escape handler
- *  - Tablet mode: clamp to 90vw × 80vh, drag disabled
+ *  - Tablet mode: clamp to 90vw x 80vh, drag disabled
  *
  * Requirements: 3.1, 3.4, 3.5, 4.1, 4.2, 4.3, 4.5, 4.6, 4.7, 4.8, 5.7, 8.3, 9.3
  */
@@ -22,11 +22,12 @@ import type { WindowState, WindowAction, ContentType } from '@/store/windowManag
 import { useDrag } from '@/hooks/useDrag';
 import { useKeyboardNav } from '@/hooks/useKeyboardNav';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { TASKBAR_HEIGHT } from './Taskbar';
 import { WindowTitleBar } from './WindowTitleBar';
 import { ResizeHandle } from './ResizeHandle';
+import { SnapLayoutFlyout } from './SnapLayoutFlyout';
 import { contentTypeLabel } from './AppIcon';
-
-// ─── Types ────────────────────────────────────────────────────────────────────
+import { getSnapActionForTarget, type SnapTarget } from '@/lib/windowSnap';
 
 export interface WindowProps {
   state: WindowState;
@@ -38,25 +39,17 @@ export interface WindowProps {
   children?: React.ReactNode;
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const TITLE_BAR_HEIGHT = 40;
-const TASKBAR_HEIGHT = 68; // matches Taskbar component height (includes floating gap)
-
 /**
  * Returns the center coordinates of the dock icon for minimize animation target.
  * Falls back to bottom-center if the icon ref is unavailable.
  */
 export function getMinimizeTarget(
-  iconRef: React.RefObject<HTMLButtonElement | null>
+  iconRef: React.RefObject<HTMLButtonElement | null>,
 ): { x: number; y: number } {
   const rect = iconRef.current?.getBoundingClientRect();
   if (!rect) return { x: window.innerWidth / 2, y: window.innerHeight };
   return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
-
 }
-
-// ─── Component ────────────────────────────────────────────────────────────────
 
 export function Window({
   state,
@@ -73,8 +66,6 @@ export function Window({
   const { id, contentType, x, y, width, height, zIndex } = state;
   const label = contentTypeLabel[contentType];
 
-  // ── Open animation ────────────────────────────────────────────────────────
-
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -88,33 +79,28 @@ export function Window({
         duration: reducedMotion ? 0 : 220,
         easing: 'ease-out',
         fill: 'none',
-      }
+      },
     );
 
-    // Ensure element is visible after animation completes
     anim.onfinish = () => {
       el.style.opacity = '1';
     };
 
-    // Start from invisible
     el.style.opacity = '0';
-    // Run only on mount
+    // Run only on mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // ── Minimize / restore animation (macOS Genie effect) ───────────────────────
 
   const prevMinimizedRef = useRef(state.isMinimized);
   const [visuallyHidden, setVisuallyHidden] = useState(state.isMinimized);
   const activeAnimRef = useRef<Animation | null>(null);
 
-  // Cancel any persisted animation when position/size changes (maximize/restore/drag)
   useEffect(() => {
     if (activeAnimRef.current && !state.isMinimized) {
       activeAnimRef.current.cancel();
       activeAnimRef.current = null;
     }
-  }, [x, y, width, height, state.isMaximized]);
+  }, [x, y, width, height, state.isMaximized, state.isMinimized]);
 
   useEffect(() => {
     const wasMinimized = prevMinimizedRef.current;
@@ -124,13 +110,11 @@ export function Window({
     const el = containerRef.current;
     if (!el) return;
 
-    // Cancel any prior animation before starting a new one
     if (activeAnimRef.current) {
       activeAnimRef.current.cancel();
       activeAnimRef.current = null;
     }
 
-    // Genie effect: window funnels down toward the taskbar icon
     if (!wasMinimized && isMinimized) {
       const target = getMinimizeTarget(dockIconRef);
       const elRect = el.getBoundingClientRect();
@@ -166,7 +150,7 @@ export function Window({
           duration: reducedMotion ? 0 : 500,
           easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
           fill: 'forwards',
-        }
+        },
       );
 
       activeAnimRef.current = anim;
@@ -176,7 +160,6 @@ export function Window({
       };
     }
 
-    // Reverse genie: window pours back out from the taskbar icon
     if (wasMinimized && !isMinimized) {
       setVisuallyHidden(false);
 
@@ -214,19 +197,16 @@ export function Window({
           duration: reducedMotion ? 0 : 500,
           easing: 'cubic-bezier(0, 0, 0.2, 1)',
           fill: 'forwards',
-        }
+        },
       );
 
       activeAnimRef.current = anim;
 
       anim.onfinish = () => {
-        // Clear the animation ref once done so it doesn't block future transforms
         activeAnimRef.current = null;
       };
     }
   }, [state.isMinimized, x, y, dockIconRef, reducedMotion]);
-
-  // ── Drag ──────────────────────────────────────────────────────────────────
 
   const { onPointerDown: onTitleBarPointerDown } = useDrag({
     windowId: id,
@@ -234,7 +214,54 @@ export function Window({
     layoutMode,
   });
 
-  // ── Keyboard nav ──────────────────────────────────────────────────────────
+  const snapViewport = {
+    viewportWidth: window.innerWidth,
+    viewportHeight: window.innerHeight,
+    dockHeight: TASKBAR_HEIGHT,
+  };
+
+  const closeSnapFlyoutTimerRef = useRef<number | null>(null);
+  const [snapFlyoutOpen, setSnapFlyoutOpen] = useState(false);
+  const [snapFlyoutAnchor, setSnapFlyoutAnchor] = useState<DOMRect | null>(null);
+
+  const clearSnapFlyoutTimer = useCallback(() => {
+    if (closeSnapFlyoutTimerRef.current !== null) {
+      window.clearTimeout(closeSnapFlyoutTimerRef.current);
+      closeSnapFlyoutTimerRef.current = null;
+    }
+  }, []);
+
+  const dismissSnapFlyout = useCallback(() => {
+    clearSnapFlyoutTimer();
+    setSnapFlyoutOpen(false);
+  }, [clearSnapFlyoutTimer]);
+
+  const requestSnapFlyoutClose = useCallback(() => {
+    clearSnapFlyoutTimer();
+    closeSnapFlyoutTimerRef.current = window.setTimeout(() => {
+      closeSnapFlyoutTimerRef.current = null;
+      setSnapFlyoutOpen(false);
+    }, 120);
+  }, [clearSnapFlyoutTimer]);
+
+  const openSnapFlyout = useCallback(
+    (anchorRect: DOMRect) => {
+      clearSnapFlyoutTimer();
+      setSnapFlyoutAnchor(anchorRect);
+      setSnapFlyoutOpen(true);
+    },
+    [clearSnapFlyoutTimer],
+  );
+
+  useEffect(() => {
+    return () => clearSnapFlyoutTimer();
+  }, [clearSnapFlyoutTimer]);
+
+  useEffect(() => {
+    if (state.isMinimized) {
+      dismissSnapFlyout();
+    }
+  }, [state.isMinimized, dismissSnapFlyout]);
 
   const onReturnFocus = useCallback(() => {
     dockIconRef.current?.focus();
@@ -243,82 +270,57 @@ export function Window({
   useKeyboardNav({
     windowId: id,
     isActive,
+    windowState: state,
+    snapViewport,
     containerRef: containerRef as React.RefObject<HTMLElement | null>,
     dispatch,
     onReturnFocus,
   });
 
-  // ── Snap zones on title bar drag release ────────────────────────────────
-
-  const SNAP_THRESHOLD = 12; // pixels from edge to trigger snap
-
-  const handleTitleBarPointerDown = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      onTitleBarPointerDown(e as React.PointerEvent<HTMLElement>);
-
-      function onPointerUp(upEvent: PointerEvent) {
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
-        const px = upEvent.clientX;
-        const py = upEvent.clientY;
-
-        const nearTop = py < SNAP_THRESHOLD;
-        const nearBottom = py > vh - SNAP_THRESHOLD;
-        const nearLeft = px < SNAP_THRESHOLD;
-        const nearRight = px > vw - SNAP_THRESHOLD;
-
-        const snapPayload = { id, viewportWidth: vw, viewportHeight: vh, dockHeight: TASKBAR_HEIGHT };
-
-        if (nearTop && nearLeft) {
-          dispatch({ type: 'SNAP_TOP_LEFT', ...snapPayload });
-        } else if (nearTop && nearRight) {
-          dispatch({ type: 'SNAP_TOP_RIGHT', ...snapPayload });
-        } else if (nearBottom && nearLeft) {
-          dispatch({ type: 'SNAP_BOTTOM_LEFT', ...snapPayload });
-        } else if (nearBottom && nearRight) {
-          dispatch({ type: 'SNAP_BOTTOM_RIGHT', ...snapPayload });
-        } else if (nearLeft) {
-          dispatch({ type: 'SNAP_LEFT', ...snapPayload });
-        } else if (nearRight) {
-          dispatch({ type: 'SNAP_RIGHT', ...snapPayload });
-        } else if (nearTop) {
-          dispatch({ type: 'SNAP_MAXIMIZE', ...snapPayload });
-        }
-
-        window.removeEventListener('pointerup', onPointerUp);
-      }
-      window.addEventListener('pointerup', onPointerUp);
+  const handleSnapLayoutSelect = useCallback(
+    (target: SnapTarget) => {
+      dismissSnapFlyout();
+      dispatch(getSnapActionForTarget(target, id, snapViewport));
     },
-    [onTitleBarPointerDown, id, dispatch],
+    [dismissSnapFlyout, dispatch, id, snapViewport],
   );
 
-  // ── Focus on click ────────────────────────────────────────────────────────
+  const handleMaximize = useCallback(() => {
+    dismissSnapFlyout();
+
+    if (state.isMaximized) {
+      dispatch({ type: 'RESTORE_MAX_WINDOW', id });
+      return;
+    }
+
+    dispatch({
+      type: 'MAXIMIZE_WINDOW',
+      id,
+      viewportWidth: window.innerWidth,
+      viewportHeight: window.innerHeight,
+      dockHeight: TASKBAR_HEIGHT,
+    });
+  }, [dismissSnapFlyout, dispatch, id, state.isMaximized]);
 
   const handleWindowPointerDown = useCallback(() => {
+    dismissSnapFlyout();
     if (!isActive) {
       onFocus(id);
     }
-  }, [isActive, id, onFocus]);
-
-  // ── Tablet sizing ─────────────────────────────────────────────────────────
+  }, [dismissSnapFlyout, isActive, id, onFocus]);
 
   const isTablet = layoutMode === 'tablet';
   const resolvedWidth = isTablet ? Math.min(width, window.innerWidth * 0.9) : width;
   const resolvedHeight = isTablet ? Math.min(height, window.innerHeight * 0.8) : height;
 
-  // ── Glassmorphism style ───────────────────────────────────────────────────
-
   const blurAmount = isActive ? '26px' : '16px';
   const borderColor = isActive ? 'var(--border-strong)' : 'var(--border)';
 
-  // ── Position style ────────────────────────────────────────────────────────
-
-  // Tablet: center via left/top 50% transform; Desktop: translate(x, y)
   const positionStyle: React.CSSProperties = isTablet
     ? {
         left: '50%',
         top: '50%',
-        transform: `translate(-50%, -50%)`,
+        transform: 'translate(-50%, -50%)',
       }
     : {
         left: 0,
@@ -326,8 +328,6 @@ export function Window({
         transform: `translate(${x}px, ${y}px)`,
       };
 
-  // Don't render DOM at all when visually hidden (after genie animation completes)
-  // Use visibility:hidden instead of null to keep ref available for restore animation
   const hiddenStyle: React.CSSProperties = visuallyHidden
     ? { visibility: 'hidden', pointerEvents: 'none' }
     : {};
@@ -347,36 +347,35 @@ export function Window({
         width: `${resolvedWidth}px`,
         height: `${resolvedHeight}px`,
         zIndex,
-        // Glassmorphism
         background: 'var(--panel)',
         backdropFilter: `blur(${blurAmount})`,
         WebkitBackdropFilter: `blur(${blurAmount})`,
         borderRadius: 'var(--radius)',
         border: `1px solid ${borderColor}`,
         boxShadow: 'var(--shadow)',
-        // Transitions for active/inactive state + maximize/restore
         transition: `width ${reducedMotion ? 0 : 250}ms ease-in-out, height ${reducedMotion ? 0 : 250}ms ease-in-out, border-color 150ms ease, backdrop-filter 150ms ease, -webkit-backdrop-filter 150ms ease`,
       }}
     >
-      {/* Title bar */}
       <WindowTitleBar
         title={label}
         contentType={contentType}
-        onPointerDown={handleTitleBarPointerDown}
+        onPointerDown={onTitleBarPointerDown}
         onClose={() => dispatch({ type: 'CLOSE_WINDOW', id })}
         onMinimize={() => dispatch({ type: 'MINIMIZE_WINDOW', id })}
-        onMaximize={() =>
-          dispatch({
-            type: state.isMaximized ? 'RESTORE_MAX_WINDOW' : 'MAXIMIZE_WINDOW',
-            id,
-            viewportWidth: window.innerWidth,
-            viewportHeight: window.innerHeight,
-            dockHeight: TASKBAR_HEIGHT,
-          })
-        }
+        onMaximize={handleMaximize}
+        onMaximizeHoverStart={openSnapFlyout}
+        onMaximizeHoverEnd={requestSnapFlyoutClose}
       />
 
-      {/* Scrollable content area */}
+      {snapFlyoutOpen && (
+        <SnapLayoutFlyout
+          anchorRect={snapFlyoutAnchor}
+          onSelect={handleSnapLayoutSelect}
+          onPointerEnter={clearSnapFlyoutTimer}
+          onPointerLeave={requestSnapFlyoutClose}
+        />
+      )}
+
       <div
         role="region"
         aria-label={`${label} content`}
@@ -389,7 +388,6 @@ export function Window({
         {children}
       </div>
 
-      {/* Resize handle */}
       {!isTablet && <ResizeHandle windowId={id} dispatch={dispatch} />}
     </div>
   );

@@ -21,6 +21,8 @@ export interface WindowTitleBarProps {
   onClose: () => void;
   onMinimize: () => void;
   onMaximize: () => void;
+  onMaximizeHoverStart?: (anchorRect: DOMRect) => void;
+  onMaximizeHoverEnd?: () => void;
 }
 
 export function WindowTitleBar({
@@ -30,6 +32,8 @@ export function WindowTitleBar({
   onClose,
   onMinimize,
   onMaximize,
+  onMaximizeHoverStart,
+  onMaximizeHoverEnd,
 }: WindowTitleBarProps) {
   return (
     <div
@@ -51,6 +55,8 @@ export function WindowTitleBar({
         onClose={onClose}
         onMinimize={onMinimize}
         onMaximize={onMaximize}
+        onMaximizeHoverStart={onMaximizeHoverStart}
+        onMaximizeHoverEnd={onMaximizeHoverEnd}
       />
       <span
         style={{

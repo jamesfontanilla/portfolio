@@ -1,3 +1,5 @@
+import type { SnapPreviewState } from '@/lib/windowSnap';
+
 // Window Manager State Types
 // All OS UI state lives here — pure TypeScript, no side effects
 
@@ -30,6 +32,7 @@ export interface WindowManagerState {
   dataCache: Partial<Record<ContentType, { data: unknown; fetchedAt: number }>>;
   notifications: Notification[];
   openCount: number;     // total number of windows opened in session (for stagger offset)
+  snapPreview: SnapPreviewState | null;
 }
 
 export type WindowAction =
@@ -49,6 +52,8 @@ export type WindowAction =
   | { type: 'SNAP_TOP_RIGHT'; id: string; viewportWidth: number; viewportHeight: number; dockHeight: number }
   | { type: 'SNAP_BOTTOM_LEFT'; id: string; viewportWidth: number; viewportHeight: number; dockHeight: number }
   | { type: 'SNAP_BOTTOM_RIGHT'; id: string; viewportWidth: number; viewportHeight: number; dockHeight: number }
+  | { type: 'SET_SNAP_PREVIEW'; preview: SnapPreviewState }
+  | { type: 'CLEAR_SNAP_PREVIEW' }
   | { type: 'CACHE_DATA'; contentType: ContentType; data: unknown }
   | { type: 'DISMISS_NOTIFICATION'; id: string };
 
@@ -61,6 +66,7 @@ export const initialWindowManagerState: WindowManagerState = {
   dataCache: {},
   notifications: [],
   openCount: 0,
+  snapPreview: null,
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -165,8 +171,23 @@ export function windowManagerReducer(
       return {
         ...state,
         windows: state.windows.map((w) =>
-          w.id === action.id ? { ...w, isMinimized: true } : w,
+          w.id === action.id ? { ...w, isMinimized: true, isOpen: false } : w,
         ),
+      };
+    }
+
+    case 'SET_SNAP_PREVIEW': {
+      return {
+        ...state,
+        snapPreview: action.preview,
+      };
+    }
+
+    case 'CLEAR_SNAP_PREVIEW': {
+      if (!state.snapPreview) return state;
+      return {
+        ...state,
+        snapPreview: null,
       };
     }
 

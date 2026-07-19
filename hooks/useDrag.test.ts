@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { renderHook } from '@testing-library/react';
+import { cleanup, renderHook } from '@testing-library/react';
 import { useDrag } from './useDrag';
 import type { WindowAction } from '@/store/windowManagerStore';
 
@@ -88,6 +88,7 @@ describe('useDrag', () => {
   });
 
   afterEach(() => {
+    cleanup();
     document.body.removeChild(element);
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
@@ -128,7 +129,7 @@ describe('useDrag', () => {
     result.current.onPointerDown(makeReactPointerEvent('pointerdown', 0, 0, element));
 
     // Move while dragging
-    window.dispatchEvent(makePointerEvent('pointermove', 10, 10));
+    window.dispatchEvent(makePointerEvent('pointermove', 100, 100));
     rafSetup.flush();
     expect(dispatch).toHaveBeenCalledOnce();
     dispatch.mockClear();
@@ -137,7 +138,7 @@ describe('useDrag', () => {
     window.dispatchEvent(new PointerEvent('pointerup', { bubbles: true }));
 
     // Move after pointer up — should not dispatch
-    window.dispatchEvent(makePointerEvent('pointermove', 50, 50));
+    window.dispatchEvent(makePointerEvent('pointermove', 150, 150));
     rafSetup.flush();
     expect(dispatch).not.toHaveBeenCalled();
   });
@@ -150,8 +151,8 @@ describe('useDrag', () => {
     result.current.onPointerDown(makeReactPointerEvent('pointerdown', 0, 0, element));
 
     // Fire two moves before flushing RAF
-    window.dispatchEvent(makePointerEvent('pointermove', 5, 5));
-    window.dispatchEvent(makePointerEvent('pointermove', 10, 10));
+    window.dispatchEvent(makePointerEvent('pointermove', 100, 100));
+    window.dispatchEvent(makePointerEvent('pointermove', 110, 110));
 
     // Flush RAF — only the first move should have queued a frame
     rafSetup.flush();
@@ -201,5 +202,47 @@ describe('useDrag', () => {
     expect(dispatch).toHaveBeenCalledWith(
       expect.objectContaining({ type: 'DRAG_WINDOW', dx: 10, dy: 10 }),
     );
+  });
+
+  it('dispatches a snap preview when the pointer nears the left edge', () => {
+    const { result } = renderHook(() =>
+      useDrag({ windowId: 'win-1', dispatch: dispatch as React.Dispatch<WindowAction> }),
+    );
+
+    result.current.onPointerDown(makeReactPointerEvent('pointerdown', 100, 100, element));
+
+    window.dispatchEvent(makePointerEvent('pointermove', 8, 200));
+    rafSetup.flush();
+
+    expect(dispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: 'SET_SNAP_PREVIEW',
+        preview: expect.objectContaining({
+          target: 'left',
+        }),
+      }),
+    );
+  });
+
+  it('snaps and clears preview on pointer up near the left edge', () => {
+    const { result } = renderHook(() =>
+      useDrag({ windowId: 'win-1', dispatch: dispatch as React.Dispatch<WindowAction> }),
+    );
+
+    result.current.onPointerDown(makeReactPointerEvent('pointerdown', 100, 100, element));
+
+    window.dispatchEvent(makePointerEvent('pointermove', 8, 200));
+    rafSetup.flush();
+    dispatch.mockClear();
+
+    window.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, clientX: 8, clientY: 200 }));
+
+    expect(dispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: 'SNAP_LEFT',
+        id: 'win-1',
+      }),
+    );
+    expect(dispatch).toHaveBeenCalledWith({ type: 'CLEAR_SNAP_PREVIEW' });
   });
 });

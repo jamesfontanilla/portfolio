@@ -15,9 +15,17 @@ export interface TrafficLightControlsProps {
   onClose: () => void;
   onMinimize: () => void;
   onMaximize: () => void;
+  onMaximizeHoverStart?: (anchorRect: DOMRect) => void;
+  onMaximizeHoverEnd?: () => void;
 }
 
-export function TrafficLightControls({ onClose, onMinimize, onMaximize }: TrafficLightControlsProps) {
+export function TrafficLightControls({
+  onClose,
+  onMinimize,
+  onMaximize,
+  onMaximizeHoverStart,
+  onMaximizeHoverEnd,
+}: TrafficLightControlsProps) {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -89,6 +97,8 @@ export function TrafficLightControls({ onClose, onMinimize, onMaximize }: Traffi
         aria-label="Maximize window"
         tabIndex={0}
         onClick={onMaximize}
+        onPointerEnter={(e) => onMaximizeHoverStart?.(e.currentTarget.getBoundingClientRect())}
+        onPointerLeave={() => onMaximizeHoverEnd?.()}
         style={{
           width: '13px',
           height: '13px',

@@ -63,7 +63,7 @@ describe('Property 12: Active Window always uses --border-strong', () => {
     document.querySelectorAll('button[data-cleanup]').forEach(el => el.remove());
   });
 
-  test.prop([fc.constantFrom(...CONTENT_TYPES)])(
+  test.prop([fc.constantFrom(...CONTENT_TYPES)], { numRuns: CONTENT_TYPES.length })(
     'active window has border-color var(--border-strong)',
     (contentType) => {
       const dispatch = vi.fn();
@@ -87,7 +87,7 @@ describe('Property 12: Active Window always uses --border-strong', () => {
     }
   );
 
-  test.prop([fc.constantFrom(...CONTENT_TYPES)])(
+  test.prop([fc.constantFrom(...CONTENT_TYPES)], { numRuns: CONTENT_TYPES.length })(
     'inactive window has border-color var(--border)',
     (contentType) => {
       const dispatch = vi.fn();
@@ -389,4 +389,35 @@ describe('TrafficLightControls: clicking triggers correct handlers', () => {
       unmount();
     }
   );
+});
+
+// ─── Snap layout flyout ───────────────────────────────────────────────────────
+
+describe('Snap layout flyout', () => {
+  it('opens on maximize hover and dispatches a snap action when a layout is selected', () => {
+    const dispatch = vi.fn();
+    const ref = makeDockIconRef();
+    const state = makeWindowState();
+
+    render(
+      <Window
+        state={state}
+        isActive={true}
+        layoutMode="desktop"
+        dockIconRef={ref}
+        onFocus={vi.fn()}
+        dispatch={dispatch as React.Dispatch<WindowAction>}
+      />,
+    );
+
+    fireEvent.pointerEnter(screen.getByRole('button', { name: 'Maximize window' }));
+
+    expect(screen.getByRole('dialog', { name: 'Snap layouts' })).toBeTruthy();
+
+    fireEvent.click(screen.getByRole('button', { name: /Left half/i }));
+
+    expect(dispatch).toHaveBeenCalledWith(
+      expect.objectContaining({ type: 'SNAP_LEFT', id: state.id }),
+    );
+  });
 });
