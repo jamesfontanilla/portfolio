@@ -15,14 +15,8 @@ import { contentTypeLabel } from './AppIcon';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const CONTENT_TYPES: ContentType[] = [
-  'about',
-  'projects',
-  'certifications',
-  'events',
-  'contacts',
-  'blog',
-];
+const PRIMARY_TYPES: ContentType[] = ['projects', 'about', 'contacts'];
+const MORE_TYPES: ContentType[] = ['certifications', 'events', 'blog'];
 
 // ─── Simple inline icons (same as AppIcon but smaller) ───────────────────────
 
@@ -84,9 +78,17 @@ export interface MobileNavProps {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function MobileNav({ activePanel, onPanelChange }: MobileNavProps) {
+  const [moreOpen, setMoreOpen] = useState(false);
+  const moreActive = activePanel !== null && MORE_TYPES.includes(activePanel);
+
+  function selectPanel(type: ContentType | null) {
+    onPanelChange(type);
+    setMoreOpen(false);
+  }
+
   return (
     <nav
-      aria-label="Mobile Navigation"
+      aria-label="Primary navigation"
       className="liquid-glass-mobile-nav liquid-glass-surface"
       style={{
         position: 'fixed',
@@ -101,21 +103,25 @@ export function MobileNav({ activePanel, onPanelChange }: MobileNavProps) {
         WebkitBackdropFilter: 'blur(28px) saturate(1.35)',
         borderTop: '1px solid var(--glass-border)',
         boxShadow: 'var(--glass-shadow)',
+        padding: '6px 8px calc(6px + env(safe-area-inset-bottom, 0px))',
+        gap: '4px',
       }}
     >
       {/* Home button */}
       <button
         aria-label="Home"
         aria-pressed={activePanel === null}
-        onClick={() => onPanelChange(null)}
+        aria-current={activePanel === null ? 'page' : undefined}
+        onClick={() => selectPanel(null)}
+        className="mobile-nav-item"
         style={{
-          flex: 0.8,
+          flex: 1,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           gap: '4px',
-          minHeight: '60px',
+          minHeight: '54px',
           minWidth: '44px',
           padding: '8px 4px',
           background: 'transparent',
@@ -135,14 +141,16 @@ export function MobileNav({ activePanel, onPanelChange }: MobileNavProps) {
         </span>
       </button>
 
-      {CONTENT_TYPES.map((type) => {
+      {PRIMARY_TYPES.map((type) => {
         const isActive = type === activePanel;
         return (
           <button
             key={type}
             aria-label={contentTypeLabel[type]}
             aria-pressed={isActive}
-            onClick={() => onPanelChange(type)}
+            aria-current={isActive ? 'page' : undefined}
+            onClick={() => selectPanel(type)}
+            className="mobile-nav-item"
             style={{
               flex: 1,
               display: 'flex',
@@ -150,7 +158,7 @@ export function MobileNav({ activePanel, onPanelChange }: MobileNavProps) {
               alignItems: 'center',
               justifyContent: 'center',
               gap: '4px',
-              minHeight: '60px',
+              minHeight: '54px',
               minWidth: '44px',
               padding: '8px 4px',
               background: 'transparent',
@@ -174,6 +182,121 @@ export function MobileNav({ activePanel, onPanelChange }: MobileNavProps) {
           </button>
         );
       })}
+
+      <button
+        aria-label="More sections"
+        aria-pressed={moreActive}
+        aria-expanded={moreOpen}
+        aria-controls="mobile-more-menu"
+        onClick={() => setMoreOpen((open) => !open)}
+        className="mobile-nav-item"
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '4px',
+          minHeight: '54px',
+          minWidth: '44px',
+          padding: '8px 4px',
+          background: moreOpen || moreActive ? 'var(--glass-control-hover)' : 'transparent',
+          border: 'none',
+          borderRadius: '14px',
+          cursor: 'pointer',
+          color: moreActive || moreOpen ? 'var(--gold)' : 'var(--muted)',
+          transition: 'color 150ms ease, background 150ms ease',
+          outline: 'none',
+        }}
+      >
+        <svg width={20} height={20} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="5" cy="12" r="1.6" fill="currentColor" />
+          <circle cx="12" cy="12" r="1.6" fill="currentColor" />
+          <circle cx="19" cy="12" r="1.6" fill="currentColor" />
+        </svg>
+        <span style={{ fontSize: '0.68rem', fontWeight: moreActive || moreOpen ? 700 : 500, letterSpacing: '0.02em' }}>
+          More
+        </span>
+      </button>
+
+      {moreOpen && (
+        <div
+          id="mobile-more-menu"
+          role="menu"
+          aria-label="More sections"
+          className="mobile-more-menu liquid-glass-surface"
+          style={{
+            position: 'fixed',
+            left: '12px',
+            right: '12px',
+            bottom: 'calc(74px + env(safe-area-inset-bottom, 0px))',
+            zIndex: 1001,
+            padding: '10px',
+            borderRadius: '24px',
+            background: 'var(--glass-strong)',
+            backdropFilter: 'blur(28px) saturate(1.35)',
+            WebkitBackdropFilter: 'blur(28px) saturate(1.35)',
+            border: '1px solid var(--glass-border)',
+            boxShadow: 'var(--glass-shadow)',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 8px 8px' }}>
+            <span style={{ color: 'var(--text)', fontSize: '0.82rem', fontWeight: 700 }}>More sections</span>
+            <button
+              type="button"
+              aria-label="Close more sections"
+              onClick={() => setMoreOpen(false)}
+              style={{
+                width: '44px',
+                height: '44px',
+                display: 'grid',
+                placeItems: 'center',
+                margin: '-8px -4px -8px 0',
+                border: 'none',
+                borderRadius: '12px',
+                background: 'transparent',
+                color: 'var(--muted)',
+                cursor: 'pointer',
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+              </svg>
+            </button>
+          </div>
+          <div style={{ display: 'grid', gap: '4px' }}>
+            {MORE_TYPES.map((type) => {
+              const isActive = type === activePanel;
+              return (
+                <button
+                  key={type}
+                  type="button"
+                  role="menuitem"
+                  aria-pressed={isActive}
+                  onClick={() => selectPanel(type)}
+                  style={{
+                    minHeight: '48px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    padding: '8px 12px',
+                    border: '1px solid transparent',
+                    borderRadius: '14px',
+                    background: isActive ? 'var(--glass-control-hover)' : 'transparent',
+                    color: isActive ? 'var(--gold)' : 'var(--text)',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <NavIcon type={type} />
+                  <span style={{ fontSize: '0.88rem', fontWeight: isActive ? 700 : 600 }}>{contentTypeLabel[type]}</span>
+                  {isActive && <span aria-hidden="true" style={{ width: '6px', height: '6px', marginLeft: 'auto', borderRadius: '50%', background: 'currentColor' }} />}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

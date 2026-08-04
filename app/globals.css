@@ -31,6 +31,8 @@
   --radius-sm: 18px;
   --sidebar-width: 280px;
   --rail-width: 280px;
+  --mobile-safe-top: env(safe-area-inset-top, 0px);
+  --mobile-safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 * {
@@ -1292,7 +1294,201 @@ img {
 }
 
 /* ============================================================
-   OS UI — Focus indicators
+   OS UI - iPhone surface
+   ============================================================ */
+@media (max-width: 767px) {
+  html {
+    min-height: 100%;
+    background: var(--bg);
+  }
+
+  body {
+    min-height: 100svh;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-home-screen {
+    min-height: 100svh !important;
+    align-items: stretch !important;
+    padding: calc(24px + var(--mobile-safe-top)) 20px calc(100px + var(--mobile-safe-bottom)) !important;
+    animation: mobilePageEnter 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .mobile-home-time {
+    text-align: left !important;
+    margin-bottom: 22px !important;
+  }
+
+  .mobile-home-time > div:first-child {
+    font-size: clamp(3rem, 16vw, 4.2rem) !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.06em !important;
+  }
+
+  .mobile-home-time > div:last-child {
+    font-size: 0.92rem !important;
+    margin-top: 8px !important;
+  }
+
+  .mobile-home-identity {
+    max-width: none !important;
+    margin-bottom: 24px !important;
+    padding: 22px !important;
+    border-radius: 24px !important;
+    text-align: left !important;
+    background: linear-gradient(135deg, rgba(113, 180, 255, 0.13), rgba(255, 255, 255, 0.045)) !important;
+    border-color: var(--glass-border) !important;
+    box-shadow: var(--content-shadow) !important;
+  }
+
+  .mobile-home-identity > div:first-child {
+    justify-content: flex-start !important;
+  }
+
+  .mobile-home-app-grid {
+    max-width: none !important;
+    margin: 0 -4px;
+    gap: 10px !important;
+  }
+
+  .mobile-home-app {
+    min-height: 96px;
+    padding: 4px !important;
+    border-radius: 18px !important;
+    touch-action: manipulation;
+    transition: transform 160ms ease, opacity 160ms ease;
+  }
+
+  .mobile-home-app:active {
+    transform: scale(0.95);
+    opacity: 0.82;
+  }
+
+  .mobile-home-app-icon {
+    width: 64px !important;
+    height: 64px !important;
+    border-radius: 20px !important;
+    background: linear-gradient(145deg, rgba(156, 204, 255, 0.16), rgba(255, 255, 255, 0.045)) !important;
+    border-color: var(--glass-border) !important;
+    box-shadow: 0 12px 24px rgba(1, 7, 18, 0.22), 0 1px 0 rgba(255, 255, 255, 0.1) inset !important;
+  }
+
+  .mobile-home-stats {
+    justify-content: flex-start !important;
+    margin-top: 28px !important;
+  }
+
+  .mobile-home-socials {
+    justify-content: flex-start !important;
+  }
+
+  .mobile-home-location {
+    align-self: flex-start;
+  }
+
+  .mobile-home-focus,
+  .mobile-home-highlights {
+    max-width: none !important;
+    margin-top: 20px !important;
+    border-radius: 20px !important;
+    background: var(--content-surface) !important;
+    border-color: var(--glass-border) !important;
+    box-shadow: var(--content-shadow) !important;
+  }
+
+  .mobile-home-highlights button {
+    min-height: 56px;
+    touch-action: manipulation;
+  }
+
+  .mobile-content-screen {
+    animation: mobilePageEnter 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .mobile-content-header {
+    padding: calc(8px + var(--mobile-safe-top)) 16px 12px !important;
+    border-bottom: 1px solid var(--glass-border);
+  }
+
+  .mobile-content-header > span {
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em;
+  }
+
+  .mobile-back-button {
+    flex: 0 0 44px;
+    touch-action: manipulation;
+  }
+
+  .mobile-content-screen > div:not(.mobile-content-header) {
+    padding: 20px 16px !important;
+  }
+
+  .liquid-glass-mobile-nav {
+    min-height: calc(66px + var(--mobile-safe-bottom));
+    border-top-color: var(--glass-border-strong);
+  }
+
+  .liquid-glass-mobile-nav button,
+  .mobile-more-menu button {
+    touch-action: manipulation;
+  }
+
+  .mobile-more-menu {
+    animation: mobileSheetEnter 200ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+@media (hover: none) {
+  .liquid-glass-mobile-nav button:hover {
+    background: transparent !important;
+  }
+
+  .liquid-glass-mobile-nav button:active {
+    background: var(--glass-control-hover) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-home-screen,
+  .mobile-content-screen,
+  .mobile-more-menu {
+    animation: none !important;
+  }
+
+  .mobile-home-app {
+    transition: none !important;
+  }
+}
+
+@keyframes mobilePageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mobileSheetEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ============================================================
+   OS UI - Focus indicators
    ============================================================ */
 :focus-visible {
   outline: 2px solid var(--gold);

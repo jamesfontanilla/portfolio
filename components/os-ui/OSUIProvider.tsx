@@ -330,32 +330,32 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute }
         )}
         {mounted && layoutMode === 'mobile' && activePanel !== null && (
           <div
+            className="mobile-content-screen"
             style={{
               position: 'fixed',
               inset: 0,
               overflowY: 'auto',
-              paddingTop: '12px',
-              paddingBottom: '72px',
+              paddingTop: 'env(safe-area-inset-top, 0px)',
+              paddingBottom: 'calc(78px + env(safe-area-inset-bottom, 0px))',
               zIndex: 1,
-              background: 'rgba(10, 10, 10, 0.85)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
+              background: 'var(--bg)',
             }}
           >
             {/* Section header */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 20px 16px', position: 'sticky', top: 0, zIndex: 2, background: 'rgba(10,10,10,0.9)', backdropFilter: 'blur(10px)' }}>
+            <div className="mobile-content-header" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 20px 16px', position: 'sticky', top: 0, zIndex: 2, background: 'rgba(7,11,20,0.88)', backdropFilter: 'blur(18px) saturate(1.2)', WebkitBackdropFilter: 'blur(18px) saturate(1.2)' }}>
               <button
                 onClick={() => setActivePanel(null)}
                 aria-label="Back to home"
+                className="mobile-back-button"
                 style={{
-                  width: '32px',
-                  height: '32px',
+                  width: '44px',
+                  height: '44px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  borderRadius: '8px',
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: '14px',
+                  background: 'var(--glass-control)',
+                  border: '1px solid var(--glass-border)',
                   color: 'var(--text)',
                   cursor: 'pointer',
                   outline: 'none',
