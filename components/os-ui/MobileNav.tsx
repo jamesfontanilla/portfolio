@@ -87,6 +87,7 @@ export function MobileNav({ activePanel, onPanelChange }: MobileNavProps) {
   return (
     <nav
       aria-label="Mobile Navigation"
+      className="liquid-glass-mobile-nav liquid-glass-surface"
       style={{
         position: 'fixed',
         bottom: 0,
@@ -95,11 +96,11 @@ export function MobileNav({ activePanel, onPanelChange }: MobileNavProps) {
         zIndex: 1000,
         display: 'flex',
         alignItems: 'stretch',
-        background: 'var(--panel)',
-        backdropFilter: 'blur(26px)',
-        WebkitBackdropFilter: 'blur(26px)',
-        borderTop: '1px solid var(--border)',
-        boxShadow: 'var(--shadow)',
+        background: 'var(--glass-regular)',
+        backdropFilter: 'blur(28px) saturate(1.35)',
+        WebkitBackdropFilter: 'blur(28px) saturate(1.35)',
+        borderTop: '1px solid var(--glass-border)',
+        boxShadow: 'var(--glass-shadow)',
       }}
     >
       {/* Home button */}

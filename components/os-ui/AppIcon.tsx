@@ -198,6 +198,7 @@ export function AppIcon({
         <div
           role="tooltip"
           id={`tooltip-${type}`}
+          className="liquid-glass-tooltip"
           style={{
             position: 'absolute',
             bottom: 'calc(100% + 10px)',
@@ -205,8 +206,8 @@ export function AppIcon({
             transform: 'translateX(-50%)',
             padding: '4px 10px',
             borderRadius: '8px',
-            background: 'var(--panel-strong)',
-            border: '1px solid var(--border)',
+            background: 'var(--glass-strong)',
+            border: '1px solid var(--glass-border)',
             color: 'var(--text)',
             fontSize: '0.76rem',
             fontWeight: 600,
@@ -238,14 +239,15 @@ export function AppIcon({
           alignItems: 'center',
           justifyContent: 'center',
           transform: `scale(${scale})`,
-          transition: 'transform 150ms ease-out',
-          background: 'transparent',
+          transition: 'transform 180ms ease-out, background 180ms ease, box-shadow 180ms ease',
+          background: isHovered || showIndicator ? 'var(--glass-control)' : 'transparent',
           border: 'none',
           cursor: 'pointer',
           borderRadius: 'var(--radius-sm)',
           padding: '8px',
           color: 'var(--text)',
           outline: 'none', // :focus-visible handled globally by globals.css
+          boxShadow: isHovered ? '0 8px 22px rgba(1, 7, 18, 0.2), 0 1px 0 rgba(255,255,255,0.1) inset' : 'none',
         }}
       >
         {iconMap[type]}

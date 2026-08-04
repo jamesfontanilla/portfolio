@@ -14,6 +14,7 @@ export function SnapPreviewOverlay({ preview }: SnapPreviewOverlayProps) {
   return (
     <div
       aria-hidden="true"
+      className="snap-preview-overlay liquid-glass-surface"
       style={{
         position: 'fixed',
         left: `${preview.rect.x}px`,
@@ -23,11 +24,11 @@ export function SnapPreviewOverlay({ preview }: SnapPreviewOverlayProps) {
         zIndex: 900,
         pointerEvents: 'none',
         borderRadius: '18px',
-        border: '1px solid rgba(152, 204, 255, 0.9)',
-        background: 'linear-gradient(180deg, rgba(82, 151, 255, 0.24), rgba(59, 118, 230, 0.14))',
-        boxShadow: 'inset 0 0 0 1px rgba(9, 17, 34, 0.35), 0 18px 42px rgba(5, 12, 24, 0.35)',
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
+        border: '1px solid var(--glass-border-strong)',
+        background: 'var(--snap-preview)',
+        boxShadow: 'var(--glass-shadow)',
+        backdropFilter: 'blur(14px) saturate(1.3)',
+        WebkitBackdropFilter: 'blur(14px) saturate(1.3)',
         transition: 'opacity 120ms ease, left 120ms ease, top 120ms ease, width 120ms ease, height 120ms ease',
         opacity: 1,
       }}
@@ -39,8 +40,8 @@ export function SnapPreviewOverlay({ preview }: SnapPreviewOverlayProps) {
           left: '10px',
           padding: '4px 8px',
           borderRadius: '999px',
-          background: 'rgba(10, 16, 28, 0.72)',
-          border: '1px solid rgba(180, 220, 255, 0.35)',
+          background: 'var(--glass-strong)',
+          border: '1px solid var(--glass-border)',
           color: 'rgba(235, 244, 255, 0.95)',
           fontFamily: '"Space Grotesk", "Manrope", sans-serif',
           fontSize: '0.68rem',
@@ -54,4 +55,3 @@ export function SnapPreviewOverlay({ preview }: SnapPreviewOverlayProps) {
     </div>
   );
 }
-

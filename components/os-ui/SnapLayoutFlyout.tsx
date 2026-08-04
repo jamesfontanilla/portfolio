@@ -76,9 +76,15 @@ export function SnapLayoutFlyout({
     <div
       role="dialog"
       aria-label="Snap layouts"
+      className="snap-layout-flyout liquid-glass-surface"
       onPointerDown={(e) => e.stopPropagation()}
       onPointerEnter={onPointerEnter}
       onPointerLeave={onPointerLeave}
+      onPointerMove={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        e.currentTarget.style.setProperty('--glass-pointer-x', `${((e.clientX - rect.left) / rect.width) * 100}%`);
+        e.currentTarget.style.setProperty('--glass-pointer-y', `${((e.clientY - rect.top) / rect.height) * 100}%`);
+      }}
       style={{
         position: 'fixed',
         left: `${placement.left}px`,
@@ -90,11 +96,11 @@ export function SnapLayoutFlyout({
         zIndex: 1120,
         padding: '12px',
         borderRadius: '20px',
-        border: '1px solid rgba(255, 255, 255, 0.12)',
-        background: 'linear-gradient(180deg, rgba(19, 27, 44, 0.96), rgba(12, 18, 30, 0.92))',
-        boxShadow: '0 24px 60px rgba(0, 0, 0, 0.45)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
+        border: '1px solid var(--glass-border-strong)',
+        background: 'var(--glass-strong)',
+        boxShadow: 'var(--glass-shadow)',
+        backdropFilter: 'blur(28px) saturate(1.4)',
+        WebkitBackdropFilter: 'blur(28px) saturate(1.4)',
       }}
     >
       <div
@@ -145,6 +151,7 @@ export function SnapLayoutFlyout({
               key={option.target}
               type="button"
               aria-label={`${option.label}: ${option.description}`}
+              className="snap-layout-option"
               onClick={() => onSelect(option.target)}
               style={{
                 gridColumn: isMaximize ? '1 / -1' : 'auto',
@@ -155,12 +162,12 @@ export function SnapLayoutFlyout({
                 minHeight: isMaximize ? '72px' : '68px',
                 padding: '12px',
                 borderRadius: '16px',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                background: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid var(--glass-border)',
+                background: 'var(--glass-control)',
                 color: 'var(--text)',
                 cursor: 'pointer',
                 textAlign: 'left',
-                transition: 'transform 120ms ease, background 120ms ease, border-color 120ms ease',
+                transition: 'transform 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease',
               }}
             >
               <div
@@ -206,4 +213,3 @@ export function SnapLayoutFlyout({
     </div>
   );
 }
-

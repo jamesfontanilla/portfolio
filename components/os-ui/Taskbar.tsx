@@ -131,6 +131,7 @@ export function Taskbar({ windows, notifications, onWindowClick, onDismissNotifi
     <div
       role="navigation"
       aria-label="Taskbar"
+      className="liquid-glass-taskbar liquid-glass-surface"
       style={{
         position: 'fixed',
         bottom: '12px',
@@ -142,11 +143,11 @@ export function Taskbar({ windows, notifications, onWindowClick, onDismissNotifi
         gap: '4px',
         padding: '6px 12px',
         borderRadius: '999px',
-        background: 'var(--panel)',
-        backdropFilter: 'blur(26px)',
-        WebkitBackdropFilter: 'blur(26px)',
-        border: '1px solid var(--border-strong)',
-        boxShadow: 'var(--shadow)',
+        background: 'var(--glass-regular)',
+        backdropFilter: 'blur(28px) saturate(1.35)',
+        WebkitBackdropFilter: 'blur(28px) saturate(1.35)',
+        border: '1px solid var(--glass-border-strong)',
+        boxShadow: 'var(--glass-shadow)',
       }}
     >
       {/* Always show all app icons (pinned) */}
@@ -163,6 +164,7 @@ export function Taskbar({ windows, notifications, onWindowClick, onDismissNotifi
             {isHovered && (
               showPreview ? (
                 <div
+                  className="liquid-glass-taskbar-preview liquid-glass-surface"
                   style={{
                     position: 'absolute',
                     bottom: 'calc(100% + 14px)',
@@ -171,9 +173,9 @@ export function Taskbar({ windows, notifications, onWindowClick, onDismissNotifi
                     width: '220px',
                     height: '150px',
                     borderRadius: '10px',
-                    background: 'var(--panel-strong)',
-                    border: '1px solid var(--border)',
-                    boxShadow: '0 12px 40px rgba(0,0,0,0.5)',
+                    background: 'var(--glass-strong)',
+                    border: '1px solid var(--glass-border)',
+                    boxShadow: 'var(--glass-shadow)',
                     overflow: 'hidden',
                     pointerEvents: 'none',
                     zIndex: 1100,
@@ -214,6 +216,7 @@ export function Taskbar({ windows, notifications, onWindowClick, onDismissNotifi
                 </div>
               ) : (
                 <div
+                  className="liquid-glass-tooltip"
                   role="tooltip"
                   style={{
                     position: 'absolute',
@@ -222,8 +225,8 @@ export function Taskbar({ windows, notifications, onWindowClick, onDismissNotifi
                     transform: 'translateX(-50%)',
                     padding: '4px 10px',
                     borderRadius: '8px',
-                    background: 'var(--panel-strong)',
-                    border: '1px solid var(--border)',
+                    background: 'var(--glass-strong)',
+                    border: '1px solid var(--glass-border)',
                     color: 'var(--text)',
                     fontSize: '0.72rem',
                     fontWeight: 600,
@@ -250,11 +253,12 @@ export function Taskbar({ windows, notifications, onWindowClick, onDismissNotifi
                 justifyContent: 'center',
                 borderRadius: '12px',
                 border: 'none',
-                background: isActive ? 'rgba(255,255,255,0.1)' : 'transparent',
+                background: isActive ? 'var(--glass-control-hover)' : 'transparent',
                 color: isActive ? 'var(--text)' : 'var(--muted)',
                 cursor: 'pointer',
-                transition: 'background 150ms ease, transform 150ms ease, color 150ms ease',
+                transition: 'background 180ms ease, transform 180ms ease, color 180ms ease, box-shadow 180ms ease',
                 transform: isHovered ? 'scale(1.15)' : 'scale(1)',
+                boxShadow: isHovered ? '0 8px 22px rgba(1, 7, 18, 0.2), 0 1px 0 rgba(255,255,255,0.1) inset' : 'none',
                 outline: 'none',
               }}
             >

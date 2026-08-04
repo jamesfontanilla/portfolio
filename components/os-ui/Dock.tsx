@@ -116,7 +116,7 @@ export function Dock({
       {/* Dock bar — positioning handled by .os-dock CSS class */}
       <nav
         aria-label="Application Dock"
-        className="os-dock"
+        className="os-dock liquid-glass-surface"
         style={{ pointerEvents: 'auto' }}
       >
         {CONTENT_TYPES.map((type, index) => {

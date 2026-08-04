@@ -339,7 +339,7 @@ export function Window({
       role="dialog"
       aria-modal="true"
       aria-label={`${label} window`}
-      className="os-window"
+      className="os-window liquid-glass-surface"
       data-window-id={id}
       onPointerDown={handleWindowPointerDown}
       style={{
@@ -348,12 +348,12 @@ export function Window({
         width: `${resolvedWidth}px`,
         height: `${resolvedHeight}px`,
         zIndex,
-        background: 'var(--panel)',
-        backdropFilter: `blur(${blurAmount})`,
-        WebkitBackdropFilter: `blur(${blurAmount})`,
+        background: isActive ? 'var(--window-surface-active)' : 'var(--window-surface)',
+        backdropFilter: `blur(${blurAmount}) saturate(1.28)`,
+        WebkitBackdropFilter: `blur(${blurAmount}) saturate(1.28)`,
         borderRadius: 'var(--radius)',
         border: `1px solid ${borderColor}`,
-        boxShadow: 'var(--shadow)',
+        boxShadow: 'var(--glass-shadow)',
         transition: `width ${reducedMotion ? 0 : 250}ms ease-in-out, height ${reducedMotion ? 0 : 250}ms ease-in-out, border-color 150ms ease, backdrop-filter 150ms ease, -webkit-backdrop-filter 150ms ease`,
       }}
     >

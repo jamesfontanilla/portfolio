@@ -96,13 +96,14 @@ export function ContextMenu({ onChangeWallpaper, onRefresh }: ContextMenuProps) 
         onClick={() => setShowAbout(false)}
       >
         <div
+          className="liquid-glass-about liquid-glass-surface"
           onClick={(e) => e.stopPropagation()}
           style={{
             padding: '28px 32px',
             borderRadius: '20px',
-            background: 'var(--panel-strong)',
-            border: '1px solid var(--border)',
-            boxShadow: 'var(--shadow)',
+            background: 'var(--glass-strong)',
+            border: '1px solid var(--glass-border-strong)',
+            boxShadow: 'var(--glass-shadow)',
             maxWidth: '360px',
             display: 'flex',
             flexDirection: 'column',
@@ -146,6 +147,7 @@ export function ContextMenu({ onChangeWallpaper, onRefresh }: ContextMenuProps) 
     <div
       ref={menuRef}
       role="menu"
+      className="liquid-glass-context-menu liquid-glass-surface"
       style={{
         position: 'fixed',
         top: position.y,
@@ -154,11 +156,11 @@ export function ContextMenu({ onChangeWallpaper, onRefresh }: ContextMenuProps) 
         minWidth: '180px',
         padding: '6px',
         borderRadius: '12px',
-        background: 'var(--panel-strong)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        border: '1px solid var(--border)',
-        boxShadow: '0 12px 40px rgba(0,0,0,0.5)',
+        background: 'var(--glass-strong)',
+        backdropFilter: 'blur(24px) saturate(1.3)',
+        WebkitBackdropFilter: 'blur(24px) saturate(1.3)',
+        border: '1px solid var(--glass-border)',
+        boxShadow: 'var(--glass-shadow)',
       }}
     >
       {/* Refresh */}
@@ -200,6 +202,7 @@ export function ContextMenu({ onChangeWallpaper, onRefresh }: ContextMenuProps) 
         {/* Submenu */}
         {showWallpaperSub && (
           <div
+            className="liquid-glass-context-submenu liquid-glass-surface"
             style={{
               position: 'absolute',
               left: '100%',
@@ -208,10 +211,10 @@ export function ContextMenu({ onChangeWallpaper, onRefresh }: ContextMenuProps) 
               minWidth: '140px',
               padding: '6px',
               borderRadius: '10px',
-              background: 'var(--panel-strong)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid var(--border)',
-              boxShadow: '0 8px 30px rgba(0,0,0,0.4)',
+              background: 'var(--glass-strong)',
+              backdropFilter: 'blur(24px) saturate(1.3)',
+              border: '1px solid var(--glass-border)',
+              boxShadow: 'var(--glass-shadow)',
             }}
           >
             {WALLPAPER_THEMES.map((theme) => (
@@ -272,7 +275,7 @@ const menuItemStyle: React.CSSProperties = {
 };
 
 function hoverIn(e: React.MouseEvent<HTMLButtonElement>) {
-  e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
+  e.currentTarget.style.background = 'var(--glass-control-hover)';
 }
 
 function hoverOut(e: React.MouseEvent<HTMLButtonElement>) {
