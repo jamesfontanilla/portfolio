@@ -3,7 +3,7 @@
 /**
  * SkeletonView — animated loading skeleton placeholder.
  *
- * Renders within the Window content area while data is loading from Sanity.
+ * Renders within the Window content area while a lazy content view is loading.
  * Uses a pulsing animation to indicate loading state.
  *
  * Requirements: 5.8

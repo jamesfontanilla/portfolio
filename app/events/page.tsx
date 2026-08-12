@@ -1,9 +1,7 @@
 import Link from "next/link";
-import { getHomeData } from "@/lib/cms";
+import { getPortfolioData } from "@/lib/portfolio-data";
 import { formatDate } from "@/lib/format";
-import { buildImageUrl } from "@/sanity/lib/image";
-
-export const revalidate = 0;
+import { buildImageUrl } from "@/lib/image";
 
 function SectionHeader({
   eyebrow,
@@ -29,7 +27,7 @@ function SectionHeader({
 }
 
 export default async function EventsPage() {
-  const { settings, events } = await getHomeData();
+  const { settings, events } = getPortfolioData();
   const featuredEvent = events[0];
   const recentEvents = events.slice(1);
 
@@ -68,7 +66,7 @@ export default async function EventsPage() {
             <span className="dot" />
             <span>{events.length} public event entries</span>
           </div>
-          <p className="muted">Media, tags, and recaps are all powered by Sanity.</p>
+          <p className="muted">Media, tags, and recaps are stored as part of the portfolio content.</p>
         </div>
 
         <div className="sidebar-actions">
@@ -204,7 +202,7 @@ export default async function EventsPage() {
         <div className="rail-card">
           <p className="eyebrow">Featured Action</p>
           <h3>Upload media</h3>
-          <p className="muted">Add event photos, badges, and screenshots from the CMS.</p>
+          <p className="muted">Add event photos, badges, and screenshots as the archive grows.</p>
         </div>
 
         <div className="rail-card">

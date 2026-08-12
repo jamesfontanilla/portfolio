@@ -6,8 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { getHomeData } from '@/lib/cms';
-import type { HomeData } from '@/lib/types';
+import { portfolioData } from '@/lib/portfolio-data';
 import type { ContentType } from '@/store/windowManagerStore';
 import { contentTypeLabel } from './AppIcon';
 
@@ -42,13 +41,8 @@ interface MobileHomeScreenProps {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function MobileHomeScreen({ onOpenApp }: MobileHomeScreenProps) {
-  const [data, setData] = useState<HomeData | null>(null);
   const [time, setTime] = useState('');
   const [date, setDate] = useState('');
-
-  useEffect(() => {
-    getHomeData().then(setData);
-  }, []);
 
   useEffect(() => {
     function update() {
@@ -61,10 +55,11 @@ export function MobileHomeScreen({ onOpenApp }: MobileHomeScreenProps) {
     return () => clearInterval(id);
   }, []);
 
-  const settings = data?.settings;
-  const name = settings?.name ?? 'Jaime Fontanilla';
-  const role = settings?.role ?? 'Full-Stack Developer';
-  const availability = settings?.availability ?? 'Available for work';
+  const data = portfolioData;
+  const { settings } = data;
+  const name = settings.name;
+  const role = settings.role;
+  const availability = settings.availability;
 
   return (
     <div

@@ -1,9 +1,7 @@
 import Link from "next/link";
-import { getHomeData } from "@/lib/cms";
+import { getPortfolioData } from "@/lib/portfolio-data";
 import { formatDate } from "@/lib/format";
-import { buildImageUrl } from "@/sanity/lib/image";
-
-export const revalidate = 0;
+import { buildImageUrl } from "@/lib/image";
 
 function SectionHeader({
   eyebrow,
@@ -47,7 +45,7 @@ function StatChip({
 }
 
 export default async function HomePage() {
-  const { settings, projects, certifications, events } = await getHomeData();
+  const { settings, projects, certifications, events } = getPortfolioData();
   const featuredProject = projects[0];
   const contactLinks = [
     { label: "Email", href: `mailto:${settings.email}` },
@@ -137,7 +135,7 @@ export default async function HomePage() {
             <div className="hero-meta">
               <StatChip label="Focus" value={settings.role} description="Product, UI, and systems" />
               <StatChip label="Location" value={settings.location} description="Timezone-aware remote" />
-              <StatChip label="Build" value="Next.js + Sanity" description="Single deploy, clean workflow" />
+              <StatChip label="Build" value="Next.js + TypeScript" description="Single deploy, clean workflow" />
             </div>
           </div>
 
@@ -424,7 +422,7 @@ export default async function HomePage() {
           <p className="eyebrow">Suggested Stack</p>
           <ul className="stack-list">
             <li>Next.js App Router</li>
-            <li>Sanity-powered content</li>
+            <li>Structured portfolio content</li>
             <li>Structured content collections</li>
             <li>Private publishing workflow</li>
           </ul>
@@ -433,8 +431,8 @@ export default async function HomePage() {
         <div className="rail-card">
           <p className="eyebrow">Publishing</p>
           <p className="muted">
-            Add content in Sanity Studio, then surface it publicly as cards, timelines, and quick
-            links.
+            The public site is ready for a future Supabase-backed admin UI, with content surfaced as
+            cards, timelines, and quick links.
           </p>
         </div>
       </aside>

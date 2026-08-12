@@ -1,8 +1,6 @@
 import Link from "next/link";
-import { getHomeData } from "@/lib/cms";
+import { getPortfolioData } from "@/lib/portfolio-data";
 import type { Metadata } from "next";
-
-export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "Jaime Fontanilla — Contact",
@@ -125,7 +123,7 @@ type LinkItem = {
 };
 
 export default async function ContactsPage() {
-  const { settings } = await getHomeData();
+  const { settings } = getPortfolioData();
 
   const linkItems: LinkItem[] = [
     {

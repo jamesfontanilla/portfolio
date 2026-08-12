@@ -1,8 +1,6 @@
 import Link from "next/link";
-import { getHomeData } from "@/lib/cms";
+import { getPortfolioData } from "@/lib/portfolio-data";
 import { formatDate } from "@/lib/format";
-
-export const revalidate = 0;
 
 function SectionHeader({
   eyebrow,
@@ -28,7 +26,7 @@ function SectionHeader({
 }
 
 export default async function CertificationsPage() {
-  const { settings, certifications } = await getHomeData();
+  const { settings, certifications } = getPortfolioData();
   const latestCertification = certifications[0];
 
   return (
@@ -136,7 +134,7 @@ export default async function CertificationsPage() {
                       Verify certificate
                     </a>
                   ) : (
-                    <span className="text-link">Stored in CMS</span>
+                    <span className="text-link">Verification link coming soon</span>
                   )}
                 </div>
               </article>
@@ -155,7 +153,7 @@ export default async function CertificationsPage() {
         <div className="rail-card">
           <p className="eyebrow">Featured Action</p>
           <h3>Keep proof current</h3>
-          <p className="muted">Add issuer details, verification links, and earned dates from the CMS.</p>
+          <p className="muted">Keep issuer details, verification links, and earned dates current.</p>
         </div>
 
         <div className="rail-card">

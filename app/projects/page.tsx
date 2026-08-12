@@ -1,8 +1,6 @@
 import Link from "next/link";
-import { getHomeData } from "@/lib/cms";
-import { buildImageUrl } from "@/sanity/lib/image";
-
-export const revalidate = 0;
+import { getPortfolioData } from "@/lib/portfolio-data";
+import { buildImageUrl } from "@/lib/image";
 
 function SectionHeader({
   eyebrow,
@@ -28,7 +26,7 @@ function SectionHeader({
 }
 
 export default async function ProjectsPage() {
-  const { settings, projects } = await getHomeData();
+  const { settings, projects } = getPortfolioData();
   const featuredProject = projects[0];
   const otherProjects = projects.slice(1);
 

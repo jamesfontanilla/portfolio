@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import "./globals.css";
-
-// OSUIProvider is a 'use client' component — imported dynamically so the
-// server layout itself remains a React Server Component.
-// It is only rendered for non-/studio paths.
 import { OSUIProvider } from "@/components/os-ui/OSUIProvider";
 
 export const metadata: Metadata = {
   title: "Portfolio Draft",
-  description: "A premium desktop-first portfolio with a hidden CMS studio.",
+  description: "A premium desktop-first portfolio with structured local content.",
 };
 
 export default async function RootLayout({
@@ -17,12 +13,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Read the x-pathname header injected by middleware.ts so we can decide
-  // whether to wrap the page in the OS_UI without reaching for usePathname()
-  // (which would force this layout to become a client component).
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") ?? "/";
-  const isStudio = pathname.startsWith("/studio");
 
   return (
     <html lang="en">
@@ -35,17 +27,7 @@ export default async function RootLayout({
         />
       </head>
       <body>
-        {isStudio ? (
-          // /studio route: render children directly — no OS_UI wrapper,
-          // no viewport-lock styles, Sanity Studio keeps its own layout.
-          children
-        ) : (
-          // All other routes: wrap in OS_UI provider which mounts the
-          // Desktop, Wallpaper, Dock, and Window Manager. The children
-          // (existing page content) are suppressed visually in OS mode
-          // but preserved in the tree for SEO/meta purposes.
-          <OSUIProvider initialRoute={pathname}>{children}</OSUIProvider>
-        )}
+        <OSUIProvider initialRoute={pathname}>{children}</OSUIProvider>
       </body>
     </html>
   );

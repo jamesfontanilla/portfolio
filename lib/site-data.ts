@@ -27,7 +27,7 @@ export const fallbackHomeData: HomeData = {
       summary:
         "A polished portfolio shell with a dashboard feel, admin publishing, and a clean content structure for projects and proof.",
       status: "Live",
-      stack: ["Next.js", "Sanity"],
+      stack: ["Next.js", "TypeScript"],
       impact: "Impact: premium first impression",
       demoUrl: "#",
       repoUrl: "#",

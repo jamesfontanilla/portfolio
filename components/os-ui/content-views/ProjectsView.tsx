@@ -1,16 +1,13 @@
 'use client';
 
 /**
- * ProjectsView — renders all Project records from Sanity.
+ * ProjectsView — renders all local Project records.
  * Requirements: 5.1, 5.2, 5.7, 5.8, 5.9
  */
 
 import React from 'react';
-import { useSanityData } from '@/hooks/useSanityData';
-import { getHomeData } from '@/lib/cms';
+import { portfolioData } from '@/lib/portfolio-data';
 import type { Project } from '@/lib/types';
-import { SkeletonView } from './SkeletonView';
-import { ErrorView } from './ErrorView';
 
 function Tag({ label, gold }: { label: string; gold?: boolean }) {
   return (
@@ -99,17 +96,7 @@ function ProjectCard({ project }: { project: Project }) {
 }
 
 export function ProjectsView() {
-  const { data, loading, error, refetch } = useSanityData<Project[]>(
-    async () => {
-      const home = await getHomeData();
-      return home.projects;
-    },
-    'projects',
-  );
-
-  if (loading) return <SkeletonView />;
-  if (error) return <ErrorView message={error.message} onRetry={refetch} />;
-  if (!data) return <SkeletonView />;
+  const data: Project[] = portfolioData.projects;
 
   return (
     <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', overflowY: 'auto' }}>

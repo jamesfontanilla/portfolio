@@ -1,8 +1,6 @@
-import { getHomeData } from "@/lib/cms";
+import { getPortfolioData } from "@/lib/portfolio-data";
 import { formatDate } from "@/lib/format";
 import type { Metadata } from "next";
-
-export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "Blog — Jaime Fontanilla",
@@ -10,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-  const data = await getHomeData();
+  const data = getPortfolioData();
   const posts = data.blogPosts ?? [];
 
   return (

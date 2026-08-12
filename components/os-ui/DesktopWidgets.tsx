@@ -5,14 +5,13 @@
  *
  * - WelcomeWidget: owner name, role, tagline, availability status + socials
  * - ClockWidget: live time + date display
- * - StatsWidget: live project/cert/event counts from Sanity
- * - HighlightsWidget: latest project, cert, event from Sanity
+ * - StatsWidget: project/cert/event counts from local portfolio content
+ * - HighlightsWidget: latest project, cert, event from local portfolio content
  * - HintText: subtle prompt that fades after first interaction
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { getHomeData } from '@/lib/cms';
-import type { HomeData } from '@/lib/types';
+import { portfolioData } from '@/lib/portfolio-data';
 
 // ─── Clock Widget ─────────────────────────────────────────────────────────────
 
@@ -520,37 +519,32 @@ export interface DesktopWidgetsProps {
 }
 
 export function DesktopWidgets({ onOpenWindow }: DesktopWidgetsProps) {
-  const [data, setData] = useState<HomeData | null>(null);
+  const data = portfolioData;
 
-  useEffect(() => {
-    getHomeData().then(setData);
-  }, []);
-
-  // Derive values from CMS data (fallback to defaults while loading)
-  const settings = data?.settings;
-  const name = settings?.name ?? 'Jaime Fontanilla';
-  const role = settings?.role ?? 'Full-Stack Developer';
-  const tagline = settings?.bio ?? 'Design-led, product-minded, and curious about systems.';
-  const availability = settings?.availability ?? 'Available for work';
-  const location = settings?.location ?? 'Philippines / Remote';
-  const intro = settings?.intro ?? 'Building an OS-style portfolio';
+  // Local content is available synchronously, so widgets render immediately.
+  const settings = data.settings;
+  const name = settings.name;
+  const role = settings.role;
+  const tagline = settings.bio;
+  const availability = settings.availability;
+  const location = settings.location;
+  const intro = settings.intro;
   const socials = {
-    github: settings?.githubUrl,
-    linkedin: settings?.linkedinUrl,
-    email: settings?.email ? `mailto:${settings.email}` : undefined,
-    x: settings?.xUrl,
-    facebook: settings?.facebookUrl,
+    github: settings.githubUrl,
+    linkedin: settings.linkedinUrl,
+    email: settings.email ? `mailto:${settings.email}` : undefined,
+    x: settings.xUrl,
+    facebook: settings.facebookUrl,
   };
 
-  // Stats from live data
-  const projectCount = data?.projects.length ?? 0;
-  const certCount = data?.certifications.length ?? 0;
-  const eventCount = data?.events.length ?? 0;
+  const projectCount = data.projects.length;
+  const certCount = data.certifications.length;
+  const eventCount = data.events.length;
 
   // Highlights from live data
   const highlights: Highlight[] = [];
 
-  if (data?.projects.length) {
+  if (data.projects.length) {
     const p = data.projects[0];
     highlights.push({
       icon: '🚀',
@@ -561,7 +555,7 @@ export function DesktopWidgets({ onOpenWindow }: DesktopWidgetsProps) {
     });
   }
 
-  if (data?.certifications.length) {
+  if (data.certifications.length) {
     const c = data.certifications[0];
     const dateStr = new Date(c.earnedOn).toLocaleDateString([], { month: 'short', year: 'numeric' });
     highlights.push({
@@ -573,7 +567,7 @@ export function DesktopWidgets({ onOpenWindow }: DesktopWidgetsProps) {
     });
   }
 
-  if (data?.events.length) {
+  if (data.events.length) {
     const e = data.events[0];
     const dateStr = new Date(e.date).toLocaleDateString([], { month: 'short', year: 'numeric' });
     highlights.push({

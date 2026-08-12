@@ -6,11 +6,8 @@
  */
 
 import React from 'react';
-import { useSanityData } from '@/hooks/useSanityData';
-import { getHomeData } from '@/lib/cms';
+import { portfolioData } from '@/lib/portfolio-data';
 import type { BlogPost } from '@/lib/types';
-import { SkeletonView } from './SkeletonView';
-import { ErrorView } from './ErrorView';
 
 // ─── Blog post card ───────────────────────────────────────────────────────────
 
@@ -115,17 +112,7 @@ function BlogCard({ post }: { post: BlogPost }) {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export function BlogView() {
-  const { data: posts, loading, error, refetch } = useSanityData<BlogPost[]>(
-    async () => {
-      const data = await getHomeData();
-      return data.blogPosts ?? [];
-    },
-    'blog',
-  );
-
-  if (loading) return <SkeletonView />;
-  if (error) return <ErrorView message={error.message} onRetry={refetch} />;
-  if (!posts) return <SkeletonView />;
+  const posts: BlogPost[] = portfolioData.blogPosts ?? [];
 
   return (
     <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>

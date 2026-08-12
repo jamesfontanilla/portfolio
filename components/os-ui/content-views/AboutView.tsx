@@ -8,11 +8,8 @@
  */
 
 import React from 'react';
-import { useSanityData } from '@/hooks/useSanityData';
-import { getHomeData } from '@/lib/cms';
+import { portfolioData } from '@/lib/portfolio-data';
 import type { SiteSettings } from '@/lib/types';
-import { SkeletonView } from './SkeletonView';
-import { ErrorView } from './ErrorView';
 
 const cardStyle: React.CSSProperties = {
   background: 'rgba(255, 255, 255, 0.04)',
@@ -22,24 +19,7 @@ const cardStyle: React.CSSProperties = {
 };
 
 export function AboutView() {
-  const {
-    data: homeData,
-    loading,
-    error,
-    refetch,
-  } = useSanityData<{ settings: SiteSettings }>(
-    async () => {
-      const data = await getHomeData();
-      return { settings: data.settings };
-    },
-    'about',
-  );
-
-  if (loading) return <SkeletonView />;
-  if (error) return <ErrorView message={error.message} onRetry={refetch} />;
-  if (!homeData) return <SkeletonView />;
-
-  const s = homeData.settings;
+  const s: SiteSettings = portfolioData.settings;
 
   return (
     <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>

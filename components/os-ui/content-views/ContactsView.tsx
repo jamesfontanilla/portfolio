@@ -7,11 +7,8 @@
  */
 
 import React, { useState, useCallback } from 'react';
-import { useSanityData } from '@/hooks/useSanityData';
-import { getHomeData } from '@/lib/cms';
+import { portfolioData } from '@/lib/portfolio-data';
 import type { SiteSettings } from '@/lib/types';
-import { SkeletonView } from './SkeletonView';
-import { ErrorView } from './ErrorView';
 
 // ─── Platform config ──────────────────────────────────────────────────────────
 
@@ -199,19 +196,7 @@ function ContactTile({ field }: { field: ContactField }) {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export function ContactsView() {
-  const { data: homeData, loading, error, refetch } = useSanityData<{ settings: SiteSettings }>(
-    async () => {
-      const data = await getHomeData();
-      return { settings: data.settings };
-    },
-    'contacts',
-  );
-
-  if (loading) return <SkeletonView />;
-  if (error) return <ErrorView message={error.message} onRetry={refetch} />;
-  if (!homeData) return <SkeletonView />;
-
-  const { settings } = homeData;
+  const settings: SiteSettings = portfolioData.settings;
   const fields = buildContactFields(settings);
 
   return (

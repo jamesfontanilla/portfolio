@@ -1,17 +1,14 @@
 'use client';
 
 /**
- * CertificationsView — renders all Certification records from Sanity.
+ * CertificationsView — renders all local Certification records.
  * Dates formatted as "Month YYYY" using Intl.DateTimeFormat.
  * Requirements: 5.1, 5.3, 5.7, 5.8, 5.9
  */
 
 import React from 'react';
-import { useSanityData } from '@/hooks/useSanityData';
-import { getHomeData } from '@/lib/cms';
+import { portfolioData } from '@/lib/portfolio-data';
 import type { Certification } from '@/lib/types';
-import { SkeletonView } from './SkeletonView';
-import { ErrorView } from './ErrorView';
 
 /**
  * Formats a date string (ISO or YYYY-MM-DD) as "Month YYYY".
@@ -69,17 +66,7 @@ function CertificationCard({ cert }: { cert: Certification }) {
 }
 
 export function CertificationsView() {
-  const { data, loading, error, refetch } = useSanityData<Certification[]>(
-    async () => {
-      const home = await getHomeData();
-      return home.certifications;
-    },
-    'certifications',
-  );
-
-  if (loading) return <SkeletonView />;
-  if (error) return <ErrorView message={error.message} onRetry={refetch} />;
-  if (!data) return <SkeletonView />;
+  const data: Certification[] = portfolioData.certifications;
 
   return (
     <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '14px' }}>

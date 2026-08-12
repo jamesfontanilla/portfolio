@@ -3,7 +3,7 @@
  *
  * - Renders error message with retry button
  * - Clicking retry calls onRetry
- * - Tests for all 5 ContentTypes (mocking Sanity to throw)
+ * - Tests for the content-load error state
  *
  * Requirements: 5.9
  */

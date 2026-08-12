@@ -3,7 +3,7 @@
 /**
  * ErrorView — error state with retry action for Content Views.
  *
- * Renders inside the Window content area when a Sanity fetch fails.
+ * Renders inside the Window content area when a content load fails.
  * The Window itself remains open and functional — only the content area
  * shows the error state.
  *

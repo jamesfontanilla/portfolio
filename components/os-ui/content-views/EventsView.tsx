@@ -1,17 +1,14 @@
 'use client';
 
 /**
- * EventsView — renders all PortfolioEvent records from Sanity.
+ * EventsView — renders all local PortfolioEvent records.
  * Dates formatted as "Month D, YYYY" (e.g. "March 15, 2024").
  * Requirements: 5.1, 5.4, 5.7, 5.8, 5.9
  */
 
 import React from 'react';
-import { useSanityData } from '@/hooks/useSanityData';
-import { getHomeData } from '@/lib/cms';
+import { portfolioData } from '@/lib/portfolio-data';
 import type { PortfolioEvent } from '@/lib/types';
-import { SkeletonView } from './SkeletonView';
-import { ErrorView } from './ErrorView';
 
 /**
  * Formats a date string as "Month D, YYYY".
@@ -86,17 +83,7 @@ function EventCard({ event }: { event: PortfolioEvent }) {
 }
 
 export function EventsView() {
-  const { data, loading, error, refetch } = useSanityData<PortfolioEvent[]>(
-    async () => {
-      const home = await getHomeData();
-      return home.events;
-    },
-    'events',
-  );
-
-  if (loading) return <SkeletonView />;
-  if (error) return <ErrorView message={error.message} onRetry={refetch} />;
-  if (!data) return <SkeletonView />;
+  const data: PortfolioEvent[] = portfolioData.events;
 
   return (
     <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
