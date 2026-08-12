@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 export default function AdminLoginPage() {
@@ -9,6 +9,39 @@ export default function AdminLoginPage() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    if (params.get("error")) {
+      setError("This sign-in link expired or was already used. Request a new link and open it in this browser.");
+    }
+    if (!code) return;
+    const authCode = code;
+
+    let active = true;
+    const supabase = createClient();
+
+    async function finishSignIn() {
+      setLoading(true);
+      const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(authCode);
+
+      if (!active) return;
+      if (exchangeError) {
+        setError("This sign-in link could not be completed. Request a new link in this browser and try again.");
+        setLoading(false);
+        return;
+      }
+
+      window.history.replaceState({}, "", "/admin/login");
+      window.location.replace("/admin");
+    }
+
+    void finishSignIn();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -20,7 +53,8 @@ export default function AdminLoginPage() {
     const { error: signInError } = await supabase.auth.signInWithOtp({
       email: email.trim().toLowerCase(),
       options: {
-        emailRedirectTo: `${window.location.origin}/admin`,
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=/admin`,
+        shouldCreateUser: false,
       },
     });
 
