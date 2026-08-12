@@ -26,7 +26,7 @@ function SectionHeader({
 }
 
 export default async function CertificationsPage() {
-  const { settings, certifications } = getPortfolioData();
+  const { settings, certifications } = await getPortfolioData();
   const latestCertification = certifications[0];
 
   return (

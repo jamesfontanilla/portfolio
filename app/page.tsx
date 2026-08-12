@@ -45,7 +45,7 @@ function StatChip({
 }
 
 export default async function HomePage() {
-  const { settings, projects, certifications, events } = getPortfolioData();
+  const { settings, projects, certifications, events } = await getPortfolioData();
   const featuredProject = projects[0];
   const contactLinks = [
     { label: "Email", href: `mailto:${settings.email}` },

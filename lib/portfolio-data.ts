@@ -1,15 +1,120 @@
-import type { HomeData } from "@/lib/types";
+import type { BlogPost, Certification, HomeData, PortfolioEvent, Project, SiteSettings } from "@/lib/types";
 import { fallbackHomeData } from "@/lib/site-data";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { createClient } from "@/lib/supabase/server";
 
-/**
- * Local portfolio content.
- *
- * This is intentionally synchronous so the public site has no remote data
- * request in its critical rendering path. A future Supabase-backed admin UI
- * can replace this module without coupling page components to the database.
- */
 export const portfolioData: HomeData = fallbackHomeData;
 
-export function getPortfolioData(): HomeData {
-  return portfolioData;
+type ContentEntry = {
+  kind: "settings" | "project" | "certification" | "event" | "blog";
+  slug: string | null;
+  title: string;
+  status: string;
+  featured: boolean;
+  data: Record<string, unknown>;
+};
+
+const asText = (value: unknown, fallback = "") => (typeof value === "string" ? value : fallback);
+const asArray = (value: unknown) =>
+  Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+
+function asImage(value: unknown, fallbackAlt: string) {
+  if (typeof value !== "string" || !value) return undefined;
+  return { url: value, alt: fallbackAlt };
+}
+
+function mapContentEntries(entries: ContentEntry[]): HomeData {
+  const settingsEntry = entries.find((entry) => entry.kind === "settings");
+  const settingsData = settingsEntry?.data ?? {};
+  const settings: SiteSettings = {
+    ...fallbackHomeData.settings,
+    ...settingsData,
+    name: asText(settingsData.name, fallbackHomeData.settings.name),
+    role: asText(settingsData.role, fallbackHomeData.settings.role),
+    tagline: asText(settingsData.tagline, fallbackHomeData.settings.tagline),
+    summary: asText(settingsData.summary, fallbackHomeData.settings.summary),
+    intro: asText(settingsData.intro, fallbackHomeData.settings.intro),
+    bio: asText(settingsData.bio, fallbackHomeData.settings.bio),
+    location: asText(settingsData.location, fallbackHomeData.settings.location),
+    availability: asText(settingsData.availability, fallbackHomeData.settings.availability),
+    email: asText(settingsData.email, fallbackHomeData.settings.email),
+    githubUrl: asText(settingsData.githubUrl, fallbackHomeData.settings.githubUrl),
+    linkedinUrl: asText(settingsData.linkedinUrl, fallbackHomeData.settings.linkedinUrl),
+    resumeUrl: asText(settingsData.resumeUrl, fallbackHomeData.settings.resumeUrl),
+  };
+
+  const projects: Project[] = entries
+    .filter((entry) => entry.kind === "project")
+    .map((entry) => ({
+      title: entry.title,
+      summary: asText(entry.data.summary),
+      status: asText(entry.data.status, entry.status),
+      stack: asArray(entry.data.stack),
+      impact: asText(entry.data.impact),
+      coverImage: asImage(entry.data.coverImage, entry.title),
+      demoUrl: asText(entry.data.demoUrl) || undefined,
+      repoUrl: asText(entry.data.repoUrl) || undefined,
+      featured: Boolean(entry.data.featured ?? entry.featured),
+    }));
+
+  const certifications: Certification[] = entries
+    .filter((entry) => entry.kind === "certification")
+    .map((entry) => ({
+      title: entry.title,
+      issuer: asText(entry.data.issuer),
+      earnedOn: asText(entry.data.earnedOn),
+      verificationUrl: asText(entry.data.verificationUrl) || undefined,
+    }));
+
+  const events: PortfolioEvent[] = entries
+    .filter((entry) => entry.kind === "event")
+    .map((entry) => ({
+      title: entry.title,
+      type: asText(entry.data.type),
+      role: asText(entry.data.role),
+      date: asText(entry.data.date),
+      location: asText(entry.data.location) || undefined,
+      summary: asText(entry.data.summary),
+      tags: asArray(entry.data.tags),
+      media: asImage(entry.data.media, entry.title),
+    }));
+
+  const blogPosts: BlogPost[] = entries
+    .filter((entry) => entry.kind === "blog")
+    .map((entry) => ({
+      title: entry.title,
+      slug: asText(entry.data.slug, entry.slug ?? entry.title.toLowerCase().replace(/\s+/g, "-")),
+      excerpt: asText(entry.data.excerpt),
+      body: Array.isArray(entry.data.body) ? entry.data.body : undefined,
+      coverImage: asImage(entry.data.coverImage, entry.title),
+      tags: asArray(entry.data.tags),
+      publishedAt: asText(entry.data.publishedAt),
+      featured: Boolean(entry.data.featured ?? entry.featured),
+    }));
+
+  return {
+    settings,
+    projects: projects.length ? projects : fallbackHomeData.projects,
+    certifications: certifications.length ? certifications : fallbackHomeData.certifications,
+    events: events.length ? events : fallbackHomeData.events,
+    blogPosts: blogPosts.length ? blogPosts : fallbackHomeData.blogPosts,
+  };
+}
+
+export async function getPortfolioData(): Promise<HomeData> {
+  if (!isSupabaseConfigured()) return portfolioData;
+
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("content_entries")
+      .select("kind, slug, title, status, featured, data")
+      .eq("status", "published")
+      .order("created_at", { ascending: true });
+
+    if (error || !data?.length) return portfolioData;
+    return mapContentEntries(data as ContentEntry[]);
+  } catch {
+    return portfolioData;
+  }
 }

@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { portfolioData } from '@/lib/portfolio-data';
+import { usePortfolioData } from '../OSUIProvider';
 import type { Certification } from '@/lib/types';
 
 /**
@@ -66,7 +66,7 @@ function CertificationCard({ cert }: { cert: Certification }) {
 }
 
 export function CertificationsView() {
-  const data: Certification[] = portfolioData.certifications;
+  const data: Certification[] = usePortfolioData().certifications;
 
   return (
     <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '14px' }}>

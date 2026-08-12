@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { portfolioData } from '@/lib/portfolio-data';
+import { usePortfolioData } from '../OSUIProvider';
 import type { BlogPost } from '@/lib/types';
 
 // ─── Blog post card ───────────────────────────────────────────────────────────
@@ -112,7 +112,7 @@ function BlogCard({ post }: { post: BlogPost }) {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export function BlogView() {
-  const posts: BlogPost[] = portfolioData.blogPosts ?? [];
+  const posts: BlogPost[] = usePortfolioData().blogPosts ?? [];
 
   return (
     <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>

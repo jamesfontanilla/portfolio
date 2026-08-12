@@ -8,7 +8,7 @@
  */
 
 import React from 'react';
-import { portfolioData } from '@/lib/portfolio-data';
+import { usePortfolioData } from '../OSUIProvider';
 import type { SiteSettings } from '@/lib/types';
 
 const cardStyle: React.CSSProperties = {
@@ -19,7 +19,7 @@ const cardStyle: React.CSSProperties = {
 };
 
 export function AboutView() {
-  const s: SiteSettings = portfolioData.settings;
+  const s: SiteSettings = usePortfolioData().settings;
 
   return (
     <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>

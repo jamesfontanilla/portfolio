@@ -7,7 +7,7 @@
  */
 
 import React, { useState, useCallback } from 'react';
-import { portfolioData } from '@/lib/portfolio-data';
+import { usePortfolioData } from '../OSUIProvider';
 import type { SiteSettings } from '@/lib/types';
 
 // ─── Platform config ──────────────────────────────────────────────────────────
@@ -196,7 +196,7 @@ function ContactTile({ field }: { field: ContactField }) {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export function ContactsView() {
-  const settings: SiteSettings = portfolioData.settings;
+  const settings: SiteSettings = usePortfolioData().settings;
   const fields = buildContactFields(settings);
 
   return (

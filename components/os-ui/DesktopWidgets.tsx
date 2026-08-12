@@ -11,7 +11,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { portfolioData } from '@/lib/portfolio-data';
+import { usePortfolioData } from './OSUIProvider';
 
 // ─── Clock Widget ─────────────────────────────────────────────────────────────
 
@@ -519,7 +519,7 @@ export interface DesktopWidgetsProps {
 }
 
 export function DesktopWidgets({ onOpenWindow }: DesktopWidgetsProps) {
-  const data = portfolioData;
+  const data = usePortfolioData();
 
   // Local content is available synchronously, so widgets render immediately.
   const settings = data.settings;

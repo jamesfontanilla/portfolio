@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { portfolioData } from '@/lib/portfolio-data';
+import { usePortfolioData } from './OSUIProvider';
 import type { ContentType } from '@/store/windowManagerStore';
 import { contentTypeLabel } from './AppIcon';
 
@@ -55,7 +55,7 @@ export function MobileHomeScreen({ onOpenApp }: MobileHomeScreenProps) {
     return () => clearInterval(id);
   }, []);
 
-  const data = portfolioData;
+  const data = usePortfolioData();
   const { settings } = data;
   const name = settings.name;
   const role = settings.role;

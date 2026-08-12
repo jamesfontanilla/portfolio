@@ -26,7 +26,7 @@ function SectionHeader({
 }
 
 export default async function ProjectsPage() {
-  const { settings, projects } = getPortfolioData();
+  const { settings, projects } = await getPortfolioData();
   const featuredProject = projects[0];
   const otherProjects = projects.slice(1);
 

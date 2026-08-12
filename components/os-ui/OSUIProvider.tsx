@@ -49,6 +49,8 @@ import { Window } from './Window';
 import { BootScreen } from './BootScreen';
 import { SkeletonView } from './content-views/SkeletonView';
 import { contentTypeLabel } from './AppIcon';
+import type { HomeData } from '@/lib/types';
+import { fallbackHomeData as portfolioData } from '@/lib/site-data';
 
 // ─── Lazy content views ───────────────────────────────────────────────────────
 
@@ -90,6 +92,7 @@ export const WindowManagerContext = createContext<{
 } | null>(null);
 
 export const LayoutModeContext = createContext<LayoutMode | null>(null);
+export const PortfolioDataContext = createContext<HomeData>(portfolioData);
 
 // ─── Custom hooks ─────────────────────────────────────────────────────────────
 
@@ -105,6 +108,10 @@ export function useLayoutMode(): LayoutMode {
   return ctx;
 }
 
+export function usePortfolioData() {
+  return useContext(PortfolioDataContext);
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 interface OSUIProviderProps {
@@ -112,9 +119,10 @@ interface OSUIProviderProps {
   suppressChildren?: boolean;
   /** Pathname from the server — used to auto-open a window on load */
   initialRoute?: string;
+  initialData?: HomeData;
 }
 
-export function OSUIProvider({ children, suppressChildren = true, initialRoute }: OSUIProviderProps) {
+export function OSUIProvider({ children, suppressChildren = true, initialRoute, initialData }: OSUIProviderProps) {
   const [state, dispatch] = useReducer(windowManagerReducer, initialWindowManagerState);
   const reducedMotion = useReducedMotion();
   const { activePanel, setActivePanel } = useMobileNav();
@@ -280,8 +288,9 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute }
     : null;
 
   return (
-    <WindowManagerContext.Provider value={{ state, dispatch }}>
-      <LayoutModeContext.Provider value={layoutMode}>
+    <PortfolioDataContext.Provider value={initialData ?? portfolioData}>
+      <WindowManagerContext.Provider value={{ state, dispatch }}>
+        <LayoutModeContext.Provider value={layoutMode}>
         {/* Desktop background with wallpaper */}
         <Desktop>
           <Wallpaper theme={wallpaperTheme} />
@@ -392,7 +401,8 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute }
             {children}
           </div>
         )}
-      </LayoutModeContext.Provider>
-    </WindowManagerContext.Provider>
+        </LayoutModeContext.Provider>
+      </WindowManagerContext.Provider>
+    </PortfolioDataContext.Provider>
   );
 }

@@ -27,7 +27,7 @@ function SectionHeader({
 }
 
 export default async function EventsPage() {
-  const { settings, events } = getPortfolioData();
+  const { settings, events } = await getPortfolioData();
   const featuredEvent = events[0];
   const recentEvents = events.slice(1);
 

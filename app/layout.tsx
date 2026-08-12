@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import "./globals.css";
 import { OSUIProvider } from "@/components/os-ui/OSUIProvider";
+import { getPortfolioData, portfolioData } from "@/lib/portfolio-data";
 
 export const metadata: Metadata = {
   title: "Portfolio Draft",
@@ -15,6 +16,8 @@ export default async function RootLayout({
 }>) {
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") ?? "/";
+  const isAdmin = pathname.startsWith("/admin");
+  const data = isAdmin ? portfolioData : await getPortfolioData();
 
   return (
     <html lang="en">
@@ -27,7 +30,7 @@ export default async function RootLayout({
         />
       </head>
       <body>
-        <OSUIProvider initialRoute={pathname}>{children}</OSUIProvider>
+        {isAdmin ? children : <OSUIProvider initialRoute={pathname} initialData={data}>{children}</OSUIProvider>}
       </body>
     </html>
   );

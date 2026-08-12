@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { portfolioData } from '@/lib/portfolio-data';
+import { usePortfolioData } from '../OSUIProvider';
 import type { PortfolioEvent } from '@/lib/types';
 
 /**
@@ -83,7 +83,7 @@ function EventCard({ event }: { event: PortfolioEvent }) {
 }
 
 export function EventsView() {
-  const data: PortfolioEvent[] = portfolioData.events;
+  const data: PortfolioEvent[] = usePortfolioData().events;
 
   return (
     <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '14px' }}>

@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { portfolioData } from '@/lib/portfolio-data';
+import { usePortfolioData } from '../OSUIProvider';
 import type { Project } from '@/lib/types';
 
 function Tag({ label, gold }: { label: string; gold?: boolean }) {
@@ -96,7 +96,7 @@ function ProjectCard({ project }: { project: Project }) {
 }
 
 export function ProjectsView() {
-  const data: Project[] = portfolioData.projects;
+  const data: Project[] = usePortfolioData().projects;
 
   return (
     <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', overflowY: 'auto' }}>

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-  const data = getPortfolioData();
+  const data = await getPortfolioData();
   const posts = data.blogPosts ?? [];
 
   return (

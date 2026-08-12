@@ -10,12 +10,12 @@ on mobile.
 - React 19 and strict TypeScript
 - Pure CSS glassmorphism, animated wallpapers, and responsive layouts
 - Vitest, Testing Library, and fast-check tests
-- Local synchronous portfolio data in `lib/portfolio-data.ts`
+- Supabase-backed portfolio data with a local fallback in `lib/portfolio-data.ts`
+- Private `/admin` studio with magic-link authentication and RLS-protected content editing
 
-The public site does not make a remote content request while rendering. The
-current built-in content lives in `lib/site-data.ts`, while
-`lib/portfolio-data.ts` provides the small data boundary that can later be
-connected to a Supabase-backed admin UI.
+Published content is read from Supabase server-side. If Supabase is unavailable
+or has not been configured locally, the public site safely uses the built-in
+content in `lib/site-data.ts`.
 
 ## Content model
 
@@ -40,8 +40,14 @@ npm run dev
 
 Then open `http://localhost:3000`.
 
-No environment variables are required for the current local-data mode. Add
-Supabase variables only when the admin UI and database connection are added.
+Copy `.env.example` to `.env.local` and keep the two public Supabase values in
+that file. The database schema and seed content are in `supabase/migrations`
+and `supabase/seed.sql`.
+
+Open `/admin/login` to request a magic link. Only emails listed in
+`public.admin_allowlist` can access the editor. The admin studio manages
+profile settings, projects, certifications, events, and blog posts with draft,
+published, and archived states.
 
 ## Features
 
@@ -50,6 +56,7 @@ Supabase variables only when the admin UI and database connection are added.
 - Animated wallpaper themes with reduced-motion support
 - Server-rendered archive pages for projects, certifications, events, contacts,
   and blog posts
+- Supabase RLS policies that expose only published content publicly
 - Accessible dialogs, focus handling, visible focus states, and mobile touch
   targets
 

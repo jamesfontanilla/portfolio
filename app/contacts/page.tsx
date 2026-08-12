@@ -123,7 +123,7 @@ type LinkItem = {
 };
 
 export default async function ContactsPage() {
-  const { settings } = getPortfolioData();
+  const { settings } = await getPortfolioData();
 
   const linkItems: LinkItem[] = [
     {
