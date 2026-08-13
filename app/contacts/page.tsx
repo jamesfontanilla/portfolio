@@ -3,11 +3,11 @@ import { getPortfolioData } from "@/lib/portfolio-data";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Jaime Fontanilla — Contact",
-  description: "Get in touch with Jaime Fontanilla. Email, phone, LinkedIn, GitHub, and social links.",
+  title: "James Fontanilla — Contact",
+  description: "Get in touch with James Fontanilla. Email, phone, LinkedIn, GitHub, and social links.",
   openGraph: {
-    title: "Jaime Fontanilla — Contact",
-    description: "Get in touch with Jaime Fontanilla. Full-Stack Developer based in Philippines. Available for freelance and collaboration.",
+    title: "James Fontanilla — Contact",
+    description: "Get in touch with James Fontanilla. Full-Stack Developer based in Philippines. Available for freelance and collaboration.",
     type: "website",
   },
 };

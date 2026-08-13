@@ -117,7 +117,7 @@ export function ContextMenu({ onChangeWallpaper, onRefresh }: ContextMenuProps) 
             A browser-based desktop OS experience built with Next.js, React 19, and pure CSS glassmorphism. No external animation libraries — just the Web Animations API and CSS transitions.
           </p>
           <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--muted)' }}>
-            Designed & developed by Jaime Fontanilla.
+            Designed & developed by James Fontanilla.
           </p>
           <button
             onClick={() => setShowAbout(false)}

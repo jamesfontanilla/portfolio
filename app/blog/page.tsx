@@ -3,7 +3,7 @@ import { formatDate } from "@/lib/format";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Blog — Jaime Fontanilla",
+  title: "Blog — James Fontanilla",
   description: "Thoughts on design, development, and building things.",
 };
 

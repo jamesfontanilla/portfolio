@@ -77,8 +77,8 @@ describe('Property 21: Boot Screen name fallback chain', () => {
       cancel: vi.fn(),
     } as unknown as Animation);
 
-    render(<BootScreen name="Jaime Fontanilla" />);
-    expect(screen.getByText('Jaime Fontanilla')).toBeTruthy();
+    render(<BootScreen name="James Fontanilla" />);
+    expect(screen.getByText('James Fontanilla')).toBeTruthy();
 
     animSpy.mockRestore();
   });

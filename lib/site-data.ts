@@ -2,7 +2,7 @@ import type { HomeData } from "@/lib/types";
 
 export const fallbackHomeData: HomeData = {
   settings: {
-    name: "Jaime Fontanilla",
+    name: "James Fontanilla",
     role: "Full-Stack Developer",
     tagline: "Premium, app-like portfolio for projects, proof, and contact.",
     summary:

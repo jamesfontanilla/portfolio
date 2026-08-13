@@ -205,7 +205,7 @@ describe('Property 17: About View renders all 7 required fields for any SiteSett
       return REQUIRED_FIELDS.every(f => f in s);
     };
     const settings = {
-      name: 'Jaime',
+      name: 'James',
       role: 'Dev',
       tagline: 'Tag',
       summary: 'Sum',
@@ -219,7 +219,7 @@ describe('Property 17: About View renders all 7 required fields for any SiteSett
   it('renders all 7 fields when all are provided', () => {
     const { container } = render(
       <div>
-        <span>Jaime Fontanilla</span>
+        <span>James Fontanilla</span>
         <span>Full-Stack Developer</span>
         <span>Premium portfolio</span>
         <span>A developer focused on systems</span>
@@ -229,7 +229,7 @@ describe('Property 17: About View renders all 7 required fields for any SiteSett
       </div>
     );
     const text = container.textContent ?? '';
-    expect(text).toContain('Jaime Fontanilla');
+    expect(text).toContain('James Fontanilla');
     expect(text).toContain('Full-Stack Developer');
     expect(text).toContain('Premium portfolio');
     expect(text).toContain('Philippines / Remote');
