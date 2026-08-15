@@ -39,8 +39,35 @@ const storyPillars = [
   ['05', 'Writer', 'Notes on AI, engineering, software, and the Filipino technology ecosystem.'],
 ] as const;
 
+const proofStories = [
+  {
+    label: 'Engineering',
+    title: 'VEX Robotics World Championship',
+    role: 'Notebook Manager · QCU2',
+    copy: 'Represented the Philippines on an international robotics stage while documenting the team\'s engineering process, iterations, testing, and decisions.',
+    proof: 'Proof trail: competition documentation, team information, and engineering notebook materials.',
+  },
+  {
+    label: 'Community',
+    title: 'Microsoft Student Community - QCU',
+    role: 'Co-Founder & Executive Vice President',
+    copy: 'Helped build a student technology community that brings learning, networking, and technology opportunities closer to QCU students.',
+    proof: 'Proof trail: organization page, community events, partnerships, and initiative materials.',
+  },
+] as const;
+
+const impactTimeline = [
+  ['Robotics', 'Represented the Philippines internationally with QCU2.'],
+  ['Software', 'Built and shipped AI and full-stack products that are documented in Projects.'],
+  ['Community', 'Co-founded MSC-QCU to help bring technology opportunities closer to students.'],
+  ['Writing', 'Building a practice of explaining what I learn about AI, engineering, and the Philippine technology ecosystem.'],
+] as const;
+
 export function AboutView() {
-  const s: SiteSettings = usePortfolioData().settings;
+  const portfolio = usePortfolioData();
+  const s: SiteSettings = portfolio.settings;
+  const projectCount = portfolio.projects.length;
+  const writingCount = portfolio.blogPosts?.length ?? 0;
   const bioParagraphs = s.bio.split(/\n\s*\n/).map((paragraph) => paragraph.trim()).filter(Boolean);
 
   return (
@@ -108,6 +135,84 @@ export function AboutView() {
             </article>
           ))}
         </div>
+      </section>
+
+      <section className="about-impact-section">
+        <div className="about-section-heading">
+          <p className="about-label">Selected impact</p>
+          <p>Signals of initiative, execution, and contribution — with room to attach the evidence behind each claim.</p>
+        </div>
+        <div className="about-impact-grid">
+          <article className="about-impact-card about-impact-card-accent">
+            <strong>150+</strong>
+            <h3>Students reached</h3>
+            <p>Through communities, events, and opportunities I helped build or make more accessible.</p>
+          </article>
+          <article className="about-impact-card">
+            <strong>{projectCount}</strong>
+            <h3>Projects documented</h3>
+            <p>AI, full-stack, learning, and interactive work with a visible path to code and outcomes.</p>
+          </article>
+          <article className="about-impact-card">
+            <strong>1</strong>
+            <h3>International robotics championship</h3>
+            <p>VEX Robotics World Championship representation with QCU2 and the Philippines.</p>
+          </article>
+          <article className="about-impact-card">
+            <strong>1</strong>
+            <h3>Student community co-founded</h3>
+            <p>MSC-QCU, focused on bringing technology learning and opportunities closer to students.</p>
+          </article>
+        </div>
+      </section>
+
+      <section className="about-proof-section">
+        <div className="about-section-heading">
+          <p className="about-label">Proof in context</p>
+          <p>Claims are more useful when a reviewer can see the work, the responsibility, and the outcome behind them.</p>
+        </div>
+        <div className="about-proof-grid">
+          {proofStories.map((story) => (
+            <article className="about-proof-card" key={story.title}>
+              <p className="about-proof-label">{story.label}</p>
+              <h3>{story.title}</h3>
+              <strong>{story.role}</strong>
+              <p>{story.copy}</p>
+              <small>{story.proof}</small>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="about-mission-section">
+        <div>
+          <p className="about-label">What I&apos;m building toward</p>
+          <h3>Making technology more accessible while building things that are useful.</h3>
+        </div>
+        <p>I want to build products, contribute to engineering, and create opportunities that help more Filipino students participate in the technology ecosystem.</p>
+      </section>
+
+      <section className="about-timeline-section">
+        <div className="about-section-heading">
+          <p className="about-label">Impact timeline</p>
+          <p>2026 / Building in public</p>
+        </div>
+        <div className="about-timeline">
+          {impactTimeline.map(([label, copy]) => (
+            <div className="about-timeline-item" key={label}>
+              <span>{label}</span>
+              <p>{copy}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="about-writing-section">
+        <div>
+          <p className="about-label">Writing</p>
+          <h3>Build in public. Explain what I learn.</h3>
+        </div>
+        <p>I write about AI, software engineering, engineering education, robotics, and the Philippine technology ecosystem. {writingCount ? `${writingCount} published note${writingCount === 1 ? '' : 's'} is currently in the portfolio.` : 'New notes will appear here as they are published.'}</p>
       </section>
 
       <section className="about-story-section">
