@@ -1,130 +1,131 @@
 'use client';
 
 /**
- * AboutView — renders portfolio owner info from SiteSettings.
+ * AboutView — a compact narrative view of the portfolio owner's work.
  *
- * Fields: name, role, tagline, summary, bio, location, availability
- * Requirements: 5.1, 5.6, 5.7, 5.8, 5.9
+ * Profile copy is CMS-backed through SiteSettings. The focus cards and
+ * through-lines give that copy a visual structure without turning the page
+ * into a resume dump.
  */
 
 import React from 'react';
 import { usePortfolioData } from '../OSUIProvider';
 import type { SiteSettings } from '@/lib/types';
 
-const cardStyle: React.CSSProperties = {
-  background: 'rgba(255, 255, 255, 0.04)',
-  border: '1px solid rgba(255, 255, 255, 0.07)',
-  borderRadius: '16px',
-  padding: '16px 20px',
-};
+const focusAreas = [
+  {
+    label: 'AI & software',
+    copy: 'Build AI-powered applications, full-stack platforms, and developer tools.',
+  },
+  {
+    label: 'Engineering',
+    copy: 'Apply software and hardware thinking to real-world problems, including robotics.',
+  },
+  {
+    label: 'Community',
+    copy: 'Create learning spaces, organize opportunities, and connect students with the wider technology ecosystem.',
+  },
+  {
+    label: 'Writing',
+    copy: 'Document what I learn about engineering, AI, software, and the Philippine tech ecosystem.',
+  },
+];
+
+const storyPillars = [
+  ['01', 'Builder', 'AI and full-stack products, SaaS experiments, and software that people can use.'],
+  ['02', 'Engineer', 'Computer Engineering, robotics, and the habit of understanding how things work.'],
+  ['03', 'Competitor', 'Hackathons and an international robotics stage with QCU2.'],
+  ['04', 'Community builder', 'Technology communities that make opportunities more reachable for students.'],
+  ['05', 'Writer', 'Notes on AI, engineering, software, and the Filipino technology ecosystem.'],
+] as const;
 
 export function AboutView() {
   const s: SiteSettings = usePortfolioData().settings;
+  const bioParagraphs = s.bio.split(/\n\s*\n/).map((paragraph) => paragraph.trim()).filter(Boolean);
 
   return (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      {/* Name + role */}
-      <div>
-        <h2
-          style={{
-            margin: '0 0 6px',
-            fontFamily: '"Space Grotesk", "Manrope", sans-serif',
-            fontWeight: 500,
-            fontSize: '1.6rem',
-            letterSpacing: '-0.04em',
-            color: 'var(--text)',
-          }}
-        >
-          {s.name}
-        </h2>
-        <p style={{ margin: 0, color: 'var(--gold)', fontWeight: 600, fontSize: '0.9rem' }}>
-          {s.role}
-        </p>
+    <div className="about-view">
+      <header className="about-hero-block">
+        <div className="about-hero-copy">
+          <p className="about-kicker">{s.intro || 'Build / Engineer / Contribute'}</p>
+          <h2>{s.name}</h2>
+          <p className="about-role">{s.role}</p>
+          {s.tagline ? <p className="about-tagline">{s.tagline}</p> : null}
+        </div>
+
+        <div className="about-triad" aria-label="Build, Engineer, Contribute">
+          {['Build', 'Engineer', 'Contribute'].map((step, index) => (
+            <div className="about-triad-step" key={step}>
+              <span>0{index + 1}</span>
+              <strong>{step}</strong>
+            </div>
+          ))}
+        </div>
+      </header>
+
+      {s.summary ? (
+        <section className="about-thesis">
+          <p className="about-label">At a glance</p>
+          <p className="about-thesis-copy">{s.summary}</p>
+        </section>
+      ) : null}
+
+      <div className="about-main-grid">
+        {bioParagraphs.length ? (
+          <section className="about-copy-card">
+            <p className="about-label">About</p>
+            <div className="about-bio">
+              {bioParagraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+            </div>
+          </section>
+        ) : null}
+
+        <aside className="about-side-card">
+          <p className="about-label">Currently</p>
+          {s.availability ? (
+            <p className="about-status">
+              <span className="about-status-dot" aria-hidden="true" />
+              {s.availability}
+            </p>
+          ) : null}
+          <div className="about-detail-list">
+            {s.location ? <div><span>Based in</span><strong>{s.location}</strong></div> : null}
+            <div><span>Exploring</span><strong>AI, software, robotics, communities</strong></div>
+          </div>
+        </aside>
       </div>
 
-      {/* Tagline */}
-      {s.tagline && (
-        <p
-          style={{
-            margin: 0,
-            color: 'var(--muted)',
-            fontSize: '1rem',
-            lineHeight: 1.6,
-            fontStyle: 'italic',
-          }}
-        >
-          {s.tagline}
-        </p>
-      )}
-
-      {/* Summary */}
-      {s.summary && (
-        <div style={cardStyle}>
-          <p style={{ margin: 0, color: 'var(--text)', lineHeight: 1.7, fontSize: '0.92rem' }}>
-            {s.summary}
-          </p>
+      <section className="about-focus-section">
+        <div className="about-section-heading">
+          <p className="about-label">What I do</p>
+          <p>Turning what I learn into products, engineering work, and openings for other people.</p>
         </div>
-      )}
-
-      {/* Bio */}
-      {s.bio && (
-        <div>
-          <h3
-            style={{
-              margin: '0 0 8px',
-              fontFamily: '"Space Grotesk", "Manrope", sans-serif',
-              fontSize: '0.8rem',
-              fontWeight: 700,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: 'var(--muted)',
-            }}
-          >
-            About
-          </h3>
-          <p style={{ margin: 0, color: 'var(--text)', lineHeight: 1.7, fontSize: '0.92rem' }}>
-            {s.bio}
-          </p>
+        <div className="about-focus-grid">
+          {focusAreas.map((area) => (
+            <article className="about-focus-card" key={area.label}>
+              <h3>{area.label}</h3>
+              <p>{area.copy}</p>
+            </article>
+          ))}
         </div>
-      )}
+      </section>
 
-      {/* Location + availability */}
-      <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-        {s.location && (
-          <span
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 14px',
-              borderRadius: '999px',
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              color: 'var(--muted)',
-              fontSize: '0.82rem',
-            }}
-          >
-            📍 {s.location}
-          </span>
-        )}
-        {s.availability && (
-          <span
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 14px',
-              borderRadius: '999px',
-              background: 'rgba(231, 194, 90, 0.08)',
-              border: '1px solid rgba(231, 194, 90, 0.22)',
-              color: 'var(--gold)',
-              fontSize: '0.82rem',
-              fontWeight: 600,
-            }}
-          >
-            ✦ {s.availability}
-          </span>
-        )}
+      <section className="about-story-section">
+        <p className="about-label">Through-lines</p>
+        <div className="about-pillars-grid">
+          {storyPillars.map(([number, label, copy]) => (
+            <article className="about-pillar" key={label}>
+              <span>{number}</span>
+              <h3>{label}</h3>
+              <p>{copy}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <div className="about-meta" aria-label="Profile details">
+        {s.location ? <span>{s.location}</span> : null}
+        {s.availability ? <span className="about-meta-accent">{s.availability}</span> : null}
       </div>
     </div>
   );

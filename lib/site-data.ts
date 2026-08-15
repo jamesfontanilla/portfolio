@@ -3,12 +3,12 @@ import type { HomeData } from "@/lib/types";
 export const fallbackHomeData: HomeData = {
   settings: {
     name: "James Fontanilla",
-    role: "Full-Stack Developer",
-    tagline: "Premium, app-like portfolio for projects, proof, and contact.",
+    role: "AI & Full-Stack Developer",
+    tagline: "Building AI-powered products, engineering solutions, and opportunities for others.",
     summary:
-      "A desktop-optimized portfolio inspired by sleek mobile dashboards, rebuilt as a clear workspace for your work, certifications, events, and private publishing.",
-    intro: "Available for freelance and collaboration",
-    bio: "Design-led, product-minded, and curious about systems.",
+      "Computer Engineering student building AI-powered and full-stack products, exploring engineering through robotics and competitions, and creating opportunities for students through technology communities.",
+    intro: "Build / Engineer / Contribute",
+    bio: "I'm a Computer Engineering student who likes building things and figuring out how they work. Most of what I do revolves around AI, software engineering, robotics, and tech communities.\n\nI've built and shipped AI and full-stack projects, competed in hackathons, and represented the Philippines at the VEX Robotics World Championship with QCU2. Outside of projects and competitions, I help grow technology communities and create opportunities for students, including through Microsoft Student Community - QCU.\n\nI'm interested in how technology can be used not just to build products, but also to give more people access to knowledge, communities, and opportunities. I'm currently exploring AI, writing about what I learn, and building things that I hope other people can actually use.",
     location: "Philippines / Remote",
     availability: "Available for freelance and collaboration",
     email: "jamesfontanilla@outlook.ph",
