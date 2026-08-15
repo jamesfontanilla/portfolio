@@ -77,7 +77,8 @@ function mapContentEntries(entries: ContentEntry[]): HomeData {
       summary: asText(entry.data.summary),
       tags: asArray(entry.data.tags),
       media: asImage(entry.data.media, entry.title),
-    }));
+    }))
+    .sort((a, b) => b.date.localeCompare(a.date));
 
   const blogPosts: BlogPost[] = entries
     .filter((entry) => entry.kind === "blog")
