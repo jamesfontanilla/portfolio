@@ -33,6 +33,7 @@ function Tag({ label, gold }: { label: string; gold?: boolean }) {
 
 function ProjectCard({ project }: { project: Project }) {
   const hasLinks = Boolean(project.demoUrl || project.repoUrl);
+  const hasCaseStudy = Boolean(project.role || project.period || project.challenge || project.contribution || project.outcome || project.evidence);
 
   return (
     <div
@@ -58,6 +59,27 @@ function ProjectCard({ project }: { project: Project }) {
       <p style={{ margin: 0, color: 'var(--muted)', lineHeight: 1.65, fontSize: '0.88rem' }}>
         {project.summary}
       </p>
+
+      {hasCaseStudy && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '14px 0 2px', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+          {(project.role || project.period) && (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 18px', color: 'var(--muted)', fontSize: '0.78rem' }}>
+              {project.role && <span><strong style={{ color: 'var(--text)' }}>Role</strong> {project.role}</span>}
+              {project.period && <span><strong style={{ color: 'var(--text)' }}>Period</strong> {project.period}</span>}
+            </div>
+          )}
+          {project.challenge && <div><strong style={{ display: 'block', marginBottom: '4px', color: 'var(--text)', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Context</strong><p style={{ margin: 0, color: 'var(--muted)', lineHeight: 1.6, fontSize: '0.84rem' }}>{project.challenge}</p></div>}
+          {project.contribution && <div><strong style={{ display: 'block', marginBottom: '4px', color: 'var(--text)', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Contribution</strong><p style={{ margin: 0, color: 'var(--muted)', lineHeight: 1.6, fontSize: '0.84rem' }}>{project.contribution}</p></div>}
+          {project.outcome && <div><strong style={{ display: 'block', marginBottom: '4px', color: 'var(--text)', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Outcome</strong><p style={{ margin: 0, color: 'var(--muted)', lineHeight: 1.6, fontSize: '0.84rem' }}>{project.outcome}</p></div>}
+          {project.evidence && <p style={{ margin: 0, color: 'var(--gold)', lineHeight: 1.55, fontSize: '0.8rem' }}>Evidence trail: {project.evidence}</p>}
+        </div>
+      )}
+
+      {project.impact && (
+        <p style={{ margin: 0, padding: '10px 12px', borderRadius: '10px', background: 'rgba(231,194,90,0.06)', color: 'var(--text)', lineHeight: 1.55, fontSize: '0.82rem' }}>
+          {project.impact}
+        </p>
+      )}
 
       {/* Stack tags */}
       {project.stack.length > 0 && (

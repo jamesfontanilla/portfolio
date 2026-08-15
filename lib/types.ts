@@ -24,6 +24,12 @@ export type Project = {
   status: string;
   stack: string[];
   impact: string;
+  role?: string;
+  period?: string;
+  challenge?: string;
+  contribution?: string;
+  outcome?: string;
+  evidence?: string;
   coverImage?: {
     url?: string;
     asset?: unknown;

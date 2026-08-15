@@ -53,7 +53,7 @@ function emptyEditor(kind: ContentKind): EditorState {
   }
 
   const fields: Record<string, string> = kind === "project"
-    ? { summary: "", status: "Live", stack: "", impact: "", coverImage: "", demoUrl: "", repoUrl: "" }
+    ? { summary: "", status: "Live", stack: "", impact: "", role: "", period: "", challenge: "", contribution: "", outcome: "", evidence: "", coverImage: "", demoUrl: "", repoUrl: "" }
     : kind === "certification"
       ? { issuer: "", earnedOn: "", verificationUrl: "" }
       : kind === "event"
