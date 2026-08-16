@@ -56,6 +56,7 @@ import { fallbackHomeData as portfolioData } from '@/lib/site-data';
 
 const AboutView = lazy(() => import('./content-views/AboutView').then(m => ({ default: m.AboutView })));
 const ProjectsView = lazy(() => import('./content-views/ProjectsView').then(m => ({ default: m.ProjectsView })));
+const CompetitionsView = lazy(() => import('./content-views/CompetitionsView').then(m => ({ default: m.CompetitionsView })));
 const CertificationsView = lazy(() => import('./content-views/CertificationsView').then(m => ({ default: m.CertificationsView })));
 const EventsView = lazy(() => import('./content-views/EventsView').then(m => ({ default: m.EventsView })));
 const ContactsView = lazy(() => import('./content-views/ContactsView').then(m => ({ default: m.ContactsView })));
@@ -66,6 +67,7 @@ function ContentViewForType({ contentType }: { contentType: ContentType }) {
     <Suspense fallback={<SkeletonView />}>
       {contentType === 'about' && <AboutView />}
       {contentType === 'projects' && <ProjectsView />}
+      {contentType === 'competitions' && <CompetitionsView />}
       {contentType === 'certifications' && <CertificationsView />}
       {contentType === 'events' && <EventsView />}
       {contentType === 'contacts' && <ContactsView />}
@@ -146,6 +148,7 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
     const ROUTE_MAP: Record<string, ContentType> = {
       '/contacts': 'contacts',
       '/projects': 'projects',
+      '/competitions': 'competitions',
       '/certifications': 'certifications',
       '/events': 'events',
     };
@@ -200,10 +203,11 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
     const SHORTCUT_MAP: Record<string, ContentType> = {
       '1': 'about',
       '2': 'projects',
-      '3': 'certifications',
-      '4': 'events',
-      '5': 'contacts',
-      '6': 'blog',
+      '3': 'competitions',
+      '4': 'certifications',
+      '5': 'events',
+      '6': 'contacts',
+      '7': 'blog',
     };
 
     function handleKeyDown(e: KeyboardEvent) {
@@ -238,7 +242,7 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
   );
 
   // Ensure refs exist for all content types
-  const contentTypes: ContentType[] = ['about', 'projects', 'certifications', 'events', 'contacts', 'blog'];
+  const contentTypes: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'blog'];
   for (const ct of contentTypes) {
     if (!dockIconRefs.current.has(ct)) {
       dockIconRefs.current.set(ct, React.createRef<HTMLButtonElement>());

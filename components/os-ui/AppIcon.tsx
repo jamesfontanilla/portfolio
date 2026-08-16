@@ -21,6 +21,7 @@ import type { ContentType } from '@/store/windowManagerStore';
 export const contentTypeLabel: Record<ContentType, string> = {
   about: 'About',
   projects: 'Projects',
+  competitions: 'Competitions',
   certifications: 'Certifications',
   events: 'Events',
   contacts: 'Contacts',
@@ -76,6 +77,15 @@ function IconCertifications() {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
+    </svg>
+  );
+}
+
+function IconCompetitions() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M7 4h10v4a5 5 0 01-10 0V4Z" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M7 6H4v1a4 4 0 004 4M17 6h3v1a4 4 0 01-4 4M12 13v4M8 20h8M9 17h6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -137,6 +147,7 @@ function IconBlog() {
 const iconMap: Record<ContentType, React.ReactNode> = {
   about: <IconAbout />,
   projects: <IconProjects />,
+  competitions: <IconCompetitions />,
   certifications: <IconCertifications />,
   events: <IconEvents />,
   contacts: <IconContacts />,

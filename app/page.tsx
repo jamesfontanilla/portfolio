@@ -45,8 +45,9 @@ function StatChip({
 }
 
 export default async function HomePage() {
-  const { settings, projects, certifications, events } = await getPortfolioData();
+  const { settings, projects, competitions, certifications, events } = await getPortfolioData();
   const featuredProject = projects[0];
+  const featuredCompetition = competitions[0];
   const contactLinks = [
     { label: "Email", href: `mailto:${settings.email}` },
     { label: "LinkedIn", href: settings.linkedinUrl },
@@ -64,6 +65,7 @@ export default async function HomePage() {
 
   const stats = [
     { label: "Projects", value: String(projects.length), description: "Featured and recent work" },
+    { label: "Competitions", value: String(competitions.length), description: "Engineering under pressure" },
     { label: "Certs", value: String(certifications.length), description: "Verified learning proof" },
     { label: "Events", value: String(events.length), description: "Meetups and conference history" },
   ];
@@ -85,6 +87,9 @@ export default async function HomePage() {
           </a>
           <a href="#projects" className="nav-link">
             Projects
+          </a>
+          <a href="#competitions" className="nav-link">
+            Competitions
           </a>
           <a href="#certifications" className="nav-link">
             Certifications
@@ -287,6 +292,34 @@ export default async function HomePage() {
               </article>
             ))}
           </div>
+        </section>
+
+        <section id="competitions" className="section-block">
+          <SectionHeader
+            eyebrow="Competitions"
+            title="Proof under pressure"
+            note="A separate record for the teams, seasons, and challenges where the work had to perform."
+            action={
+              <Link href="/competitions" className="text-link">
+                See All
+              </Link>
+            }
+          />
+
+          {featuredCompetition ? (
+            <article className="content-card glass-card featured-card">
+              <div className="card-topline">
+                <span className="tag">{featuredCompetition.status}</span>
+                {featuredCompetition.tags.slice(0, 2).map((tag) => <span className="tag tag-secondary" key={tag}>{tag}</span>)}
+              </div>
+              <h3>{featuredCompetition.title}</h3>
+              <p>{featuredCompetition.summary}</p>
+              <div className="card-footer">
+                <span>{featuredCompetition.impact}</span>
+                <Link href="/competitions" className="text-link">Open log</Link>
+              </div>
+            </article>
+          ) : null}
         </section>
 
         <section id="certifications" className="section-block">

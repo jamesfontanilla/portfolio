@@ -48,6 +48,9 @@ export default async function ProjectsPage() {
           <Link href="/projects" className="nav-link is-active">
             Projects
           </Link>
+          <Link href="/competitions" className="nav-link">
+            Competitions
+          </Link>
           <Link href="/certifications" className="nav-link">
             Certifications
           </Link>

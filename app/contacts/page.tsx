@@ -213,6 +213,9 @@ export default async function ContactsPage() {
           <Link href="/projects" className="nav-link">
             Projects
           </Link>
+          <Link href="/competitions" className="nav-link">
+            Competitions
+          </Link>
           <Link href="/certifications" className="nav-link">
             Certifications
           </Link>

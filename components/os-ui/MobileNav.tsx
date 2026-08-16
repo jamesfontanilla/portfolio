@@ -16,7 +16,7 @@ import { contentTypeLabel } from './AppIcon';
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const PRIMARY_TYPES: ContentType[] = ['projects', 'about', 'contacts'];
-const MORE_TYPES: ContentType[] = ['certifications', 'events', 'blog'];
+const MORE_TYPES: ContentType[] = ['competitions', 'certifications', 'events', 'blog'];
 
 // ─── Simple inline icons (same as AppIcon but smaller) ───────────────────────
 
@@ -42,6 +42,13 @@ function NavIcon({ type }: { type: ContentType }) {
         <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <circle cx="12" cy="10" r="5" stroke="currentColor" strokeWidth="1.8" />
           <path d="M9 21l3-3 3 3V15.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+    case 'competitions':
+      return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M7 4h10v4a5 5 0 01-10 0V4Z" stroke="currentColor" strokeWidth="1.8" />
+          <path d="M7 6H4v1a4 4 0 004 4M17 6h3v1a4 4 0 01-4 4M12 13v4M8 20h8M9 17h6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       );
     case 'events':

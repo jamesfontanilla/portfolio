@@ -1,4 +1,4 @@
-import type { BlogPost, Certification, HomeData, PortfolioEvent, Project, SiteSettings } from "@/lib/types";
+import type { BlogPost, Certification, Competition, HomeData, PortfolioEvent, Project, SiteSettings } from "@/lib/types";
 import { fallbackHomeData } from "@/lib/site-data";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 export const portfolioData: HomeData = fallbackHomeData;
 
 type ContentEntry = {
-  kind: "settings" | "project" | "certification" | "event" | "blog";
+  kind: "settings" | "project" | "competition" | "certification" | "event" | "blog";
   slug: string | null;
   title: string;
   status: string;
@@ -72,6 +72,23 @@ function mapContentEntries(entries: ContentEntry[]): HomeData {
       verificationUrl: asText(entry.data.verificationUrl) || undefined,
     }));
 
+  const competitions: Competition[] = entries
+    .filter((entry) => entry.kind === "competition")
+    .map((entry) => ({
+      title: entry.title,
+      summary: asText(entry.data.summary),
+      status: asText(entry.data.status, entry.status),
+      tags: asArray(entry.data.tags ?? entry.data.stack),
+      impact: asText(entry.data.impact),
+      role: asText(entry.data.role) || undefined,
+      period: asText(entry.data.period) || undefined,
+      challenge: asText(entry.data.challenge) || undefined,
+      contribution: asText(entry.data.contribution) || undefined,
+      outcome: asText(entry.data.outcome) || undefined,
+      evidence: asText(entry.data.evidence) || undefined,
+      featured: Boolean(entry.data.featured ?? entry.featured),
+    }));
+
   const events: PortfolioEvent[] = entries
     .filter((entry) => entry.kind === "event")
     .map((entry) => ({
@@ -102,6 +119,7 @@ function mapContentEntries(entries: ContentEntry[]): HomeData {
   return {
     settings,
     projects: projects.length ? projects : fallbackHomeData.projects,
+    competitions: competitions.length ? competitions : fallbackHomeData.competitions,
     certifications: certifications.length ? certifications : fallbackHomeData.certifications,
     events: events.length ? events : fallbackHomeData.events,
     blogPosts: blogPosts.length ? blogPosts : fallbackHomeData.blogPosts,

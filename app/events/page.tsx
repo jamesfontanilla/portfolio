@@ -49,6 +49,9 @@ export default async function EventsPage() {
           <Link href="/projects" className="nav-link">
             Projects
           </Link>
+          <Link href="/competitions" className="nav-link">
+            Competitions
+          </Link>
           <Link href="/certifications" className="nav-link">
             Certifications
           </Link>

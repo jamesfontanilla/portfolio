@@ -23,20 +23,6 @@ export const fallbackHomeData: HomeData = {
   },
   projects: [
     {
-      title: "VEX Robotics World Championship — QCU2",
-      summary: "An engineering and documentation case study from representing the Philippines at the VEX Robotics World Championship with QCU2.",
-      status: "International Robotics",
-      stack: ["Robotics", "Engineering Documentation", "Team Collaboration", "Competition"],
-      impact: "Impact: turned a season of engineering work into a competition-ready record and helped the team communicate its design process on an international stage.",
-      role: "Notebook Manager · QCU2",
-      period: "2026",
-      challenge: "Turn a complex season of robot design, iteration, and team decisions into a clear, competition-ready engineering record while supporting the team at an international event.",
-      contribution: "Maintained the engineering notebook, organized the team’s build narrative and evidence, and helped represent the Philippines with QCU2 at the VEX Robotics World Championship.",
-      outcome: "A bridge between hands-on engineering, technical communication, and international representation—evidence of disciplined execution beyond software projects.",
-      evidence: "Competition documentation and engineering notebook materials available on request.",
-      featured: true,
-    },
-    {
       title: "Microsoft Student Community — QCU",
       summary: "A student-led technology community I helped co-found at QCU to make learning, mentorship, and opportunities more accessible to students.",
       status: "Community Building",
@@ -176,6 +162,22 @@ export const fallbackHomeData: HomeData = {
       impact: "Impact: gives trip collaborators a shared planning surface with a clear path from demo to production data.",
       repoUrl: "https://github.com/jamesfontanilla/RouteQuilt",
       featured: false,
+    },
+  ],
+  competitions: [
+    {
+      title: "VEX Robotics World Championship — QCU2",
+      summary: "An engineering and documentation record from representing the Philippines at the VEX Robotics World Championship with QCU2.",
+      status: "International Robotics",
+      tags: ["Robotics", "Engineering Documentation", "Team Collaboration", "VEX"],
+      impact: "Impact: turned a season of engineering work into a competition-ready record and helped the team communicate its design process on an international stage.",
+      role: "Notebook Manager · QCU2",
+      period: "2026",
+      challenge: "Turn a complex season of robot design, iteration, and team decisions into a clear, competition-ready engineering record while supporting the team at an international event.",
+      contribution: "Maintained the engineering notebook, organized the team’s build narrative and evidence, and helped represent the Philippines with QCU2 at the VEX Robotics World Championship.",
+      outcome: "A bridge between hands-on engineering, technical communication, and international representation—evidence of disciplined execution beyond software projects.",
+      evidence: "Competition documentation and engineering notebook materials available on request.",
+      featured: true,
     },
   ],
   certifications: [

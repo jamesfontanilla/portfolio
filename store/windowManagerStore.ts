@@ -3,7 +3,7 @@ import type { SnapPreviewState } from '@/lib/windowSnap';
 // Window Manager State Types
 // All OS UI state lives here — pure TypeScript, no side effects
 
-export type ContentType = 'about' | 'projects' | 'certifications' | 'events' | 'contacts' | 'blog';
+export type ContentType = 'about' | 'projects' | 'competitions' | 'certifications' | 'events' | 'contacts' | 'blog';
 
 export interface WindowState {
   id: string;

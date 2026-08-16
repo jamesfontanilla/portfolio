@@ -38,6 +38,15 @@ function IconCertifications() {
   );
 }
 
+function IconCompetitions() {
+  return (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M7 4h10v4a5 5 0 01-10 0V4Z" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M7 6H4v1a4 4 0 004 4M17 6h3v1a4 4 0 01-4 4M12 13v4M8 20h8M9 17h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 function IconEvents() {
   return (
     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -68,6 +77,7 @@ function IconBlog() {
 const iconMap: Record<ContentType, React.ReactNode> = {
   about: <IconAbout />,
   projects: <IconProjects />,
+  competitions: <IconCompetitions />,
   certifications: <IconCertifications />,
   events: <IconEvents />,
   contacts: <IconContacts />,
@@ -77,6 +87,7 @@ const iconMap: Record<ContentType, React.ReactNode> = {
 const labelMap: Record<ContentType, string> = {
   about: 'About Me',
   projects: 'Projects',
+  competitions: 'Competitions',
   certifications: 'Certifications',
   events: 'Events',
   contacts: 'Contacts',
@@ -91,7 +102,7 @@ interface DesktopIconsProps {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-const CONTENT_TYPES: ContentType[] = ['about', 'projects', 'certifications', 'events', 'contacts', 'blog'];
+const CONTENT_TYPES: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'blog'];
 
 export function DesktopIcons({ onOpen }: DesktopIconsProps) {
   const [selected, setSelected] = useState<ContentType | null>(null);

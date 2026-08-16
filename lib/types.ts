@@ -40,6 +40,21 @@ export type Project = {
   featured?: boolean;
 };
 
+export type Competition = {
+  title: string;
+  summary: string;
+  status: string;
+  tags: string[];
+  impact: string;
+  role?: string;
+  period?: string;
+  challenge?: string;
+  contribution?: string;
+  outcome?: string;
+  evidence?: string;
+  featured?: boolean;
+};
+
 export type Certification = {
   title: string;
   issuer: string;
@@ -80,6 +95,7 @@ export type BlogPost = {
 export type HomeData = {
   settings: SiteSettings;
   projects: Project[];
+  competitions: Competition[];
   certifications: Certification[];
   events: PortfolioEvent[];
   blogPosts?: BlogPost[];

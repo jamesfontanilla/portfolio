@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { fallbackHomeData } from "@/lib/site-data";
 import { createClient } from "@/lib/supabase/client";
 
-type ContentKind = "settings" | "project" | "certification" | "event" | "blog";
+type ContentKind = "settings" | "project" | "competition" | "certification" | "event" | "blog";
 type EntryStatus = "draft" | "published" | "archived";
 
 type ContentEntry = {
@@ -31,6 +31,7 @@ type EditorState = {
 const sections: { kind: ContentKind; label: string; singular: string }[] = [
   { kind: "settings", label: "Profile", singular: "profile" },
   { kind: "project", label: "Projects", singular: "project" },
+  { kind: "competition", label: "Competitions", singular: "competition" },
   { kind: "certification", label: "Certifications", singular: "certification" },
   { kind: "event", label: "Events", singular: "event" },
   { kind: "blog", label: "Blog", singular: "post" },
@@ -54,7 +55,9 @@ function emptyEditor(kind: ContentKind): EditorState {
 
   const fields: Record<string, string> = kind === "project"
     ? { summary: "", status: "Live", stack: "", impact: "", role: "", period: "", challenge: "", contribution: "", outcome: "", evidence: "", coverImage: "", demoUrl: "", repoUrl: "" }
-    : kind === "certification"
+    : kind === "competition"
+      ? { summary: "", status: "International", tags: "", impact: "", role: "", period: "", challenge: "", contribution: "", outcome: "", evidence: "" }
+      : kind === "certification"
       ? { issuer: "", earnedOn: "", verificationUrl: "" }
       : kind === "event"
         ? { type: "Conference", role: "Attendee", date: "", location: "", summary: "", tags: "", media: "" }
@@ -82,7 +85,7 @@ function editorFromEntry(entry: ContentEntry): EditorState {
 
 function toData(editor: EditorState) {
   const data: Record<string, unknown> = { ...editor.fields };
-  if (editor.kind === "project" || editor.kind === "event" || editor.kind === "blog") {
+  if (editor.kind === "project" || editor.kind === "competition" || editor.kind === "event" || editor.kind === "blog") {
     for (const key of ["stack", "tags"]) {
       if (key in data) data[key] = String(data[key] ?? "").split(",").map((value) => value.trim()).filter(Boolean);
     }
@@ -226,7 +229,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
           <button className={`admin-nav-button ${activeKind === "settings" ? "active" : ""}`} onClick={() => chooseKind("settings")}><span>⌂</span>Overview &amp; profile</button>
           {sections.slice(1).map((section) => (
             <button key={section.kind} className={`admin-nav-button ${activeKind === section.kind ? "active" : ""}`} onClick={() => chooseKind(section.kind)}>
-              <span>{section.kind === "project" ? "◈" : section.kind === "certification" ? "✦" : section.kind === "event" ? "◌" : "✎"}</span>{section.label}
+              <span>{section.kind === "project" ? "◈" : section.kind === "competition" ? "🏆" : section.kind === "certification" ? "✦" : section.kind === "event" ? "◌" : "✎"}</span>{section.label}
             </button>
           ))}
         </nav>
@@ -250,7 +253,8 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
           <section className="admin-metrics">
             <article className="admin-metric"><span>Published</span><strong>{publishedCount}</strong><small>Visible on your site</small></article>
             <article className="admin-metric"><span>Drafts</span><strong>{draftCount}</strong><small>Private until you publish</small></article>
-            <article className="admin-metric"><span>Projects</span><strong>{projectCount}</strong><small>Proof of your work</small></article>
+              <article className="admin-metric"><span>Projects</span><strong>{projectCount}</strong><small>Proof of your work</small></article>
+              <article className="admin-metric"><span>Competitions</span><strong>{entries.filter((entry) => entry.kind === "competition").length}</strong><small>Performance under pressure</small></article>
             <article className="admin-metric admin-metric-accent"><span>Publishing flow</span><strong>Ready</strong><small>Supabase + Vercel connected</small></article>
           </section>
         ) : null}
@@ -262,7 +266,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
             <div className="admin-entry-list">
               {loading ? <p className="admin-empty">Loading your content…</p> : visibleEntries.length === 0 ? <p className="admin-empty">No matching entries. Create your first {currentSection.singular}.</p> : visibleEntries.map((entry) => (
                 <button key={entry.id} className={`admin-entry-row ${editor.id === entry.id ? "selected" : ""}`} onClick={() => chooseEntry(entry)}>
-                  <span className="admin-entry-icon">{entry.kind === "settings" ? "⌂" : entry.kind === "project" ? "◈" : entry.kind === "certification" ? "✦" : entry.kind === "event" ? "◌" : "✎"}</span>
+                  <span className="admin-entry-icon">{entry.kind === "settings" ? "⌂" : entry.kind === "project" ? "◈" : entry.kind === "competition" ? "🏆" : entry.kind === "certification" ? "✦" : entry.kind === "event" ? "◌" : "✎"}</span>
                   <span className="admin-entry-copy"><strong>{entry.title}</strong><small>{entry.slug || "Site-wide profile"}</small></span>
                   <span className={`admin-status admin-status-${entry.status}`}>{entry.status}</span>
                 </button>

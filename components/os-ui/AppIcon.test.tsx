@@ -21,6 +21,7 @@ import type { ContentType } from '@/store/windowManagerStore';
 const CONTENT_TYPES: ContentType[] = [
   'about',
   'projects',
+  'competitions',
   'certifications',
   'events',
   'contacts',
@@ -41,7 +42,7 @@ describe('Property 7: Dock indicator dot shown iff window is open or minimized',
   test.prop([
     fc.record({ isOpen: fc.boolean(), isMinimized: fc.boolean() }),
     fc.constantFrom(...CONTENT_TYPES),
-    fc.integer({ min: 0, max: 4 }),
+    fc.integer({ min: 0, max: CONTENT_TYPES.length - 1 }),
   ])(
     'indicator dot present when isOpen || isMinimized, absent otherwise',
     ({ isOpen, isMinimized }, type, selfIndex) => {
@@ -86,7 +87,7 @@ describe('Property 7: Dock indicator dot shown iff window is open or minimized',
  */
 describe('Property 8: Dock magnification scales are correct for any hovered index', () => {
   test.prop([
-    fc.integer({ min: 0, max: 4 }),
+    fc.integer({ min: 0, max: CONTENT_TYPES.length - 1 }),
     fc.integer({ min: 0, max: 4 }),
   ])(
     'scale is 1.5 at dist=0, 1.25 at dist=1, 1.0 otherwise',
@@ -247,9 +248,11 @@ describe('Property 26: App Icon aria-labels match ContentType display names', ()
   const expectedLabels: Record<ContentType, string> = {
     about: 'About',
     projects: 'Projects',
+    competitions: 'Competitions',
     certifications: 'Certifications',
     events: 'Events',
     contacts: 'Contacts',
+    blog: 'Blog',
   };
 
   test.prop([fc.constantFrom(...CONTENT_TYPES)])(
@@ -276,7 +279,7 @@ describe('Property 26: App Icon aria-labels match ContentType display names', ()
     },
   );
 
-  it('all five ContentTypes have correct aria-labels', () => {
+  it('all dock ContentTypes have correct aria-labels', () => {
     CONTENT_TYPES.forEach((type, selfIndex) => {
       const { container, unmount } = render(
         <AppIcon

@@ -54,7 +54,7 @@ function makeDockIconRef(): React.RefObject<HTMLButtonElement | null> {
   return { current: btn };
 }
 
-const CONTENT_TYPES: ContentType[] = ['about', 'projects', 'certifications', 'events', 'contacts'];
+const CONTENT_TYPES: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts'];
 
 // ─── Property 12: Active Window uses --border-strong ─────────────────────────
 
@@ -147,9 +147,11 @@ describe('Property 25: Window Title Bar aria-label matches ContentType', () => {
   const expectedLabels: Record<ContentType, string> = {
     about: 'About',
     projects: 'Projects',
+    competitions: 'Competitions',
     certifications: 'Certifications',
     events: 'Events',
     contacts: 'Contacts',
+    blog: 'Blog',
   };
 
   test.prop([fc.constantFrom(...CONTENT_TYPES)])(

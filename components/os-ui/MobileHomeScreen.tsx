@@ -19,6 +19,8 @@ function AppGridIcon({ type }: { type: ContentType }) {
       return (<svg width={s} height={s} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.6"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>);
     case 'projects':
       return (<svg width={s} height={s} viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.6"/><path d="M3 11h18M8 7V5a1 1 0 011-1h6a1 1 0 011 1v2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>);
+    case 'competitions':
+      return (<svg width={s} height={s} viewBox="0 0 24 24" fill="none"><path d="M7 4h10v4a5 5 0 01-10 0V4Z" stroke="currentColor" strokeWidth="1.6"/><path d="M7 6H4v1a4 4 0 004 4M17 6h3v1a4 4 0 01-4 4M12 13v4M8 20h8M9 17h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>);
     case 'certifications':
       return (<svg width={s} height={s} viewBox="0 0 24 24" fill="none"><circle cx="12" cy="10" r="5" stroke="currentColor" strokeWidth="1.6"/><path d="M9 21l3-3 3 3V15.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>);
     case 'events':
@@ -30,7 +32,7 @@ function AppGridIcon({ type }: { type: ContentType }) {
   }
 }
 
-const CONTENT_TYPES: ContentType[] = ['about', 'projects', 'certifications', 'events', 'contacts', 'blog'];
+const CONTENT_TYPES: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'blog'];
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
