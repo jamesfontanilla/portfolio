@@ -17,7 +17,9 @@ export default async function RootLayout({
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") ?? "/";
   const isAdmin = pathname.startsWith("/admin");
-  const data = isAdmin ? portfolioData : await getPortfolioData();
+  const isProjectDetail = pathname.startsWith("/projects/");
+  const useOsShell = !isAdmin && !isProjectDetail;
+  const data = useOsShell ? await getPortfolioData() : portfolioData;
 
   return (
     <html lang="en">
@@ -30,7 +32,7 @@ export default async function RootLayout({
         />
       </head>
       <body>
-        {isAdmin ? children : <OSUIProvider initialRoute={pathname} initialData={data}>{children}</OSUIProvider>}
+        {useOsShell ? <OSUIProvider initialRoute={pathname} initialData={data}>{children}</OSUIProvider> : children}
       </body>
     </html>
   );
