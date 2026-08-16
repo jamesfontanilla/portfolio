@@ -6,7 +6,10 @@
  */
 
 import React from 'react';
+import Link from 'next/link';
 import { usePortfolioData } from '../OSUIProvider';
+import { buildImageUrl } from '@/lib/image';
+import { getProjectSlug } from '@/lib/project';
 import type { Project } from '@/lib/types';
 
 function Tag({ label, gold }: { label: string; gold?: boolean }) {
@@ -34,9 +37,29 @@ function Tag({ label, gold }: { label: string; gold?: boolean }) {
 function ProjectCard({ project }: { project: Project }) {
   const hasLinks = Boolean(project.demoUrl || project.repoUrl);
   const hasCaseStudy = Boolean(project.role || project.period || project.challenge || project.contribution || project.outcome || project.evidence);
+  const detailHref = `/projects/${getProjectSlug(project)}`;
+  const previewImage = project.coverImage ?? project.photos?.[0];
+  const previewImageUrl = previewImage ? buildImageUrl(previewImage) : '';
+
+  function openProject(event: React.MouseEvent<HTMLDivElement>) {
+    if ((event.target as HTMLElement).closest('a')) return;
+    window.location.href = detailHref;
+  }
+
+  function openProjectWithKeyboard(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      window.location.href = detailHref;
+    }
+  }
 
   return (
     <div
+      role="link"
+      tabIndex={0}
+      aria-label={`Open ${project.title} case study`}
+      onClick={openProject}
+      onKeyDown={openProjectWithKeyboard}
       style={{
         background: 'rgba(255,255,255,0.04)',
         border: '1px solid rgba(255,255,255,0.07)',
@@ -45,12 +68,27 @@ function ProjectCard({ project }: { project: Project }) {
         display: 'flex',
         flexDirection: 'column',
         gap: '12px',
+        cursor: 'pointer',
+        transition: 'transform 180ms ease, border-color 180ms ease, background 180ms ease',
       }}
     >
+      {previewImageUrl && (
+        <div style={{ overflow: 'hidden', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.07)', background: 'rgba(255,255,255,0.03)' }}>
+          <img
+            src={previewImageUrl}
+            alt={previewImage?.alt ?? `${project.title} preview`}
+            loading="lazy"
+            style={{ display: 'block', width: '100%', aspectRatio: '16 / 9', objectFit: 'cover' }}
+          />
+        </div>
+      )}
+
       {/* Title + status */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap' }}>
         <h3 style={{ margin: 0, fontFamily: '"Space Grotesk","Manrope",sans-serif', fontWeight: 500, fontSize: '1.05rem', color: 'var(--text)', letterSpacing: '-0.02em' }}>
-          {project.title}
+          <Link href={detailHref} style={{ color: 'inherit' }}>
+            {project.title}
+          </Link>
         </h3>
         <Tag label={project.status} gold />
       </div>
@@ -113,6 +151,13 @@ function ProjectCard({ project }: { project: Project }) {
           )}
         </div>
       )}
+
+      <Link
+        href={detailHref}
+        style={{ color: 'var(--gold)', fontSize: '0.84rem', fontWeight: 700, marginTop: '2px' }}
+      >
+        Open case study →
+      </Link>
     </div>
   );
 }
