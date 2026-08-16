@@ -1,4 +1,4 @@
-import type { BlogPost, Certification, Competition, HomeData, PortfolioEvent, Project, SiteSettings } from "@/lib/types";
+import type { BlogPost, Certification, Competition, HomeData, PortfolioEvent, PortfolioImage, Project, SiteSettings } from "@/lib/types";
 import { fallbackHomeData } from "@/lib/site-data";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
@@ -19,8 +19,26 @@ const asArray = (value: unknown) =>
   Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
 
 function asImage(value: unknown, fallbackAlt: string) {
-  if (typeof value !== "string" || !value) return undefined;
-  return { url: value, alt: fallbackAlt };
+  if (typeof value === "string" && value) return { url: value, alt: fallbackAlt };
+  if (typeof value === "object" && value !== null) {
+    const image = value as { url?: unknown; alt?: unknown; asset?: unknown };
+    if (typeof image.url === "string" && image.url) {
+      return {
+        url: image.url,
+        alt: typeof image.alt === "string" && image.alt ? image.alt : fallbackAlt,
+        asset: image.asset,
+      };
+    }
+  }
+  return undefined;
+}
+
+function asImages(value: unknown, fallbackAlt: string): PortfolioImage[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((item) => {
+    const image = asImage(item, fallbackAlt);
+    return image ? [image] : [];
+  });
 }
 
 function mapContentEntries(entries: ContentEntry[]): HomeData {
@@ -46,6 +64,7 @@ function mapContentEntries(entries: ContentEntry[]): HomeData {
   const projects: Project[] = entries
     .filter((entry) => entry.kind === "project")
     .map((entry) => ({
+      slug: entry.slug ?? undefined,
       title: entry.title,
       summary: asText(entry.data.summary),
       status: asText(entry.data.status, entry.status),
@@ -58,6 +77,7 @@ function mapContentEntries(entries: ContentEntry[]): HomeData {
       outcome: asText(entry.data.outcome) || undefined,
       evidence: asText(entry.data.evidence) || undefined,
       coverImage: asImage(entry.data.coverImage, entry.title),
+      photos: asImages(entry.data.photos, entry.title),
       demoUrl: asText(entry.data.demoUrl) || undefined,
       repoUrl: asText(entry.data.repoUrl) || undefined,
       featured: Boolean(entry.data.featured ?? entry.featured),

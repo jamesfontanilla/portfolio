@@ -38,7 +38,18 @@ const sections: { kind: ContentKind; label: string; singular: string }[] = [
 ];
 
 const text = (value: unknown) => (typeof value === "string" ? value : "");
-const arrayText = (value: unknown) => (Array.isArray(value) ? value.filter((item) => typeof item === "string").join(", ") : "");
+const arrayText = (value: unknown) => (Array.isArray(value)
+  ? value
+    .map((item) => {
+      if (typeof item === "string") return item;
+      if (typeof item === "object" && item !== null && typeof (item as { url?: unknown }).url === "string") {
+        return (item as { url: string }).url;
+      }
+      return "";
+    })
+    .filter(Boolean)
+    .join(", ")
+  : "");
 
 function emptyEditor(kind: ContentKind): EditorState {
   if (kind === "settings") {
@@ -54,7 +65,7 @@ function emptyEditor(kind: ContentKind): EditorState {
   }
 
   const fields: Record<string, string> = kind === "project"
-    ? { summary: "", status: "Live", stack: "", impact: "", role: "", period: "", challenge: "", contribution: "", outcome: "", evidence: "", coverImage: "", demoUrl: "", repoUrl: "" }
+    ? { summary: "", status: "Live", stack: "", impact: "", role: "", period: "", challenge: "", contribution: "", outcome: "", evidence: "", coverImage: "", photos: "", demoUrl: "", repoUrl: "" }
     : kind === "competition"
       ? { summary: "", status: "International", tags: "", impact: "", role: "", period: "", challenge: "", contribution: "", outcome: "", evidence: "" }
       : kind === "certification"
@@ -70,7 +81,7 @@ function editorFromEntry(entry: ContentEntry): EditorState {
   const editor = emptyEditor(entry.kind);
   const data = entry.data ?? {};
   const fields = Object.fromEntries(
-    Object.keys(editor.fields).map((key) => [key, key === "stack" || key === "tags" ? arrayText(data[key]) : text(data[key])]),
+    Object.keys(editor.fields).map((key) => [key, key === "stack" || key === "tags" || key === "photos" ? arrayText(data[key]) : text(data[key])]),
   );
   return {
     ...editor,
@@ -86,7 +97,7 @@ function editorFromEntry(entry: ContentEntry): EditorState {
 function toData(editor: EditorState) {
   const data: Record<string, unknown> = { ...editor.fields };
   if (editor.kind === "project" || editor.kind === "competition" || editor.kind === "event" || editor.kind === "blog") {
-    for (const key of ["stack", "tags"]) {
+    for (const key of ["stack", "tags", "photos"]) {
       if (key in data) data[key] = String(data[key] ?? "").split(",").map((value) => value.trim()).filter(Boolean);
     }
   }
@@ -301,5 +312,5 @@ function SettingsFields({ editor, updateField }: { editor: EditorState; updateFi
 
 function ContentFields({ editor, updateField }: { editor: EditorState; updateField: (key: string, value: string) => void }) {
   const fields = Object.keys(editor.fields);
-  return <div className="admin-field-grid">{fields.map((key) => { const long = ["summary", "excerpt", "body"].includes(key); return <label className={`admin-field ${long ? "admin-field-wide" : ""}`} key={key}><span>{key.replace(/([A-Z])/g, " $1")}</span>{long ? <textarea className="admin-textarea" rows={key === "body" ? 8 : 4} value={editor.fields[key] ?? ""} onChange={(event) => updateField(key, event.target.value)} /> : <input value={editor.fields[key] ?? ""} onChange={(event) => updateField(key, event.target.value)} placeholder={key === "tags" || key === "stack" ? "Separate items with commas" : ""} />}</label>; })}</div>;
+  return <div className="admin-field-grid">{fields.map((key) => { const long = ["summary", "excerpt", "body"].includes(key); const list = key === "tags" || key === "stack" || key === "photos"; return <label className={`admin-field ${long ? "admin-field-wide" : ""}`} key={key}><span>{key.replace(/([A-Z])/g, " $1")}</span>{long ? <textarea className="admin-textarea" rows={key === "body" ? 8 : 4} value={editor.fields[key] ?? ""} onChange={(event) => updateField(key, event.target.value)} /> : <input value={editor.fields[key] ?? ""} onChange={(event) => updateField(key, event.target.value)} placeholder={list ? (key === "photos" ? "Comma-separated image URLs" : "Separate items with commas") : ""} />}</label>; })}</div>;
 }

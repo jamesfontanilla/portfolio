@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getPortfolioData } from "@/lib/portfolio-data";
 import { formatDate } from "@/lib/format";
 import { buildImageUrl } from "@/lib/image";
+import { getProjectSlug } from "@/lib/project";
 
 function SectionHeader({
   eyebrow,
@@ -219,7 +220,10 @@ export default async function HomePage() {
 
           <div className="card-grid projects-grid">
             {featuredProject ? (
-              <article className="content-card glass-card featured-card">
+              <Link
+                href={`/projects/${getProjectSlug(featuredProject)}`}
+                className="content-card glass-card featured-card project-card-link"
+              >
                 {featuredProject.coverImage ? (
                   <div className="project-media">
                     <img
@@ -241,24 +245,17 @@ export default async function HomePage() {
                 <p>{featuredProject.summary}</p>
                 <div className="card-footer">
                   <span>{featuredProject.impact}</span>
-                  <div className="card-actions">
-                    {featuredProject.demoUrl ? (
-                      <a href={featuredProject.demoUrl} className="text-link">
-                        Demo
-                      </a>
-                    ) : null}
-                    {featuredProject.repoUrl ? (
-                      <a href={featuredProject.repoUrl} className="text-link">
-                        Repo
-                      </a>
-                    ) : null}
-                  </div>
+                  <span className="text-link">View details →</span>
                 </div>
-              </article>
+              </Link>
             ) : null}
 
             {projects.slice(1, 3).map((project) => (
-              <article className="content-card glass-card" key={project.title}>
+              <Link
+                href={`/projects/${getProjectSlug(project)}`}
+                className="content-card glass-card project-card-link"
+                key={project.title}
+              >
                 {project.coverImage ? (
                   <div className="project-media project-media-small">
                     <img
@@ -276,20 +273,9 @@ export default async function HomePage() {
                 <p>{project.summary}</p>
                 <div className="card-footer">
                   <span>{project.impact}</span>
-                  <div className="card-actions">
-                    {project.demoUrl ? (
-                      <a href={project.demoUrl} className="text-link">
-                        Demo
-                      </a>
-                    ) : null}
-                    {project.repoUrl ? (
-                      <a href={project.repoUrl} className="text-link">
-                        Repo
-                      </a>
-                    ) : null}
-                  </div>
+                  <span className="text-link">View details →</span>
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
         </section>

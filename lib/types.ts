@@ -18,7 +18,14 @@ export type SiteSettings = {
   instagramUrl?: string;
 };
 
+export type PortfolioImage = {
+  url?: string;
+  asset?: unknown;
+  alt: string;
+};
+
 export type Project = {
+  slug?: string;
   title: string;
   summary: string;
   status: string;
@@ -30,11 +37,8 @@ export type Project = {
   contribution?: string;
   outcome?: string;
   evidence?: string;
-  coverImage?: {
-    url?: string;
-    asset?: unknown;
-    alt: string;
-  };
+  coverImage?: PortfolioImage;
+  photos?: PortfolioImage[];
   demoUrl?: string;
   repoUrl?: string;
   featured?: boolean;

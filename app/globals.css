@@ -772,6 +772,159 @@ img {
   gap: 14px;
 }
 
+.project-card-link {
+  display: block;
+  color: inherit;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.project-card-link:hover {
+  transform: translateY(-3px);
+}
+
+.project-card-link:focus-visible {
+  outline: 2px solid var(--sand);
+  outline-offset: 4px;
+}
+
+.project-detail-page {
+  display: grid;
+  gap: 22px;
+}
+
+.detail-breadcrumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.project-detail-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(220px, 0.55fr);
+  gap: 28px;
+  padding: clamp(24px, 4vw, 44px);
+}
+
+.project-detail-copy {
+  display: grid;
+  align-content: center;
+  gap: 12px;
+}
+
+.project-detail-copy .card-topline {
+  margin-bottom: 4px;
+}
+
+.project-detail-copy h1 {
+  max-width: 12ch;
+  margin: 0;
+  font-family: "Space Grotesk", "Manrope", "Aptos", "Segoe UI", sans-serif;
+  font-size: clamp(2.8rem, 6vw, 6.2rem);
+  font-weight: 500;
+  letter-spacing: -0.065em;
+  line-height: 0.92;
+}
+
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.project-detail-meta {
+  display: grid;
+  align-content: end;
+  gap: 18px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.project-detail-meta div,
+.detail-prose div {
+  display: grid;
+  gap: 6px;
+}
+
+.project-detail-meta strong {
+  line-height: 1.45;
+}
+
+.project-gallery-section,
+.project-detail-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.project-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.project-gallery.is-single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.project-gallery-item {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.project-gallery-item img {
+  aspect-ratio: 16 / 10;
+}
+
+.project-gallery-item figcaption {
+  padding: 12px 16px 15px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.project-detail-grid {
+  grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
+}
+
+.detail-story-card,
+.detail-side-card {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  padding: 26px;
+}
+
+.detail-story-card h2,
+.detail-side-card h2 {
+  margin: 0;
+  font-family: "Space Grotesk", "Manrope", "Aptos", "Segoe UI", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+
+.detail-prose {
+  display: grid;
+  gap: 20px;
+}
+
+.detail-prose p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.detail-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .achievement-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1066,6 +1219,16 @@ img {
     flex-direction: column;
   }
 
+  .project-detail-hero,
+  .project-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-detail-meta {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-content: start;
+  }
+
   .archive-actions {
     justify-content: flex-start;
   }
@@ -1076,6 +1239,17 @@ img {
 
   .admin-body {
     padding: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .project-detail-meta,
+  .project-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .project-detail-copy h1 {
+    max-width: none;
   }
 }
 
