@@ -7,6 +7,10 @@ import { getPortfolioData, portfolioData } from "@/lib/portfolio-data";
 export const metadata: Metadata = {
   title: "Portfolio Draft",
   description: "A premium desktop-first portfolio with structured local content.",
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    shortcut: ["/icon.svg"],
+  },
 };
 
 export default async function RootLayout({

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">James Fontanilla portfolio mark</title>
+  <desc id="desc">A JF monogram inside a layered desktop window.</desc>
+  <rect width="64" height="64" rx="17" fill="#091321"/>
+  <rect x="2.5" y="2.5" width="59" height="59" rx="14.5" fill="none" stroke="#A9D2FF" stroke-opacity=".72"/>
+  <path d="M14 18.5h36" stroke="#E7C25A" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="18" cy="18.5" r="2" fill="#E7C25A"/>
+  <circle cx="25" cy="18.5" r="2" fill="#A9D2FF"/>
+  <circle cx="32" cy="18.5" r="2" fill="#E7C25A"/>
+  <path d="M14 27.5h36M14 36.5h36" stroke="#A9D2FF" stroke-opacity=".62" stroke-width="2" stroke-linecap="round"/>
+  <text x="32" y="50" fill="#F4F7FB" font-family="Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="-1.2" text-anchor="middle">JF</text>
+</svg>
