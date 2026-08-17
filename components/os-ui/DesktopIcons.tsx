@@ -138,11 +138,17 @@ export function DesktopIcons({ onOpen }: DesktopIconsProps) {
         position: 'absolute',
         top: '16px',
         left: '16px',
-        display: 'flex',
-        flexDirection: 'column',
-        flexWrap: 'wrap',
+        // Keep a protected lane above the bottom-left widgets. CSS Grid fills
+        // the first column top-to-bottom, then starts the next column instead
+        // of shrinking/overflowing icons into the location badge.
+        display: 'grid',
+        gridAutoFlow: 'column',
+        gridTemplateRows: 'repeat(auto-fill, 80px)',
+        gridAutoColumns: '80px',
         gap: '4px',
-        maxHeight: 'calc(100vh - 64px)',
+        height: 'calc(100vh - 300px)',
+        maxHeight: 'calc(100vh - 300px)',
+        alignContent: 'start',
         zIndex: 1,
       }}
     >
@@ -170,6 +176,7 @@ export function DesktopIcons({ onOpen }: DesktopIconsProps) {
             cursor: 'pointer',
             color: 'var(--text)',
             outline: 'none',
+            flex: '0 0 80px',
             transition: 'background 100ms ease, border-color 100ms ease',
           }}
         >
