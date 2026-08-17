@@ -112,18 +112,43 @@ export function BootScreen({ name }: BootScreenProps) {
         opacity: 0, // WAAPI handles the transition from 0
       }}
     >
-      <span
+      <div
         style={{
-          fontFamily: '"Space Grotesk", "Manrope", sans-serif',
-          fontSize: 'clamp(2rem, 5vw, 4rem)',
-          fontWeight: 500,
-          color: 'var(--gold)',
-          letterSpacing: '-0.04em',
-          userSelect: 'none',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 'clamp(1rem, 2.5vw, 1.5rem)',
+          maxWidth: '100%',
+          padding: '1.5rem',
+          textAlign: 'center',
         }}
       >
-        {displayName}
-      </span>
+        <img
+          src="/icon.svg"
+          alt="James Fontanilla portfolio mark"
+          width={88}
+          height={88}
+          style={{
+            display: 'block',
+            width: 'clamp(56px, 13vw, 88px)',
+            height: 'auto',
+            borderRadius: 'clamp(16px, 3vw, 22px)',
+            boxShadow: '0 18px 54px rgba(1, 7, 18, 0.32), 0 0 0 1px rgba(169, 210, 255, 0.12)',
+          }}
+        />
+        <span
+          style={{
+            fontFamily: '"Space Grotesk", "Manrope", sans-serif',
+            fontSize: 'clamp(2rem, 5vw, 4rem)',
+            fontWeight: 500,
+            color: 'var(--gold)',
+            letterSpacing: '-0.04em',
+            userSelect: 'none',
+          }}
+        >
+          {displayName}
+        </span>
+      </div>
     </div>
   );
 }

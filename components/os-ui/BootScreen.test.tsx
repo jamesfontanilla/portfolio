@@ -83,6 +83,21 @@ describe('Property 21: Boot Screen name fallback chain', () => {
     animSpy.mockRestore();
   });
 
+  it('shows the portfolio mark above the boot name', () => {
+    mockUseReducedMotion.mockReturnValue(false);
+    const animSpy = vi.spyOn(HTMLElement.prototype, 'animate').mockReturnValue({
+      onfinish: null,
+      cancel: vi.fn(),
+    } as unknown as Animation);
+
+    render(<BootScreen name="James Fontanilla" />);
+
+    const mark = screen.getByRole('img', { name: 'James Fontanilla portfolio mark' });
+    expect(mark.getAttribute('src')).toBe('/icon.svg');
+
+    animSpy.mockRestore();
+  });
+
   it('shows em-dash when name is empty string', () => {
     mockUseReducedMotion.mockReturnValue(false);
     const animSpy = vi.spyOn(HTMLElement.prototype, 'animate').mockReturnValue({
