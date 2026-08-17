@@ -1,8 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ChangeEvent } from "react";
 import { fallbackHomeData } from "@/lib/site-data";
 import { createClient } from "@/lib/supabase/client";
+
+const MEDIA_BUCKET = "portfolio-media";
+const MAX_MEDIA_SIZE = 10 * 1024 * 1024;
+const ALLOWED_MEDIA_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"];
 
 type ContentKind = "settings" | "project" | "competition" | "certification" | "event" | "blog";
 type EntryStatus = "draft" | "published" | "archived";
@@ -290,7 +294,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
             <div className="admin-editor-form">
               <label className="admin-field admin-field-wide"><span>Title</span><input value={editor.title} onChange={(event) => setEditor((current) => ({ ...current, title: event.target.value }))} placeholder="Give this entry a clear title" /></label>
               {editor.kind !== "settings" ? <label className="admin-field"><span>Slug</span><input value={editor.slug} onChange={(event) => setEditor((current) => ({ ...current, slug: event.target.value.toLowerCase().replace(/[^a-z0-9-]+/g, "-") }))} placeholder="url-friendly-slug" /></label> : null}
-              {editor.kind === "settings" ? <SettingsFields editor={editor} updateField={updateField} /> : <ContentFields editor={editor} updateField={updateField} />}
+              {editor.kind === "settings" ? <SettingsFields editor={editor} updateField={updateField} /> : <ContentFields editor={editor} updateField={updateField} supabase={supabase} />}
               {editor.kind !== "certification" && editor.kind !== "settings" ? <label className="admin-check"><input type="checkbox" checked={editor.featured} onChange={(event) => setEditor((current) => ({ ...current, featured: event.target.checked }))} /><span>Feature this entry on the public homepage</span></label> : null}
             </div>
             <div className="admin-editor-footer"><div>{editor.id ? <button className="admin-delete-button" onClick={removeEntry}>Delete</button> : <span className="admin-editor-hint">Changes stay private until published.</span>}</div><div className="admin-actions"><button className="admin-button admin-button-secondary" disabled={saving} onClick={() => save("draft")}>Save draft</button><button className="admin-button admin-button-primary" disabled={saving} onClick={() => save("published")}>{saving ? "Saving…" : "Publish changes"}</button></div></div>
@@ -310,7 +314,134 @@ function SettingsFields({ editor, updateField }: { editor: EditorState; updateFi
   return <>{groups.map((group) => <div className="admin-field-group" key={group.label}><span className="admin-group-label">{group.label}</span><div className="admin-field-grid">{group.keys.map((key) => <label className={`admin-field ${["summary", "bio", "tagline"].includes(key) ? "admin-field-wide" : ""}`} key={key}><span>{key.replace(/([A-Z])/g, " $1")}</span>{["summary", "bio", "tagline"].includes(key) ? <textarea className="admin-textarea" value={editor.fields[key] ?? ""} onChange={(event) => updateField(key, event.target.value)} /> : <input value={editor.fields[key] ?? ""} onChange={(event) => updateField(key, event.target.value)} />}</label>)}</div></div>)}</>;
 }
 
-function ContentFields({ editor, updateField }: { editor: EditorState; updateField: (key: string, value: string) => void }) {
+function ContentFields({ editor, updateField, supabase }: { editor: EditorState; updateField: (key: string, value: string) => void; supabase: ReturnType<typeof createClient> }) {
   const fields = Object.keys(editor.fields);
-  return <div className="admin-field-grid">{fields.map((key) => { const long = ["summary", "excerpt", "body"].includes(key); const list = key === "tags" || key === "stack" || key === "photos"; return <label className={`admin-field ${long ? "admin-field-wide" : ""}`} key={key}><span>{key.replace(/([A-Z])/g, " $1")}</span>{long ? <textarea className="admin-textarea" rows={key === "body" ? 8 : 4} value={editor.fields[key] ?? ""} onChange={(event) => updateField(key, event.target.value)} /> : <input value={editor.fields[key] ?? ""} onChange={(event) => updateField(key, event.target.value)} placeholder={list ? (key === "photos" ? "Comma-separated image URLs" : "Separate items with commas") : ""} />}</label>; })}</div>;
+  return (
+    <div className="admin-field-grid">
+      {fields.map((key) => {
+        const long = ["summary", "excerpt", "body"].includes(key);
+        const list = key === "tags" || key === "stack" || key === "photos";
+        const media = key === "coverImage" || key === "photos" || key === "media";
+
+        if (media) {
+          return <MediaField key={key} editor={editor} fieldKey={key} value={editor.fields[key] ?? ""} updateField={updateField} supabase={supabase} />;
+        }
+
+        return (
+          <label className={`admin-field ${long ? "admin-field-wide" : ""}`} key={key}>
+            <span>{key.replace(/([A-Z])/g, " $1")}</span>
+            {long ? (
+              <textarea className="admin-textarea" rows={key === "body" ? 8 : 4} value={editor.fields[key] ?? ""} onChange={(event) => updateField(key, event.target.value)} />
+            ) : (
+              <input value={editor.fields[key] ?? ""} onChange={(event) => updateField(key, event.target.value)} placeholder={list ? "Separate items with commas" : ""} />
+            )}
+          </label>
+        );
+      })}
+    </div>
+  );
+}
+
+function MediaField({
+  editor,
+  fieldKey,
+  value,
+  updateField,
+  supabase,
+}: {
+  editor: EditorState;
+  fieldKey: string;
+  value: string;
+  updateField: (key: string, value: string) => void;
+  supabase: ReturnType<typeof createClient>;
+}) {
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const multiple = fieldKey === "photos";
+  const urls = value.split(",").map((item) => item.trim()).filter(Boolean);
+
+  async function uploadFiles(event: ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files ?? []);
+    event.target.value = "";
+    if (!files.length) return;
+
+    setUploading(true);
+    setUploadError("");
+    const uploadedPaths: string[] = [];
+    const uploadedUrls: string[] = [];
+    const folder = (editor.slug || editor.title || "draft").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-+|-+$/g, "") || "draft";
+
+    try {
+      for (const file of multiple ? files : files.slice(0, 1)) {
+        if (!ALLOWED_MEDIA_TYPES.includes(file.type)) {
+          throw new Error(`${file.name} is not a supported image. Use JPG, PNG, WebP, GIF, or AVIF.`);
+        }
+        if (file.size > MAX_MEDIA_SIZE) {
+          throw new Error(`${file.name} is larger than 10 MB.`);
+        }
+
+        const extension = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+        const uniqueId = typeof crypto.randomUUID === "function" ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+        const path = `${editor.kind}/${folder}/${uniqueId}.${extension}`;
+        const { error: uploadError } = await supabase.storage.from(MEDIA_BUCKET).upload(path, file, {
+          cacheControl: "3600",
+          contentType: file.type,
+          upsert: false,
+        });
+
+        if (uploadError) throw uploadError;
+        uploadedPaths.push(path);
+        uploadedUrls.push(supabase.storage.from(MEDIA_BUCKET).getPublicUrl(path).data.publicUrl);
+      }
+
+      updateField(fieldKey, multiple ? [...urls, ...uploadedUrls].join(", ") : uploadedUrls[0] ?? "");
+    } catch (error) {
+      if (uploadedPaths.length) await supabase.storage.from(MEDIA_BUCKET).remove(uploadedPaths);
+      setUploadError(error instanceof Error ? error.message : "The image could not be uploaded.");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  async function removeUrl(url: string) {
+    updateField(fieldKey, urls.filter((item) => item !== url).join(", "));
+    if (!url.startsWith("http")) return;
+    try {
+      const parsed = new URL(url);
+      const marker = `/storage/v1/object/public/${MEDIA_BUCKET}/`;
+      const markerIndex = parsed.pathname.indexOf(marker);
+      if (markerIndex >= 0) {
+        const path = decodeURIComponent(parsed.pathname.slice(markerIndex + marker.length));
+        const { error } = await supabase.storage.from(MEDIA_BUCKET).remove([path]);
+        if (error) throw error;
+      }
+    } catch (error) {
+      setUploadError(error instanceof Error ? error.message : "The image was removed from the draft but could not be deleted from storage.");
+    }
+  }
+
+  return (
+    <div className="admin-media-field admin-field-wide">
+      <span>{fieldKey === "photos" ? "Project gallery" : fieldKey.replace(/([A-Z])/g, " $1")}</span>
+      <div className="admin-upload-row">
+        <label className="admin-upload-button">
+          <input className="admin-upload-input" type="file" accept={ALLOWED_MEDIA_TYPES.join(",")} multiple={multiple} onChange={uploadFiles} disabled={uploading} />
+          {uploading ? "Uploading…" : multiple ? "Upload photos" : "Upload image"}
+        </label>
+        <small className="admin-media-help">JPG, PNG, WebP, GIF, or AVIF · up to 10 MB each</small>
+      </div>
+      <input value={value} onChange={(event) => updateField(fieldKey, event.target.value)} placeholder={multiple ? "Or paste image URLs, separated by commas" : "Or paste an image URL"} />
+      {urls.length ? (
+        <div className="admin-media-previews">
+          {urls.map((url) => (
+            <div className="admin-media-preview" key={url}>
+              <img src={url} alt="" loading="lazy" />
+              <button type="button" className="admin-media-remove" onClick={() => void removeUrl(url)} aria-label={`Remove ${fieldKey === "photos" ? "photo" : "image"}`}>×</button>
+            </div>
+          ))}
+        </div>
+      ) : null}
+      {uploadError ? <small className="admin-media-error" role="alert">{uploadError}</small> : null}
+    </div>
+  );
 }

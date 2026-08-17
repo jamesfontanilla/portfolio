@@ -2088,6 +2088,18 @@ img {
 .admin-field > span { color: #9fb5d0; font-size: .67rem; font-weight: 700; text-transform: capitalize; }
 .admin-field input, .admin-field textarea { width: 100%; padding: 10px 11px; box-sizing: border-box; }
 .admin-textarea { min-height: 82px; resize: vertical; line-height: 1.5; }
+.admin-media-field { display: grid; gap: 8px; min-width: 0; }
+.admin-media-field > span { color: #9fb5d0; font-size: .67rem; font-weight: 700; text-transform: capitalize; }
+.admin-upload-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.admin-upload-button { display: inline-flex; align-items: center; justify-content: center; min-height: 35px; padding: 0 12px; border: 1px solid rgba(169, 210, 255, .25); border-radius: 8px; background: rgba(169, 210, 255, .1); color: #c8e3ff; font-size: .7rem; font-weight: 800; cursor: pointer; }
+.admin-upload-button:hover { background: rgba(169, 210, 255, .16); }
+.admin-upload-input { display: none; }
+.admin-media-help { color: #7f99b7; font-size: .63rem; }
+.admin-media-previews { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
+.admin-media-preview { position: relative; min-width: 0; aspect-ratio: 1 / .72; overflow: hidden; border: 1px solid rgba(178, 211, 249, .15); border-radius: 8px; background: rgba(5, 14, 25, .48); }
+.admin-media-preview img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.admin-media-remove { position: absolute; top: 5px; right: 5px; display: grid; place-items: center; width: 22px; height: 22px; padding: 0; border: 1px solid rgba(5, 14, 25, .5); border-radius: 50%; background: rgba(5, 14, 25, .8); color: #fff; font: inherit; font-size: .9rem; line-height: 1; cursor: pointer; }
+.admin-media-error { color: #ffb1b1; font-size: .67rem; line-height: 1.5; }
 .admin-check { gap: 8px; color: #a3b8d2; font-size: .71rem; }
 .admin-check input { accent-color: #9ecbff; }
 .admin-editor-footer { justify-content: space-between; gap: 12px; padding: 15px 20px; border-top: 1px solid rgba(178, 211, 249, .1); }
