@@ -25,6 +25,7 @@ const CONTENT_TYPES: ContentType[] = [
   'certifications',
   'events',
   'contacts',
+  'tech-stack',
 ];
 
 // Helper: build a minimal iconRef
@@ -253,6 +254,7 @@ describe('Property 26: App Icon aria-labels match ContentType display names', ()
     events: 'Events',
     contacts: 'Contacts',
     blog: 'Blog',
+    'tech-stack': 'Tech Stack',
   };
 
   test.prop([fc.constantFrom(...CONTENT_TYPES)])(

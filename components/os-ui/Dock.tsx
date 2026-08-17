@@ -18,6 +18,7 @@ import type { ContentType, WindowState, Notification } from '@/store/windowManag
 const CONTENT_TYPES: ContentType[] = [
   'about',
   'projects',
+  'tech-stack',
   'competitions',
   'certifications',
   'events',

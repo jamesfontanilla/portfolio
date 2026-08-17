@@ -61,6 +61,7 @@ const CertificationsView = lazy(() => import('./content-views/CertificationsView
 const EventsView = lazy(() => import('./content-views/EventsView').then(m => ({ default: m.EventsView })));
 const ContactsView = lazy(() => import('./content-views/ContactsView').then(m => ({ default: m.ContactsView })));
 const BlogView = lazy(() => import('./content-views/BlogView').then(m => ({ default: m.BlogView })));
+const TechStackView = lazy(() => import('./content-views/TechStackView').then(m => ({ default: m.TechStackView })));
 
 function ContentViewForType({ contentType }: { contentType: ContentType }) {
   return (
@@ -72,6 +73,7 @@ function ContentViewForType({ contentType }: { contentType: ContentType }) {
       {contentType === 'events' && <EventsView />}
       {contentType === 'contacts' && <ContactsView />}
       {contentType === 'blog' && <BlogView />}
+      {contentType === 'tech-stack' && <TechStackView />}
     </Suspense>
   );
 }
@@ -151,6 +153,7 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
       '/competitions': 'competitions',
       '/certifications': 'certifications',
       '/events': 'events',
+      '/tech-stack': 'tech-stack',
     };
 
     const contentType = ROUTE_MAP[initialRoute];
@@ -208,6 +211,7 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
       '5': 'events',
       '6': 'contacts',
       '7': 'blog',
+      '8': 'tech-stack',
     };
 
     function handleKeyDown(e: KeyboardEvent) {
@@ -242,7 +246,7 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
   );
 
   // Ensure refs exist for all content types
-  const contentTypes: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'blog'];
+  const contentTypes: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'blog', 'tech-stack'];
   for (const ct of contentTypes) {
     if (!dockIconRefs.current.has(ct)) {
       dockIconRefs.current.set(ct, React.createRef<HTMLButtonElement>());

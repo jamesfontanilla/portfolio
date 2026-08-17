@@ -74,6 +74,17 @@ function IconBlog() {
   );
 }
 
+function IconTechStack() {
+  return (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="9" cy="7" r="2" fill="var(--gold)" stroke="currentColor" strokeWidth="1.1" />
+      <circle cx="15" cy="12" r="2" fill="var(--gold)" stroke="currentColor" strokeWidth="1.1" />
+      <circle cx="11" cy="17" r="2" fill="var(--gold)" stroke="currentColor" strokeWidth="1.1" />
+    </svg>
+  );
+}
+
 const iconMap: Record<ContentType, React.ReactNode> = {
   about: <IconAbout />,
   projects: <IconProjects />,
@@ -82,6 +93,7 @@ const iconMap: Record<ContentType, React.ReactNode> = {
   events: <IconEvents />,
   contacts: <IconContacts />,
   blog: <IconBlog />,
+  'tech-stack': <IconTechStack />,
 };
 
 const labelMap: Record<ContentType, string> = {
@@ -92,6 +104,7 @@ const labelMap: Record<ContentType, string> = {
   events: 'Events',
   contacts: 'Contacts',
   blog: 'Blog',
+  'tech-stack': 'Tech Stack',
 };
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -102,7 +115,7 @@ interface DesktopIconsProps {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-const CONTENT_TYPES: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'blog'];
+const CONTENT_TYPES: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'blog', 'tech-stack'];
 
 export function DesktopIcons({ onOpen }: DesktopIconsProps) {
   const [selected, setSelected] = useState<ContentType | null>(null);

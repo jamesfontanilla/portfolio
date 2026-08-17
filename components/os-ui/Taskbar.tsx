@@ -77,12 +77,14 @@ function TaskbarIcon({ type }: { type: ContentType }) {
       return (<svg width={s} height={s} viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="13" rx="2" stroke="currentColor" strokeWidth="1.8"/><path d="M3 9l9 6 9-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>);
     case 'blog':
       return (<svg width={s} height={s} viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" strokeWidth="1.8"/><path d="M8 8h8M8 12h6M8 16h4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>);
+    case 'tech-stack':
+      return (<svg width={s} height={s} viewBox="0 0 24 24" fill="none"><path d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><circle cx="9" cy="7" r="2" fill="var(--gold)" stroke="currentColor" strokeWidth="1.1"/><circle cx="15" cy="12" r="2" fill="var(--gold)" stroke="currentColor" strokeWidth="1.1"/><circle cx="11" cy="17" r="2" fill="var(--gold)" stroke="currentColor" strokeWidth="1.1"/></svg>);
   }
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-const ALL_CONTENT_TYPES: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'blog'];
+const ALL_CONTENT_TYPES: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'blog', 'tech-stack'];
 
 export function Taskbar({ windows, notifications, onWindowClick, onDismissNotification }: TaskbarProps) {
   const [hoverType, setHoverType] = useState<ContentType | null>(null);

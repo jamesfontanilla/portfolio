@@ -16,7 +16,7 @@ import { contentTypeLabel } from './AppIcon';
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const PRIMARY_TYPES: ContentType[] = ['projects', 'about', 'contacts'];
-const MORE_TYPES: ContentType[] = ['competitions', 'certifications', 'events', 'blog'];
+const MORE_TYPES: ContentType[] = ['tech-stack', 'competitions', 'certifications', 'events', 'blog'];
 
 // ─── Simple inline icons (same as AppIcon but smaller) ───────────────────────
 
@@ -70,6 +70,15 @@ function NavIcon({ type }: { type: ContentType }) {
         <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" strokeWidth="1.8" />
           <path d="M8 8h8M8 12h6M8 16h4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+        </svg>
+      );
+    case 'tech-stack':
+      return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          <circle cx="9" cy="7" r="2" fill="var(--gold)" stroke="currentColor" strokeWidth="1.1" />
+          <circle cx="15" cy="12" r="2" fill="var(--gold)" stroke="currentColor" strokeWidth="1.1" />
+          <circle cx="11" cy="17" r="2" fill="var(--gold)" stroke="currentColor" strokeWidth="1.1" />
         </svg>
       );
   }

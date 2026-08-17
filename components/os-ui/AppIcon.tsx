@@ -26,6 +26,7 @@ export const contentTypeLabel: Record<ContentType, string> = {
   events: 'Events',
   contacts: 'Contacts',
   blog: 'Blog',
+  'tech-stack': 'Tech Stack',
 };
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
@@ -144,6 +145,17 @@ function IconBlog() {
   );
 }
 
+function IconTechStack() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="9" cy="7" r="2" fill="var(--gold)" stroke="currentColor" strokeWidth="1.2" />
+      <circle cx="15" cy="12" r="2" fill="var(--gold)" stroke="currentColor" strokeWidth="1.2" />
+      <circle cx="11" cy="17" r="2" fill="var(--gold)" stroke="currentColor" strokeWidth="1.2" />
+    </svg>
+  );
+}
+
 const iconMap: Record<ContentType, React.ReactNode> = {
   about: <IconAbout />,
   projects: <IconProjects />,
@@ -152,6 +164,7 @@ const iconMap: Record<ContentType, React.ReactNode> = {
   events: <IconEvents />,
   contacts: <IconContacts />,
   blog: <IconBlog />,
+  'tech-stack': <IconTechStack />,
 };
 
 // ─── Magnification ────────────────────────────────────────────────────────────

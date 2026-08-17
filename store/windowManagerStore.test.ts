@@ -24,6 +24,7 @@ const contentTypeArb = fc.constantFrom<ContentType>(
   'certifications',
   'events',
   'contacts',
+  'tech-stack',
 );
 
 const viewportArb = fc.record({
