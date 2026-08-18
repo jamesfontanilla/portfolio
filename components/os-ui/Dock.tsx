@@ -23,6 +23,8 @@ const CONTENT_TYPES: ContentType[] = [
   'certifications',
   'events',
   'contacts',
+  'blog',
+  'settings',
 ];
 
 const TOAST_DURATION_MS = 3000;

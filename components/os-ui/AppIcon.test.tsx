@@ -255,6 +255,7 @@ describe('Property 26: App Icon aria-labels match ContentType display names', ()
     contacts: 'Contacts',
     blog: 'Blog',
     'tech-stack': 'Tech Stack',
+    settings: 'Settings',
   };
 
   test.prop([fc.constantFrom(...CONTENT_TYPES)])(

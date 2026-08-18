@@ -19,7 +19,7 @@ interface MenuPosition {
   y: number;
 }
 
-const WALLPAPER_THEMES: { id: WallpaperTheme; label: string }[] = [
+export const WALLPAPER_THEMES: { id: WallpaperTheme; label: string }[] = [
   { id: 'default', label: 'Gold & Teal' },
   { id: 'ocean', label: 'Deep Ocean' },
   { id: 'sunset', label: 'Warm Sunset' },

@@ -62,6 +62,7 @@ const EventsView = lazy(() => import('./content-views/EventsView').then(m => ({ 
 const ContactsView = lazy(() => import('./content-views/ContactsView').then(m => ({ default: m.ContactsView })));
 const BlogView = lazy(() => import('./content-views/BlogView').then(m => ({ default: m.BlogView })));
 const TechStackView = lazy(() => import('./content-views/TechStackView').then(m => ({ default: m.TechStackView })));
+const SettingsView = lazy(() => import('./content-views/SettingsView').then(m => ({ default: m.SettingsView })));
 
 function ContentViewForType({ contentType }: { contentType: ContentType }) {
   return (
@@ -74,6 +75,7 @@ function ContentViewForType({ contentType }: { contentType: ContentType }) {
       {contentType === 'contacts' && <ContactsView />}
       {contentType === 'blog' && <BlogView />}
       {contentType === 'tech-stack' && <TechStackView />}
+      {contentType === 'settings' && <SettingsView />}
     </Suspense>
   );
 }
@@ -98,6 +100,35 @@ export const WindowManagerContext = createContext<{
 export const LayoutModeContext = createContext<LayoutMode | null>(null);
 export const PortfolioDataContext = createContext<HomeData>(portfolioData);
 
+export type AccentColor = 'gold' | 'ice' | 'mint';
+export type MotionMode = 'system' | 'reduced' | 'full';
+
+export interface OSPreferences {
+  wallpaperTheme: WallpaperTheme;
+  accentColor: AccentColor;
+  motionMode: MotionMode;
+  showWidgets: boolean;
+  setWallpaperTheme: (theme: WallpaperTheme) => void;
+  setAccentColor: (accent: AccentColor) => void;
+  setMotionMode: (mode: MotionMode) => void;
+  setShowWidgets: (show: boolean) => void;
+}
+
+export const OSPreferencesContext = createContext<OSPreferences | null>(null);
+
+const DEFAULT_OS_PREFERENCES = {
+  wallpaperTheme: 'default' as WallpaperTheme,
+  accentColor: 'gold' as AccentColor,
+  motionMode: 'system' as MotionMode,
+  showWidgets: true,
+};
+
+const ACCENT_TOKENS: Record<AccentColor, { gold: string; goldSoft: string; borderStrong: string }> = {
+  gold: { gold: '#e7c25a', goldSoft: 'rgba(231, 194, 90, 0.22)', borderStrong: 'rgba(239, 196, 84, 0.28)' },
+  ice: { gold: '#a9d2ff', goldSoft: 'rgba(169, 210, 255, 0.2)', borderStrong: 'rgba(169, 210, 255, 0.3)' },
+  mint: { gold: '#8fe0c0', goldSoft: 'rgba(143, 224, 192, 0.2)', borderStrong: 'rgba(143, 224, 192, 0.3)' },
+};
+
 // ─── Custom hooks ─────────────────────────────────────────────────────────────
 
 export function useWindowManager() {
@@ -116,6 +147,12 @@ export function usePortfolioData() {
   return useContext(PortfolioDataContext);
 }
 
+export function useOSPreferences() {
+  const ctx = useContext(OSPreferencesContext);
+  if (!ctx) throw new Error('useOSPreferences must be used within an OSUIProvider');
+  return ctx;
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 interface OSUIProviderProps {
@@ -130,7 +167,8 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
   const [state, dispatch] = useReducer(windowManagerReducer, initialWindowManagerState);
   const reducedMotion = useReducedMotion();
   const { activePanel, setActivePanel } = useMobileNav();
-  const [wallpaperTheme, setWallpaperTheme] = useState<WallpaperTheme>('default');
+  const [preferences, setPreferences] = useState({ ...DEFAULT_OS_PREFERENCES });
+  const [preferencesHydrated, setPreferencesHydrated] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   const [layoutMode, setLayoutMode] = useState<LayoutMode>('desktop');
@@ -140,6 +178,49 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
     setLayoutMode(getLayoutMode(window.innerWidth));
     setMounted(true);
   }, []);
+
+  // Preferences are local to this browser so the desktop remembers how it was arranged.
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem('portfolio-os-preferences');
+      if (saved) {
+        const parsed = JSON.parse(saved) as Partial<typeof DEFAULT_OS_PREFERENCES>;
+        setPreferences({
+          ...DEFAULT_OS_PREFERENCES,
+          wallpaperTheme: ['default', 'ocean', 'sunset', 'aurora'].includes(parsed.wallpaperTheme ?? '')
+            ? parsed.wallpaperTheme as WallpaperTheme
+            : DEFAULT_OS_PREFERENCES.wallpaperTheme,
+          accentColor: ['gold', 'ice', 'mint'].includes(parsed.accentColor ?? '')
+            ? parsed.accentColor as AccentColor
+            : DEFAULT_OS_PREFERENCES.accentColor,
+          motionMode: ['system', 'reduced', 'full'].includes(parsed.motionMode ?? '')
+            ? parsed.motionMode as MotionMode
+            : DEFAULT_OS_PREFERENCES.motionMode,
+          showWidgets: typeof parsed.showWidgets === 'boolean' ? parsed.showWidgets : DEFAULT_OS_PREFERENCES.showWidgets,
+        });
+      }
+    } catch {
+      // A malformed local preference should never prevent the portfolio from opening.
+    } finally {
+      setPreferencesHydrated(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!preferencesHydrated) return;
+    window.localStorage.setItem('portfolio-os-preferences', JSON.stringify({
+      wallpaperTheme: preferences.wallpaperTheme,
+      accentColor: preferences.accentColor,
+      motionMode: preferences.motionMode,
+      showWidgets: preferences.showWidgets,
+    }));
+  }, [preferences, preferencesHydrated]);
+
+  const setWallpaperTheme = (theme: WallpaperTheme) => setPreferences((current) => ({ ...current, wallpaperTheme: theme }));
+  const setAccentColor = (accentColor: AccentColor) => setPreferences((current) => ({ ...current, accentColor }));
+  const setMotionMode = (motionMode: MotionMode) => setPreferences((current) => ({ ...current, motionMode }));
+  const setShowWidgets = (showWidgets: boolean) => setPreferences((current) => ({ ...current, showWidgets }));
+  const effectiveReducedMotion = preferences.motionMode === 'reduced' || (preferences.motionMode === 'system' && reducedMotion);
 
   // Auto-open window based on initial route (e.g. /contacts → open contacts)
   const hasAutoOpened = useRef(false);
@@ -172,9 +253,18 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
     if (typeof document === 'undefined') return;
     document.documentElement.setAttribute(
       'data-reduced-motion',
-      reducedMotion ? 'true' : 'false'
+      effectiveReducedMotion ? 'true' : 'false'
     );
-  }, [reducedMotion]);
+  }, [effectiveReducedMotion]);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const root = document.documentElement;
+    const tokens = ACCENT_TOKENS[preferences.accentColor];
+    root.style.setProperty('--gold', tokens.gold);
+    root.style.setProperty('--gold-soft', tokens.goldSoft);
+    root.style.setProperty('--border-strong', tokens.borderStrong);
+  }, [preferences.accentColor]);
 
   // Lock viewport scrolling when OS UI is active
   useEffect(() => {
@@ -199,7 +289,7 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Keyboard shortcuts: 1-5 opens apps, Esc closes active window
+  // Keyboard shortcuts: number keys open apps, Cmd/Ctrl+, opens Settings, Esc closes active window
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -212,12 +302,19 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
       '6': 'contacts',
       '7': 'blog',
       '8': 'tech-stack',
+      '9': 'settings',
     };
 
     function handleKeyDown(e: KeyboardEvent) {
       // Don't trigger when typing in inputs
       const tag = (e.target as HTMLElement).tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target as HTMLElement).isContentEditable) return;
+
+      if ((e.metaKey || e.ctrlKey) && e.key === ',') {
+        e.preventDefault();
+        handleIconClick('settings');
+        return;
+      }
 
       const ct = SHORTCUT_MAP[e.key];
       if (ct) {
@@ -246,7 +343,7 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
   );
 
   // Ensure refs exist for all content types
-  const contentTypes: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'blog', 'tech-stack'];
+  const contentTypes: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'blog', 'tech-stack', 'settings'];
   for (const ct of contentTypes) {
     if (!dockIconRefs.current.has(ct)) {
       dockIconRefs.current.set(ct, React.createRef<HTMLButtonElement>());
@@ -296,16 +393,23 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
     : null;
 
   return (
+    <OSPreferencesContext.Provider value={{
+      ...preferences,
+      setWallpaperTheme,
+      setAccentColor,
+      setMotionMode,
+      setShowWidgets,
+    }}>
     <PortfolioDataContext.Provider value={initialData ?? portfolioData}>
       <WindowManagerContext.Provider value={{ state, dispatch }}>
         <LayoutModeContext.Provider value={layoutMode}>
         {/* Desktop background with wallpaper */}
         <Desktop>
-          <Wallpaper theme={wallpaperTheme} />
+          <Wallpaper theme={preferences.wallpaperTheme} />
           {mounted && layoutMode !== 'mobile' && (
             <>
               <DesktopIcons onOpen={handleIconClick} />
-              <DesktopWidgets onOpenWindow={handleIconClick} />
+              {preferences.showWidgets && <DesktopWidgets onOpenWindow={handleIconClick} />}
             </>
           )}
         </Desktop>
@@ -412,5 +516,6 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
         </LayoutModeContext.Provider>
       </WindowManagerContext.Provider>
     </PortfolioDataContext.Provider>
+    </OSPreferencesContext.Provider>
   );
 }

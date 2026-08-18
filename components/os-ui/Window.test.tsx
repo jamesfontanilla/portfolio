@@ -153,6 +153,7 @@ describe('Property 25: Window Title Bar aria-label matches ContentType', () => {
     contacts: 'Contacts',
     blog: 'Blog',
     'tech-stack': 'Tech Stack',
+    settings: 'Settings',
   };
 
   test.prop([fc.constantFrom(...CONTENT_TYPES)])(
