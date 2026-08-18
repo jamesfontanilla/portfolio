@@ -218,10 +218,23 @@ export function SettingsView() {
         <SettingsCard title="Keyboard shortcuts" description="The fastest way to move through the portfolio desktop.">
           <div className="settings-shortcut-list">
             {[
-              ['0 / 1 — 9', 'Open an app by its desktop order'],
+              ['1', 'Open About Me'],
+              ['2', 'Open Projects'],
+              ['3', 'Open Competitions'],
+              ['4', 'Open Certifications'],
+              ['5', 'Open Events'],
+              ['6', 'Open Contacts'],
+              ['7', 'Open Blog'],
+              ['8', 'Open Tech Stack'],
+              ['0', 'Open Task Manager'],
+              ['9', 'Open Settings'],
               ['⌘, / Ctrl+,', 'Open Settings'],
-              ['Esc', 'Close the active window'],
               ['Enter / Space', 'Open a selected desktop icon'],
+              ['Tab / Shift+Tab', 'Cycle focus within the active window'],
+              ['Esc', 'Close the active window or menu'],
+              ['⌘ / Ctrl+Alt + ← →', 'Snap the active window left or right'],
+              ['⌘ / Ctrl+Alt + ↑', 'Maximize the active window'],
+              ['⌘ / Ctrl+Alt + ↓', 'Snap down or restore the active window'],
             ].map(([key, label]) => (
               <div className="settings-shortcut-row" key={key}>
                 <kbd>{key}</kbd><span>{label}</span>

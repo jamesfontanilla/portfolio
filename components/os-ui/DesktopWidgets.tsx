@@ -521,6 +521,7 @@ function ShortcutsHint() {
       <button
         onClick={() => setVisible(!visible)}
         aria-label="Keyboard shortcuts"
+        aria-expanded={visible}
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -554,45 +555,124 @@ function ShortcutsHint() {
             background: 'var(--panel-strong)',
             border: '1px solid var(--border)',
             boxShadow: '0 8px 30px rgba(0,0,0,0.4)',
-            minWidth: '180px',
+            width: 'min(272px, calc(100vw - 32px))',
+            maxHeight: 'min(70vh, 430px)',
+            overflowY: 'auto',
             display: 'flex',
             flexDirection: 'column',
-            gap: '6px',
+            gap: '10px',
             zIndex: 1200,
           }}
+          role="dialog"
+          aria-label="Keyboard shortcuts"
         >
-          <span style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>
+          <span style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Keyboard Shortcuts
           </span>
+          <span style={{ fontSize: '0.6rem', fontWeight: 700, color: 'var(--gold)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+            Launch apps
+          </span>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '5px 10px' }}>
+            {[
+              { key: '1', action: 'About Me' },
+              { key: '2', action: 'Projects' },
+              { key: '3', action: 'Competitions' },
+              { key: '4', action: 'Certifications' },
+              { key: '5', action: 'Events' },
+              { key: '6', action: 'Contacts' },
+              { key: '7', action: 'Blog' },
+              { key: '8', action: 'Tech Stack' },
+              { key: '0', action: 'Task Manager' },
+              { key: '9', action: 'Settings' },
+            ].map((s) => (
+              <div key={s.key} style={{ display: 'flex', alignItems: 'center', gap: '7px', minWidth: 0 }}>
+                <kbd
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '22px',
+                    height: '20px',
+                    flex: '0 0 auto',
+                    padding: '0 4px',
+                    borderRadius: '4px',
+                    background: 'rgba(255,255,255,0.08)',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    fontSize: '0.63rem',
+                    fontWeight: 600,
+                    color: 'var(--text)',
+                    fontFamily: 'monospace',
+                  }}
+                >
+                  {s.key}
+                </kbd>
+                <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.66rem', color: 'var(--muted)' }}>{s.action}</span>
+              </div>
+            ))}
+          </div>
+          <span style={{ fontSize: '0.6rem', fontWeight: 700, color: 'var(--gold)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+            Desktop controls
+          </span>
           {[
-            { key: '1', action: 'About' },
-            { key: '2', action: 'Projects' },
-            { key: '3', action: 'Certifications' },
-            { key: '4', action: 'Events' },
-            { key: '5', action: 'Contacts' },
-            { key: 'Esc', action: 'Close window' },
+            { key: '⌘, / Ctrl+,', action: 'Open Settings' },
+            { key: 'Enter / Space', action: 'Open selected icon' },
+            { key: 'Tab / ⇧Tab', action: 'Cycle focus in window' },
+            { key: 'Esc', action: 'Close active window or menu' },
           ].map((s) => (
-            <div key={s.key} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div key={s.key} style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
               <kbd
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  minWidth: '22px',
+                  minWidth: '66px',
                   height: '20px',
                   padding: '0 5px',
                   borderRadius: '4px',
                   background: 'rgba(255,255,255,0.08)',
                   border: '1px solid rgba(255,255,255,0.12)',
-                  fontSize: '0.68rem',
+                  fontSize: '0.58rem',
                   fontWeight: 600,
                   color: 'var(--text)',
                   fontFamily: 'monospace',
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {s.key}
               </kbd>
-              <span style={{ fontSize: '0.72rem', color: 'var(--muted)' }}>{s.action}</span>
+              <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.66rem', color: 'var(--muted)' }}>{s.action}</span>
+            </div>
+          ))}
+          <span style={{ fontSize: '0.6rem', fontWeight: 700, color: 'var(--gold)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+            Window snapping
+          </span>
+          {[
+            { key: '⌘ / Ctrl+Alt + ← →', action: 'Snap left or right' },
+            { key: '⌘ / Ctrl+Alt + ↑', action: 'Maximize window' },
+            { key: '⌘ / Ctrl+Alt + ↓', action: 'Snap down or restore' },
+          ].map((s) => (
+            <div key={s.key} style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+              <kbd
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minWidth: '66px',
+                  height: '20px',
+                  padding: '0 5px',
+                  borderRadius: '4px',
+                  background: 'rgba(255,255,255,0.08)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  fontSize: '0.58rem',
+                  fontWeight: 600,
+                  color: 'var(--text)',
+                  fontFamily: 'monospace',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {s.key}
+              </kbd>
+              <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.66rem', color: 'var(--muted)' }}>{s.action}</span>
             </div>
           ))}
         </div>
