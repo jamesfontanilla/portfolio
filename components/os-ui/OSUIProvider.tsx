@@ -499,6 +499,7 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
           <MobileNav activePanel={activePanel} onPanelChange={setActivePanel} />
         ) : (
           <Taskbar
+            data={initialData ?? portfolioData}
             windows={state.windows}
             notifications={state.notifications}
             onWindowClick={handleTaskbarWindowClick}

@@ -11,7 +11,9 @@
 
 import React, { useState, useEffect } from 'react';
 import type { ContentType, WindowState, Notification } from '@/store/windowManagerStore';
+import type { HomeData } from '@/lib/types';
 import { contentTypeLabel } from './AppIcon';
+import { StartMenu } from './StartMenu';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -22,6 +24,7 @@ export const TASKBAR_HEIGHT = 68; // includes floating gap
 export interface TaskbarProps {
   windows: WindowState[];
   notifications: Notification[];
+  data: HomeData;
   onWindowClick: (type: ContentType) => void;
   onDismissNotification?: (id: string) => void;
 }
@@ -88,7 +91,7 @@ function TaskbarIcon({ type }: { type: ContentType }) {
 
 const ALL_CONTENT_TYPES: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'blog', 'tech-stack', 'settings'];
 
-export function Taskbar({ windows, notifications, onWindowClick, onDismissNotification }: TaskbarProps) {
+export function Taskbar({ data, windows, notifications, onWindowClick, onDismissNotification }: TaskbarProps) {
   const [hoverType, setHoverType] = useState<ContentType | null>(null);
   const [previewHtml, setPreviewHtml] = useState<string | null>(null);
   const hoverTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -134,28 +137,30 @@ export function Taskbar({ windows, notifications, onWindowClick, onDismissNotifi
   }
 
   return (
-    <div
-      role="navigation"
-      aria-label="Taskbar"
-      className="liquid-glass-taskbar liquid-glass-surface"
-      style={{
-        position: 'fixed',
-        bottom: '12px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        zIndex: 1000,
-        display: 'flex',
-        alignItems: 'center',
-        gap: '4px',
-        padding: '6px 12px',
-        borderRadius: '999px',
-        background: 'var(--glass-regular)',
-        backdropFilter: 'blur(28px) saturate(1.35)',
-        WebkitBackdropFilter: 'blur(28px) saturate(1.35)',
-        border: '1px solid var(--glass-border-strong)',
-        boxShadow: 'var(--glass-shadow)',
-      }}
-    >
+    <>
+      <StartMenu data={data} onOpenApp={onWindowClick} onRefresh={() => window.location.reload()} />
+      <div
+        role="navigation"
+        aria-label="Taskbar"
+        className="liquid-glass-taskbar liquid-glass-surface"
+        style={{
+          position: 'fixed',
+          bottom: '12px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 1000,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '4px',
+          padding: '6px 12px',
+          borderRadius: '999px',
+          background: 'var(--glass-regular)',
+          backdropFilter: 'blur(28px) saturate(1.35)',
+          WebkitBackdropFilter: 'blur(28px) saturate(1.35)',
+          border: '1px solid var(--glass-border-strong)',
+          boxShadow: 'var(--glass-shadow)',
+        }}
+      >
       {/* Always show all app icons (pinned) */}
       {ALL_CONTENT_TYPES.map((type) => {
         const win = windows.find(w => w.contentType === type);
@@ -291,6 +296,7 @@ export function Taskbar({ windows, notifications, onWindowClick, onDismissNotifi
       {/* Separator + Clock */}
       <div style={{ width: '1px', height: '20px', background: 'var(--border)', margin: '0 6px' }} />
       <TaskbarClock />
-    </div>
+      </div>
+    </>
   );
 }

@@ -9,6 +9,7 @@ import React, { useState, useEffect } from 'react';
 import { usePortfolioData } from './OSUIProvider';
 import type { ContentType } from '@/store/windowManagerStore';
 import { contentTypeLabel } from './AppIcon';
+import { StartMenu } from './StartMenu';
 
 // ─── App icons for home screen grid ──────────────────────────────────────────
 
@@ -135,6 +136,14 @@ export function MobileHomeScreen({ onOpenApp }: MobileHomeScreenProps) {
         </h1>
         <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--gold)' }}>{role}</span>
       </div>
+
+      {/* Start launcher */}
+      <StartMenu
+        data={data}
+        variant="mobile"
+        onOpenApp={onOpenApp}
+        onRefresh={() => window.location.reload()}
+      />
 
       {/* App grid */}
       <div
