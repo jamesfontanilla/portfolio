@@ -108,7 +108,7 @@ describe('Property 20: Under reduced-motion, all window state changes complete w
     vi.restoreAllMocks();
   });
 
-  it('Window open animation uses duration 0 under reduced-motion', () => {
+  it('Window open state is applied immediately under reduced-motion', () => {
     const animateCalls: (number | undefined)[] = [];
     const originalAnimate = HTMLElement.prototype.animate;
 
@@ -133,8 +133,10 @@ describe('Property 20: Under reduced-motion, all window state changes complete w
       />
     );
 
-    // Under reduced-motion (mocked to true at top level), duration should be 0
-    expect(animateCalls.some(d => d === 0)).toBe(true);
+    // Reduced motion should skip WAAPI entirely so the window cannot get stuck
+    // waiting for a duration-0 animation to finish.
+    expect(animateCalls).toHaveLength(0);
+    expect(document.querySelector('[role="dialog"]')).toHaveStyle({ opacity: '1' });
 
     HTMLElement.prototype.animate = originalAnimate;
   });

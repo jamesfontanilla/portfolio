@@ -32,10 +32,13 @@ function getDisplayName(name?: string): string {
 export interface BootScreenProps {
   /** Owner name sourced from SiteSettings. May be undefined. */
   name?: string;
+  /** Effective motion preference, including the in-app Settings choice. */
+  reducedMotion?: boolean;
 }
 
-export function BootScreen({ name }: BootScreenProps) {
-  const reducedMotion = useReducedMotion();
+export function BootScreen({ name, reducedMotion: reducedMotionOverride }: BootScreenProps) {
+  const systemReducedMotion = useReducedMotion();
+  const reducedMotion = reducedMotionOverride ?? systemReducedMotion;
   const overlayRef = useRef<HTMLDivElement>(null);
 
   // Tracks whether the overlay is still in the DOM.

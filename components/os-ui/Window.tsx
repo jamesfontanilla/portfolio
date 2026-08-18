@@ -34,6 +34,8 @@ export interface WindowProps {
   state: WindowState;
   isActive: boolean;
   layoutMode: 'desktop' | 'tablet' | 'mobile';
+  /** Effective motion preference, including the in-app Settings choice. */
+  reducedMotion?: boolean;
   dockIconRef: React.RefObject<HTMLButtonElement | null>;
   onFocus: (id: string) => void;
   dispatch: React.Dispatch<WindowAction>;
@@ -56,13 +58,15 @@ export function Window({
   state,
   isActive,
   layoutMode,
+  reducedMotion: reducedMotionOverride,
   dockIconRef,
   onFocus,
   dispatch,
   children,
 }: WindowProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const reducedMotion = useReducedMotion();
+  const systemReducedMotion = useReducedMotion();
+  const reducedMotion = reducedMotionOverride ?? systemReducedMotion;
 
   const { id, contentType, x, y, width, height, zIndex } = state;
   const label = contentTypeLabel[contentType];
@@ -70,6 +74,14 @@ export function Window({
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
+
+    // Reduced motion is an immediate state, not a zero-duration animation.
+    // Some browsers do not reliably fire `onfinish` for duration-0 WAAPI
+    // animations, which could leave a newly opened window invisible.
+    if (reducedMotion) {
+      el.style.opacity = '1';
+      return;
+    }
 
     const anim = el.animate(
       [
@@ -114,6 +126,14 @@ export function Window({
     if (activeAnimRef.current) {
       activeAnimRef.current.cancel();
       activeAnimRef.current = null;
+    }
+
+    // Apply minimize and restore state synchronously when motion is reduced.
+    // This keeps the window usable even when the browser skips a zero-duration
+    // animation's completion callback.
+    if (reducedMotion) {
+      setVisuallyHidden(isMinimized);
+      return;
     }
 
     if (!wasMinimized && isMinimized) {

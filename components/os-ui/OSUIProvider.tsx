@@ -423,7 +423,7 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
         )}
 
         {/* Boot screen — shown once per session */}
-        <BootScreen />
+        <BootScreen reducedMotion={effectiveReducedMotion} />
 
         {/* Global snap preview overlay */}
         {mounted && layoutMode !== 'mobile' && (
@@ -437,6 +437,7 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
             state={win}
             isActive={win.id === activeWindowId}
             layoutMode={layoutMode}
+            reducedMotion={effectiveReducedMotion}
             dockIconRef={dockIconRefs.current.get(win.contentType) ?? React.createRef()}
             onFocus={(id) => dispatch({ type: 'FOCUS_WINDOW', id })}
             dispatch={dispatch}
