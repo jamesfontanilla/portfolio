@@ -1,14 +1,86 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
+import {
+  siCapacitor,
+  siFastapi,
+  siFastify,
+  siFiles,
+  siFramer,
+  siJsonwebtokens,
+  siNestjs,
+  siNodedotjs,
+  siNextdotjs,
+  siPostgresql,
+  siPrisma,
+  siPwa,
+  siRadixui,
+  siReact,
+  siReactrouter,
+  siSanity,
+  siSqlalchemy,
+  siSocket,
+  siStellar,
+  siSupabase,
+  siTailwindcss,
+  siThreedotjs,
+  siTypescript,
+  siVitest,
+  siVite,
+  siZod,
+  type SimpleIcon,
+} from 'simple-icons';
 import { usePortfolioData } from '../OSUIProvider';
 import { auditedProjects, techById, techCategories, techStack, type TechCategory, type TechStackEntry } from '@/lib/tech-stack';
 
-function BrandMark({ entry, size = 44 }: { entry: Pick<TechStackEntry, 'mark' | 'color' | 'name'>; size?: number }) {
+const BRAND_ICONS: Partial<Record<string, SimpleIcon>> = {
+  typescript: siTypescript,
+  react: siReact,
+  nextjs: siNextdotjs,
+  vite: siVite,
+  'react-router': siReactrouter,
+  tailwind: siTailwindcss,
+  capacitor: siCapacitor,
+  pwa: siPwa,
+  fastapi: siFastapi,
+  nestjs: siNestjs,
+  fastify: siFastify,
+  node: siNodedotjs,
+  'python-data': siSqlalchemy,
+  supabase: siSupabase,
+  postgres: siPostgresql,
+  prisma: siPrisma,
+  sanity: siSanity,
+  three: siThreedotjs,
+  'react-three-fiber': siThreedotjs,
+  websockets: siSocket,
+  'framer-motion': siFramer,
+  zod: siZod,
+  radix: siRadixui,
+  testing: siVitest,
+  auth: siJsonwebtokens,
+  stellar: siStellar,
+  'data-import': siFiles,
+};
+
+const SYMBOL_GLYPHS: Record<string, string> = {
+  'aws-s3': '⌁',
+  indexeddb: '◫',
+  drei: '◇',
+  zustand: '✦',
+};
+
+function BrandMark({ entry, size = 44 }: { entry: Pick<TechStackEntry, 'id' | 'mark' | 'color' | 'name'>; size?: number }) {
+  const icon = BRAND_ICONS[entry.id];
+  const glyph = SYMBOL_GLYPHS[entry.id] ?? entry.mark;
+  const iconColor = icon?.hex === '000000' ? entry.color : icon ? `#${icon.hex}` : entry.color;
+
   return (
     <span
+      role="img"
       aria-label={`${entry.name} logo mark`}
       title={`${entry.name} logo mark`}
+      data-brand-logo={icon ? 'simple-icons' : 'custom-symbol'}
       style={{
         width: `${size}px`,
         height: `${size}px`,
@@ -19,14 +91,14 @@ function BrandMark({ entry, size = 44 }: { entry: Pick<TechStackEntry, 'mark' | 
         borderRadius: size > 40 ? '13px' : '9px',
         background: `linear-gradient(145deg, ${entry.color}30, rgba(255,255,255,0.05))`,
         border: `1px solid ${entry.color}70`,
-        color: entry.color,
-        fontSize: size > 40 ? (entry.mark.length > 2 ? '0.58rem' : '0.92rem') : (entry.mark.length > 2 ? '0.52rem' : '0.68rem'),
+        color: iconColor,
+        fontSize: size > 40 ? (glyph.length > 2 ? '0.58rem' : '0.92rem') : (glyph.length > 2 ? '0.52rem' : '0.68rem'),
         fontWeight: 800,
         letterSpacing: '-0.04em',
-        boxShadow: `0 7px 18px ${entry.color}18`,
+        boxShadow: `0 7px 18px ${iconColor}18`,
       }}
     >
-      {entry.mark}
+      {icon ? <svg width={size > 40 ? 23 : 14} height={size > 40 ? 23 : 14} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={icon.path} /></svg> : glyph}
     </span>
   );
 }
