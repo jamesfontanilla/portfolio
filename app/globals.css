@@ -1886,6 +1886,181 @@ img {
     touch-action: manipulation;
   }
 
+  /* iPhone-style launcher: fixed 4 x 6 pages with a swipe viewport. */
+  .mobile-home-screen {
+    padding: calc(18px + var(--mobile-safe-top)) 16px calc(92px + var(--mobile-safe-bottom)) !important;
+    overflow: hidden !important;
+  }
+
+  .mobile-home-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 60px;
+    margin-bottom: 12px;
+  }
+
+  .mobile-home-status-time {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(2rem, 10vw, 3rem);
+    font-weight: 400;
+    letter-spacing: -0.07em;
+    line-height: 0.95;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.42);
+  }
+
+  .mobile-home-status-date {
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 0.72rem;
+  }
+
+  .mobile-home-status-profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    color: var(--text);
+  }
+
+  .mobile-home-status-profile > span:last-child {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    text-align: right;
+  }
+
+  .mobile-home-status-profile strong,
+  .mobile-home-status-profile small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-home-status-profile strong { font-size: 0.7rem; font-weight: 700; }
+  .mobile-home-status-profile small { margin-top: 2px; color: var(--muted); font-size: 0.58rem; }
+
+  .mobile-home-status-mark {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    place-items: center;
+    border: 1px solid var(--glass-border);
+    border-radius: 11px;
+    background: linear-gradient(145deg, rgba(156, 204, 255, 0.24), rgba(255, 255, 255, 0.05));
+    color: var(--text);
+    font-size: 0.68rem;
+    font-weight: 800;
+  }
+
+  .mobile-home-pages-viewport {
+    min-height: 0;
+    flex: 1;
+    overflow: hidden;
+    border-radius: 24px;
+    outline: none;
+    touch-action: pan-y;
+  }
+
+  .mobile-home-pages-viewport:focus-visible { box-shadow: 0 0 0 2px var(--gold); }
+
+  .mobile-home-pages { display: flex; height: 100%; will-change: transform; }
+
+  .mobile-home-page {
+    display: grid;
+    flex: 0 0 50%;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(6, minmax(0, 1fr));
+    gap: clamp(4px, 1.3vw, 10px);
+    min-width: 0;
+    height: 100%;
+    padding: 8px 2px;
+  }
+
+  .mobile-home-app {
+    display: flex;
+    min-width: 0;
+    min-height: 0 !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(3px, 0.9vw, 6px);
+    padding: 3px 1px !important;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    outline: none;
+    touch-action: manipulation;
+    transition: transform 160ms ease, opacity 160ms ease, background 160ms ease;
+  }
+
+  .mobile-home-app:hover,
+  .mobile-home-app:focus-visible { background: rgba(255,255,255,0.07); border-color: var(--glass-border); }
+  .mobile-home-app:active { transform: scale(0.92); opacity: 0.82; }
+
+  .mobile-home-app-icon {
+    display: grid;
+    width: clamp(46px, 15vw, 64px) !important;
+    height: clamp(46px, 15vw, 64px) !important;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: clamp(14px, 4.5vw, 20px) !important;
+    background: linear-gradient(145deg, rgba(156, 204, 255, 0.16), rgba(255, 255, 255, 0.045)) !important;
+    box-shadow: 0 12px 24px rgba(1, 7, 18, 0.22), 0 1px 0 rgba(255, 255, 255, 0.1) inset !important;
+  }
+
+  .mobile-home-app-label {
+    max-width: 100%;
+    overflow: hidden;
+    color: var(--muted);
+    font-size: clamp(0.56rem, 2.1vw, 0.68rem);
+    font-weight: 600;
+    line-height: 1.1;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-home-page-footer {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 8px;
+    min-height: 30px;
+    padding: 4px 2px 0;
+  }
+
+  .mobile-home-page-label,
+  .mobile-home-page-hint {
+    color: var(--muted);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .mobile-home-page-hint { text-align: right; opacity: 0.65; }
+
+  .mobile-home-page-dots { display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+  .mobile-home-page-dot {
+    width: 7px;
+    height: 7px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    cursor: pointer;
+  }
+
+  .mobile-home-page-dot.is-active { width: 18px; border-radius: 999px; background: var(--gold); }
+  .mobile-home-page-dot:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
   .mobile-content-screen {
     animation: mobilePageEnter 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
@@ -1923,6 +2098,27 @@ img {
   .mobile-more-menu {
     animation: mobileSheetEnter 200ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
+}
+
+@media (max-width: 767px) and (max-height: 640px) {
+  .mobile-home-screen {
+    padding-top: calc(12px + var(--mobile-safe-top)) !important;
+    padding-bottom: calc(82px + var(--mobile-safe-bottom)) !important;
+  }
+
+  .mobile-home-status {
+    min-height: 50px;
+    margin-bottom: 6px;
+  }
+
+  .mobile-home-status-time { font-size: clamp(1.8rem, 9vw, 2.4rem); }
+  .mobile-home-status-date { margin-top: 3px; font-size: 0.64rem; }
+  .mobile-home-status-mark { width: 30px; height: 30px; flex-basis: 30px; border-radius: 9px; }
+  .mobile-home-status-profile strong { font-size: 0.64rem; }
+  .mobile-home-status-profile small { font-size: 0.52rem; }
+  .mobile-home-page { gap: 3px; padding: 4px 0; }
+  .mobile-home-app-icon { width: clamp(40px, 13vw, 54px) !important; height: clamp(40px, 13vw, 54px) !important; }
+  .mobile-home-app-label { font-size: 0.55rem; }
 }
 
 @media (hover: none) {
