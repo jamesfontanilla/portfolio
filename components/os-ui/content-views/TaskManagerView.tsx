@@ -139,7 +139,11 @@ export function TaskManagerView() {
     [state.windows],
   );
   const foregroundWindow = openWindows.find((windowState) => windowState.isOpen && !windowState.isMinimized);
-  const cachedContent = Object.keys(state.dataCache).length;
+  const contentItemCount = portfolio.projects.length
+    + portfolio.competitions.length
+    + portfolio.certifications.length
+    + portfolio.events.length
+    + (portfolio.blogPosts?.length ?? 0);
   const visibleCount = openWindows.filter((windowState) => windowState.isOpen && !windowState.isMinimized).length;
 
   function openApp(type: ContentType) {
@@ -184,7 +188,7 @@ export function TaskManagerView() {
       <section className="task-manager-metrics" aria-label="Workspace metrics">
         <Metric label="Open apps" value={String(openWindows.length)} detail={`${state.openCount} launches this session`} />
         <Metric label="Page load" value={formatDuration(performanceSnapshot.loadMs)} detail={`DOM ready ${formatDuration(performanceSnapshot.domReadyMs)}`} />
-        <Metric label="Data cache" value={String(cachedContent)} detail={cachedContent === 1 ? 'content area cached' : 'content areas cached'} />
+        <Metric label="Portfolio items" value={String(contentItemCount)} detail="public records available" />
         <Metric label="Network" value={performanceSnapshot.online ? performanceSnapshot.connection : 'Offline'} detail={performanceSnapshot.visibility === 'visible' ? 'desktop visible' : 'desktop hidden'} />
       </section>
 
