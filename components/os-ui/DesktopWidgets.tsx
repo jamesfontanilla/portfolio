@@ -5,6 +5,7 @@
  *
  * - WelcomeWidget: owner name, role, tagline, availability status + socials
  * - ClockWidget: live time + date display
+ * - WeatherWidget: current conditions for the portfolio's home location
  * - StatsWidget: project/cert/event counts from local portfolio content
  * - HighlightsWidget: latest project, cert, event from local portfolio content
  * - HintText: subtle prompt that fades after first interaction
@@ -14,6 +15,93 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { usePortfolioData } from './OSUIProvider';
 
 // ─── Clock Widget ─────────────────────────────────────────────────────────────
+
+const WEATHER_ENDPOINT =
+  'https://api.open-meteo.com/v1/forecast?latitude=14.6760&longitude=121.0437&current=temperature_2m,weather_code&timezone=Asia%2FManila';
+const WEATHER_LOCATION = 'Quezon City';
+
+interface WeatherResponse {
+  current?: {
+    temperature_2m?: number;
+    weather_code?: number;
+  };
+}
+
+function describeWeather(code: number) {
+  if (code === 0) return { icon: '☀️', label: 'Clear sky' };
+  if (code <= 3) return { icon: '⛅', label: 'Partly cloudy' };
+  if (code === 45 || code === 48) return { icon: '🌫️', label: 'Foggy' };
+  if (code >= 51 && code <= 57) return { icon: '🌦️', label: 'Drizzle' };
+  if (code >= 61 && code <= 67) return { icon: '🌧️', label: 'Rain' };
+  if (code >= 71 && code <= 77) return { icon: '🌨️', label: 'Snow' };
+  if (code >= 80 && code <= 82) return { icon: '🌦️', label: 'Rain showers' };
+  if (code >= 85 && code <= 86) return { icon: '🌨️', label: 'Snow showers' };
+  if (code >= 95) return { icon: '⛈️', label: 'Thunderstorm' };
+  return { icon: '🌤️', label: 'Mixed conditions' };
+}
+
+function WeatherWidget() {
+  const [weather, setWeather] = useState<{ temperature: number; code: number } | null>(null);
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    fetch(WEATHER_ENDPOINT, { cache: 'no-store', signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error('Weather request failed');
+        return (await response.json()) as WeatherResponse;
+      })
+      .then((payload) => {
+        const current = payload.current;
+        if (typeof current?.temperature_2m !== 'number' || typeof current.weather_code !== 'number') {
+          throw new Error('Weather response was incomplete');
+        }
+        setWeather({ temperature: current.temperature_2m, code: current.weather_code });
+        setStatus('ready');
+      })
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === 'AbortError') return;
+        setStatus('error');
+      });
+
+    return () => controller.abort();
+  }, []);
+
+  const presentation = weather ? describeWeather(weather.code) : { icon: '☁️', label: 'Loading weather' };
+  const value = status === 'ready' && weather ? `${Math.round(weather.temperature)}°C` : status === 'error' ? '—' : '…';
+
+  return (
+    <div
+      aria-label={`Current weather in ${WEATHER_LOCATION}`}
+      aria-live="polite"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        marginTop: '10px',
+        padding: '7px 10px',
+        borderRadius: '12px',
+        background: 'rgba(231,194,90,0.08)',
+        border: '1px solid rgba(231,194,90,0.16)',
+        color: 'var(--text)',
+        textAlign: 'right',
+        boxShadow: '0 4px 16px rgba(0,0,0,0.14)',
+      }}
+    >
+      <span aria-hidden="true" style={{ fontSize: '1.05rem', lineHeight: 1 }}>
+        {presentation.icon}
+      </span>
+      <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '1px', minWidth: 0 }}>
+        <span style={{ fontSize: '0.78rem', fontWeight: 700, lineHeight: 1.1 }}>
+          {value}
+          <span style={{ marginLeft: '5px', fontWeight: 500, color: 'var(--muted)' }}>{presentation.label}</span>
+        </span>
+        <span style={{ fontSize: '0.63rem', color: 'var(--muted)', letterSpacing: '0.02em' }}>{WEATHER_LOCATION}</span>
+      </span>
+    </div>
+  );
+}
 
 function ClockWidget() {
   const [now, setNow] = useState<Date | null>(null);
@@ -62,6 +150,7 @@ function ClockWidget() {
       >
         {dateStr}
       </span>
+      <WeatherWidget />
     </div>
   );
 }
