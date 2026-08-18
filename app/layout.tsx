@@ -5,7 +5,7 @@ import { OSUIProvider } from "@/components/os-ui/OSUIProvider";
 import { getPortfolioData, portfolioData } from "@/lib/portfolio-data";
 
 export const metadata: Metadata = {
-  title: "Portfolio Draft",
+  title: "James Fontanilla",
   description: "A premium desktop-first portfolio with structured local content.",
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
