@@ -26,6 +26,7 @@ const CONTENT_TYPES: ContentType[] = [
   'events',
   'contacts',
   'tech-stack',
+  'task-manager',
 ];
 
 // Helper: build a minimal iconRef
@@ -255,6 +256,7 @@ describe('Property 26: App Icon aria-labels match ContentType display names', ()
     contacts: 'Contacts',
     blog: 'Blog',
     'tech-stack': 'Tech Stack',
+    'task-manager': 'Task Manager',
     settings: 'Settings',
   };
 

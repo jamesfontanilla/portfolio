@@ -52,7 +52,7 @@ import type { ContentType } from '@/store/windowManagerStore';
 
 describe('Property 30 — Window_State preserved after mobile-to-desktop transition', () => {
   const VIEWPORT = { viewportWidth: 1280, viewportHeight: 800, dockHeight: 60 };
-  const CONTENT_TYPES: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'tech-stack'];
+  const CONTENT_TYPES: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'blog', 'tech-stack', 'task-manager'];
 
   it('windows array is unchanged when layoutMode context updates (reducer is unaffected by resize)', () => {
     // Open several windows via reducer

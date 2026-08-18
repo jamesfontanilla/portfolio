@@ -19,6 +19,7 @@ const CONTENT_TYPES: ContentType[] = [
   'about',
   'projects',
   'tech-stack',
+  'task-manager',
   'competitions',
   'certifications',
   'events',

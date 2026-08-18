@@ -62,6 +62,7 @@ const EventsView = lazy(() => import('./content-views/EventsView').then(m => ({ 
 const ContactsView = lazy(() => import('./content-views/ContactsView').then(m => ({ default: m.ContactsView })));
 const BlogView = lazy(() => import('./content-views/BlogView').then(m => ({ default: m.BlogView })));
 const TechStackView = lazy(() => import('./content-views/TechStackView').then(m => ({ default: m.TechStackView })));
+const TaskManagerView = lazy(() => import('./content-views/TaskManagerView').then(m => ({ default: m.TaskManagerView })));
 const SettingsView = lazy(() => import('./content-views/SettingsView').then(m => ({ default: m.SettingsView })));
 
 function ContentViewForType({ contentType }: { contentType: ContentType }) {
@@ -75,6 +76,7 @@ function ContentViewForType({ contentType }: { contentType: ContentType }) {
       {contentType === 'contacts' && <ContactsView />}
       {contentType === 'blog' && <BlogView />}
       {contentType === 'tech-stack' && <TechStackView />}
+      {contentType === 'task-manager' && <TaskManagerView />}
       {contentType === 'settings' && <SettingsView />}
     </Suspense>
   );
@@ -235,6 +237,7 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
       '/certifications': 'certifications',
       '/events': 'events',
       '/tech-stack': 'tech-stack',
+      '/task-manager': 'task-manager',
     };
 
     const contentType = ROUTE_MAP[initialRoute];
@@ -303,6 +306,7 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
       '7': 'blog',
       '8': 'tech-stack',
       '9': 'settings',
+      '0': 'task-manager',
     };
 
     function handleKeyDown(e: KeyboardEvent) {
@@ -343,7 +347,7 @@ export function OSUIProvider({ children, suppressChildren = true, initialRoute, 
   );
 
   // Ensure refs exist for all content types
-  const contentTypes: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'blog', 'tech-stack', 'settings'];
+  const contentTypes: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'blog', 'tech-stack', 'task-manager', 'settings'];
   for (const ct of contentTypes) {
     if (!dockIconRefs.current.has(ct)) {
       dockIconRefs.current.set(ct, React.createRef<HTMLButtonElement>());

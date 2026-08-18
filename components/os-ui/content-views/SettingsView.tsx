@@ -218,7 +218,7 @@ export function SettingsView() {
         <SettingsCard title="Keyboard shortcuts" description="The fastest way to move through the portfolio desktop.">
           <div className="settings-shortcut-list">
             {[
-              ['1 — 9', 'Open an app by its desktop order'],
+              ['0 / 1 — 9', 'Open an app by its desktop order'],
               ['⌘, / Ctrl+,', 'Open Settings'],
               ['Esc', 'Close the active window'],
               ['Enter / Space', 'Open a selected desktop icon'],
@@ -321,4 +321,3 @@ export function SettingsView() {
     </main>
   );
 }
-

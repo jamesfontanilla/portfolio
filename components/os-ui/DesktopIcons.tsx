@@ -85,6 +85,16 @@ function IconTechStack() {
   );
 }
 
+function IconTaskManager() {
+  return (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 19V10M12 19V5M19 19v-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M3.5 19h17" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M5 10l2.5-2 2 1.5L12 5l2.5 3 2-1.5L19 12" stroke="var(--gold)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 function IconSettings() {
   return (
     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -104,6 +114,7 @@ const iconMap: Record<ContentType, React.ReactNode> = {
   contacts: <IconContacts />,
   blog: <IconBlog />,
   'tech-stack': <IconTechStack />,
+  'task-manager': <IconTaskManager />,
   settings: <IconSettings />,
 };
 
@@ -116,6 +127,7 @@ const labelMap: Record<ContentType, string> = {
   contacts: 'Contacts',
   blog: 'Blog',
   'tech-stack': 'Tech Stack',
+  'task-manager': 'Task Manager',
   settings: 'Settings',
 };
 
@@ -127,7 +139,7 @@ interface DesktopIconsProps {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-const CONTENT_TYPES: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'blog', 'tech-stack', 'settings'];
+const CONTENT_TYPES: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'blog', 'tech-stack', 'task-manager', 'settings'];
 
 export function DesktopIcons({ onOpen }: DesktopIconsProps) {
   const [selected, setSelected] = useState<ContentType | null>(null);

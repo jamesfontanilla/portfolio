@@ -18,6 +18,7 @@ const ALL_APPS: { type: ContentType; description: string; glyph: string }[] = [
   { type: 'projects', description: 'Browse the work archive', glyph: 'P' },
   { type: 'about', description: 'Meet James', glyph: 'A' },
   { type: 'tech-stack', description: 'Tools behind the work', glyph: 'TS' },
+  { type: 'task-manager', description: 'Monitor this workspace', glyph: 'TM' },
   { type: 'contacts', description: 'Start a conversation', glyph: 'C' },
   { type: 'settings', description: 'Tune this desktop', glyph: '⚙' },
   { type: 'competitions', description: 'See the field record', glyph: '🏆' },

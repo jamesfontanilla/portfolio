@@ -82,6 +82,8 @@ function TaskbarIcon({ type }: { type: ContentType }) {
       return (<svg width={s} height={s} viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" strokeWidth="1.8"/><path d="M8 8h8M8 12h6M8 16h4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>);
     case 'tech-stack':
       return (<svg width={s} height={s} viewBox="0 0 24 24" fill="none"><path d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><circle cx="9" cy="7" r="2" fill="var(--gold)" stroke="currentColor" strokeWidth="1.1"/><circle cx="15" cy="12" r="2" fill="var(--gold)" stroke="currentColor" strokeWidth="1.1"/><circle cx="11" cy="17" r="2" fill="var(--gold)" stroke="currentColor" strokeWidth="1.1"/></svg>);
+    case 'task-manager':
+      return (<svg width={s} height={s} viewBox="0 0 24 24" fill="none"><path d="M5 19V10M12 19V5M19 19v-7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><path d="M3.5 19h17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><path d="M5 10l2.5-2 2 1.5L12 5l2.5 3 2-1.5L19 12" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>);
     case 'settings':
       return (<svg width={s} height={s} viewBox="0 0 24 24" fill="none"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.64 5.64l1.42 1.42M16.94 16.94l1.42 1.42M18.36 5.64l-1.42 1.42M7.06 16.94l-1.42 1.42" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/><circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.8"/><circle cx="12" cy="12" r="1.2" fill="var(--gold)"/></svg>);
   }
@@ -89,7 +91,7 @@ function TaskbarIcon({ type }: { type: ContentType }) {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-const ALL_CONTENT_TYPES: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'blog', 'tech-stack', 'settings'];
+const ALL_CONTENT_TYPES: ContentType[] = ['about', 'projects', 'competitions', 'certifications', 'events', 'contacts', 'blog', 'tech-stack', 'task-manager', 'settings'];
 
 export function Taskbar({ data, windows, notifications, onWindowClick, onDismissNotification }: TaskbarProps) {
   const [hoverType, setHoverType] = useState<ContentType | null>(null);

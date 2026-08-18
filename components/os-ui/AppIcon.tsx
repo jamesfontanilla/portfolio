@@ -27,6 +27,7 @@ export const contentTypeLabel: Record<ContentType, string> = {
   contacts: 'Contacts',
   blog: 'Blog',
   'tech-stack': 'Tech Stack',
+  'task-manager': 'Task Manager',
   settings: 'Settings',
 };
 
@@ -157,6 +158,16 @@ function IconTechStack() {
   );
 }
 
+function IconTaskManager() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 19V10M12 19V5M19 19v-7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M3.5 19h17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M5 10l2.5-2 2 1.5L12 5l2.5 3 2-1.5L19 12" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 function IconSettings() {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -176,6 +187,7 @@ const iconMap: Record<ContentType, React.ReactNode> = {
   contacts: <IconContacts />,
   blog: <IconBlog />,
   'tech-stack': <IconTechStack />,
+  'task-manager': <IconTaskManager />,
   settings: <IconSettings />,
 };
 
