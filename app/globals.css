@@ -2746,6 +2746,7 @@ img {
 .admin-field > span { color: #9fb5d0; font-size: .67rem; font-weight: 700; text-transform: capitalize; }
 .admin-field input, .admin-field textarea { width: 100%; padding: 10px 11px; box-sizing: border-box; }
 .admin-textarea { min-height: 82px; resize: vertical; line-height: 1.5; }
+.admin-markdown-help { color: #7f99b7; font-size: .63rem; line-height: 1.5; }
 .admin-media-field { display: grid; gap: 8px; min-width: 0; }
 .admin-media-field > span { color: #9fb5d0; font-size: .67rem; font-weight: 700; text-transform: capitalize; }
 .admin-upload-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
@@ -2771,6 +2772,32 @@ img {
 .admin-login-form { display: grid; gap: 14px; margin-top: 25px; }
 .admin-auth-note { color: #8fa9c6; font-size: .7rem; line-height: 1.6; }
 .admin-back-link { display: inline-block; margin-top: 24px; color: #a9cfff; font-size: .72rem; text-decoration: none; }
+
+.competition-markdown { min-width: 0; color: var(--muted); font-size: .92rem; line-height: 1.75; overflow-wrap: anywhere; }
+.competition-markdown > :first-child { margin-top: 0; }
+.competition-markdown > :last-child { margin-bottom: 0; }
+.competition-markdown h1, .competition-markdown h2, .competition-markdown h3, .competition-markdown h4 { margin: 1.45em 0 .45em; color: var(--text); font-family: "Space Grotesk", "Manrope", sans-serif; font-weight: 500; letter-spacing: -.035em; line-height: 1.15; }
+.competition-markdown h1 { font-size: clamp(1.35rem, 3vw, 2rem); }
+.competition-markdown h2 { font-size: clamp(1.15rem, 2.5vw, 1.45rem); }
+.competition-markdown h3 { font-size: 1.05rem; }
+.competition-markdown p { margin: .85em 0; }
+.competition-markdown a { color: var(--gold); text-underline-offset: 3px; }
+.competition-markdown strong { color: var(--text); font-weight: 700; }
+.competition-markdown em { color: #d9e5f3; }
+.competition-markdown ul, .competition-markdown ol { margin: .85em 0; padding-left: 1.3em; }
+.competition-markdown li + li { margin-top: .35em; }
+.competition-markdown blockquote { margin: 1em 0; padding: .2em 1em; border-left: 2px solid var(--gold); color: #b9c8d9; background: rgba(231,194,90,.05); }
+.competition-markdown code { padding: .12em .35em; border-radius: 5px; background: rgba(0,0,0,.22); color: #e8f1ff; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .88em; }
+.competition-markdown pre { max-width: 100%; overflow-x: auto; padding: 13px 14px; border: 1px solid rgba(255,255,255,.08); border-radius: 10px; background: rgba(0,0,0,.22); }
+.competition-markdown pre code { padding: 0; background: transparent; }
+.competition-markdown hr { margin: 1.4em 0; border: 0; border-top: 1px solid rgba(255,255,255,.1); }
+.competition-markdown table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
+.competition-markdown th, .competition-markdown td { padding: 8px 10px; border: 1px solid rgba(255,255,255,.1); text-align: left; white-space: nowrap; }
+.competition-markdown th { color: var(--text); background: rgba(255,255,255,.045); }
+.competition-markdown img { display: block; max-width: 100%; height: auto; margin: 1em 0; border-radius: 10px; }
+.competition-markdown-empty { margin: 0; color: var(--muted); }
+.competition-markdown-compact { font-size: .84rem; line-height: 1.6; }
+.competition-markdown-compact h1, .competition-markdown-compact h2, .competition-markdown-compact h3 { font-size: 1rem; }
 
 @media (max-width: 980px) {
   .admin-page { grid-template-columns: 210px minmax(0, 1fr); }

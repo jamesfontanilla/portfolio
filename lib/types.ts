@@ -45,18 +45,23 @@ export type Project = {
 };
 
 export type Competition = {
+  slug?: string;
   title: string;
-  summary: string;
+  summary?: string;
   status: string;
   tags: string[];
-  impact: string;
+  body: string;
+  coverImage?: PortfolioImage;
+  photos?: PortfolioImage[];
+  featured?: boolean;
+  // Kept for backwards compatibility with older competition entries.
   role?: string;
   period?: string;
   challenge?: string;
   contribution?: string;
   outcome?: string;
   evidence?: string;
-  featured?: boolean;
+  impact?: string;
 };
 
 export type Certification = {

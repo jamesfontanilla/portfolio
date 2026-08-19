@@ -18,6 +18,22 @@ const asText = (value: unknown, fallback = "") => (typeof value === "string" ? v
 const asArray = (value: unknown) =>
   Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
 
+function competitionBody(data: Record<string, unknown>) {
+  const body = asText(data.body).trim();
+  if (body) return body;
+
+  const legacySections = [
+    ["## The challenge", asText(data.challenge)],
+    ["## My contribution", asText(data.contribution)],
+    ["## Outcome", asText(data.outcome)],
+    ["## Evidence", asText(data.evidence)],
+  ]
+    .filter(([, value]) => value)
+    .map(([heading, value]) => `${heading}\n\n${value}`);
+
+  return legacySections.join("\n\n") || asText(data.summary);
+}
+
 function asImage(value: unknown, fallbackAlt: string) {
   if (typeof value === "string" && value) return { url: value, alt: fallbackAlt };
   if (typeof value === "object" && value !== null) {
@@ -95,11 +111,15 @@ function mapContentEntries(entries: ContentEntry[]): HomeData {
   const competitions: Competition[] = entries
     .filter((entry) => entry.kind === "competition")
     .map((entry) => ({
+      slug: entry.slug ?? undefined,
       title: entry.title,
-      summary: asText(entry.data.summary),
+      summary: asText(entry.data.summary) || competitionBody(entry.data).split("\n\n")[0],
       status: asText(entry.data.status, entry.status),
       tags: asArray(entry.data.tags ?? entry.data.stack),
-      impact: asText(entry.data.impact),
+      body: competitionBody(entry.data),
+      coverImage: asImage(entry.data.coverImage, entry.title),
+      photos: asImages(entry.data.photos, entry.title),
+      impact: asText(entry.data.impact) || undefined,
       role: asText(entry.data.role) || undefined,
       period: asText(entry.data.period) || undefined,
       challenge: asText(entry.data.challenge) || undefined,

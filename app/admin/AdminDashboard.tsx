@@ -71,7 +71,7 @@ function emptyEditor(kind: ContentKind): EditorState {
   const fields: Record<string, string> = kind === "project"
     ? { summary: "", status: "Live", stack: "", impact: "", role: "", period: "", challenge: "", contribution: "", outcome: "", evidence: "", coverImage: "", photos: "", demoUrl: "", repoUrl: "" }
     : kind === "competition"
-      ? { summary: "", status: "International", tags: "", impact: "", role: "", period: "", challenge: "", contribution: "", outcome: "", evidence: "" }
+      ? { status: "International", tags: "", body: "", photos: "" }
       : kind === "certification"
       ? { issuer: "", earnedOn: "", verificationUrl: "" }
       : kind === "event"
@@ -180,16 +180,13 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
       setError("Add a title before saving.");
       return;
     }
-    if (editor.kind !== "settings" && !editor.slug.trim() && editor.kind !== "blog") {
-      setError("Add a slug before saving this entry.");
-      return;
-    }
+    const generatedSlug = editor.title.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
     setSaving(true);
     setNotice("");
     setError("");
     const payload = {
       kind: editor.kind,
-      slug: editor.kind === "settings" ? "site-settings" : editor.slug.trim() || null,
+      slug: editor.kind === "settings" ? "site-settings" : editor.slug.trim() || generatedSlug || null,
       title: editor.title.trim(),
       status,
       featured: editor.featured,
@@ -329,9 +326,12 @@ function ContentFields({ editor, updateField, supabase }: { editor: EditorState;
 
         return (
           <label className={`admin-field ${long ? "admin-field-wide" : ""}`} key={key}>
-            <span>{key.replace(/([A-Z])/g, " $1")}</span>
+            <span>{key === "body" && editor.kind === "competition" ? "Body (Markdown)" : key.replace(/([A-Z])/g, " $1")}</span>
             {long ? (
-              <textarea className="admin-textarea" rows={key === "body" ? 8 : 4} value={editor.fields[key] ?? ""} onChange={(event) => updateField(key, event.target.value)} />
+              <>
+                <textarea className="admin-textarea" rows={key === "body" ? 16 : 4} value={editor.fields[key] ?? ""} onChange={(event) => updateField(key, event.target.value)} placeholder={key === "body" && editor.kind === "competition" ? "# Competition title\n\nTell the full story here using Markdown…" : ""} />
+                {key === "body" && editor.kind === "competition" ? <small className="admin-markdown-help">Supports headings, links, lists, quotes, code, tables, and emphasis. Keep the story in this one field.</small> : null}
+              </>
             ) : (
               <input value={editor.fields[key] ?? ""} onChange={(event) => updateField(key, event.target.value)} placeholder={list ? "Separate items with commas" : ""} />
             )}
@@ -422,7 +422,7 @@ function MediaField({
 
   return (
     <div className="admin-media-field admin-field-wide">
-      <span>{fieldKey === "photos" ? "Project gallery" : fieldKey.replace(/([A-Z])/g, " $1")}</span>
+      <span>{fieldKey === "photos" ? `${editor.kind === "competition" ? "Competition" : "Project"} gallery` : fieldKey.replace(/([A-Z])/g, " $1")}</span>
       <div className="admin-upload-row">
         <label className="admin-upload-button">
           <input className="admin-upload-input" type="file" accept={ALLOWED_MEDIA_TYPES.join(",")} multiple={multiple} onChange={uploadFiles} disabled={uploading} />
