@@ -338,6 +338,64 @@ And this was only the beginning of my VEX journey.
       photos: [],
       featured: false,
     },
+    {
+      slug: "sparkfest-2026-orderly-ops-chronisync",
+      title: "SparkFest 2026 — Orderly Ops",
+      summary: "Team Orderly Ops reached the Top 10 Finalists at SparkFest 2026 with ChroniSync, an AI-assisted chronic disease monitoring platform.",
+      status: "Hackathon Finalist",
+      tags: ["Hackathon", "Healthcare AI", "Gemini", "Firebase", "Community Impact", "Orderly Ops"],
+      body: `# ⚡ SparkFest 2026
+
+**June 28–July 9, 2026 — Bulwagang Bonifacio, PUP Manila**
+
+SparkFest 2026 was the flagship hackathon of **Google Developer Groups on Campus PUP**, bringing students from technical, creative, and managerial backgrounds together to build solutions for real-world and community challenges.
+
+## 🩺 Our project: ChroniSync
+
+With **Team Orderly Ops**, we built **ChroniSync**, an AI-assisted chronic disease monitoring platform connecting patients, caregivers, and physicians.
+
+ChroniSync supports four chronic conditions:
+
+* Type 2 diabetes
+* Hypertension
+* Chronic kidney disease
+* Chronic obstructive pulmonary disease (COPD)
+
+Patients can log vitals, medications, symptoms, and daily check-ins. The platform then contextualizes that information against disease-specific clinical guidelines and produces AI-assisted summaries, trend explanations, and rule-based alerts.
+
+The system was designed as a transparent, clinician-reviewable coordination layer—not as a diagnosis engine.
+
+## 🏅 Top 10 Finalists
+
+Team Orderly Ops was named one of the **Top 10 Finalists** of SparkFest 2026 with ChroniSync.
+
+Reaching the finalist stage validated more than the prototype itself. It recognized the team's ability to connect a meaningful healthcare problem with a practical, guideline-grounded technology solution.
+
+## 🧠 Google technologies
+
+ChroniSync used Google technologies across its application stack:
+
+* **Gemini API** for AI-assisted document extraction and visit and trend summarization
+* **Firebase Authentication** for sign-in, registration, password reset, and role-based routing
+* **Cloud Firestore** for clinical and portal data
+* **Firebase Storage** for patient documents and files
+* **Firebase Admin SDK** for secure server-side access
+
+## 🌱 From prototype to impact
+
+SparkFest was built around a simple idea: technology should move beyond a demo and create value for a real community.
+
+ChroniSync became our response to that challenge—a platform focused on helping people manage ongoing health conditions while giving caregivers and physicians a clearer view of the patient's journey.
+
+For me, the hackathon was an opportunity to practice engineering in a team, build with Google technologies, and turn a healthcare concept into a working product under a real deadline.
+
+**Orderly Ops → ChroniSync → SparkFest 2026 Top 10 Finalists**
+
+[1]: https://sparkfest.gdgpup.org/ "SparkFest 2026 — GDG on Campus PUP"
+[2]: https://github.com/jamesfontanilla/chronisync "ChroniSync on GitHub"`,
+      photos: [],
+      featured: false,
+    },
   ],
   certifications: [
     {
