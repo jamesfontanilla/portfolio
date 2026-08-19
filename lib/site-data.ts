@@ -166,12 +166,84 @@ export const fallbackHomeData: HomeData = {
   ],
   competitions: [
     {
+      slug: "vex-robotics-world-championship-qcu2",
       title: "VEX Robotics World Championship — QCU2",
       summary: "An engineering and documentation record from representing the Philippines at the VEX Robotics World Championship with QCU2.",
       status: "International Robotics",
       tags: ["Robotics", "Engineering Documentation", "Team Collaboration", "VEX"],
       body: "## The challenge\n\nTurn a complex season of robot design, iteration, and team decisions into a clear, competition-ready engineering record while supporting the team at an international event.\n\n## My contribution\n\nMaintained the engineering notebook, organized the team’s build narrative and evidence, and helped represent the Philippines with QCU2 at the VEX Robotics World Championship.\n\n## Outcome\n\nA bridge between hands-on engineering, technical communication, and international representation—evidence of disciplined execution beyond software projects.\n\n## Evidence\n\nCompetition documentation and engineering notebook materials available on request.",
       featured: true,
+    },
+    {
+      slug: "vex-robotics-philippine-national-championship-2026",
+      title: "VEX Robotics Philippine National Championship 2026",
+      summary: "QCU2 earned the Design Award, Robot Skills — 2nd Place, and Tournament Finalist honors at the 2026 Philippine National Championship.",
+      status: "National Robotics",
+      tags: ["Robotics", "Engineering Documentation", "Robot Skills", "VEX", "QCU2"],
+      body: `# 🇵🇭 VEX Robotics Philippine National Championship 2026
+
+**January 29-30, 2026**
+
+On January 29-30, 2026, **QCU2** competed at the **VEX Robotics Philippine National Championship**, putting months of engineering, iteration, documentation, and teamwork to the test.
+
+What started as a robotics project became an opportunity to compete alongside some of the strongest teams in the country—and ultimately produced three major results:
+
+* 🏆 **Design Award**
+* 🥈 **Robot Skills — 2nd Place**
+* 🥈 **Tournament Finalists**
+
+## 🏆 Design Award
+
+One of our biggest achievements was receiving the **Design Award**, a judged recognition centered on the team's engineering design process.
+
+The award isn't simply about having an impressive robot. VEX places significant emphasis on how teams **design, document, iterate, innovate, and explain the decisions behind their robot**. Teams are expected to demonstrate ownership of their engineering process and be able to defend their design decisions.
+
+For QCU2, this meant documenting how our robot evolved, why particular design decisions were made, and how testing and iteration shaped the final system.
+
+Receiving the Design Award was therefore a recognition not only of the robot we built, but of the **engineering process behind it**.
+
+## 🥈 Robot Skills — 2nd Place
+
+We also finished **2nd Place in Robot Skills**.
+
+Robot Skills combines **Driving Skills** and **Autonomous Coding Skills**, with teams ranked according to their combined performance.
+
+Finishing second nationally demonstrated our ability to translate the robot's engineering design into competitive performance under the pressure of the championship.
+
+## 🥈 Tournament Finalists
+
+Our run also took us all the way to the **Tournament Finals**, where QCU2 competed for the championship.
+
+Reaching the finals was a different kind of validation from Robot Skills. It showed that our robot and team could perform not only in individual skills runs, but also in the head-to-head tournament environment.
+
+We ultimately finished as **Tournament Finalists**—just short of the championship, but proud of how far the team had progressed.
+
+---
+
+## More Than Three Awards
+
+Looking back, the results were more than a collection of trophies.
+
+**Design Award**
+→ Our engineering process and documentation mattered.
+
+**Robot Skills 2nd Place**
+→ Our robot could perform at a high competitive level.
+
+**Tournament Finalists**
+→ We could compete deep into the championship tournament.
+
+Together, these results represented three different dimensions of the same thing:
+
+> **Engineering something, understanding why you built it, and making it perform when it matters.**
+
+For me personally, this championship became one of the experiences that showed how quickly engineering can move from something learned in the classroom to something tested in a real competitive environment.
+
+And this was only the beginning of my VEX journey.
+
+**QCU2 → Philippine National Championship → VEX Robotics World Championship 🇵🇭🌎**`,
+      photos: [],
+      featured: false,
     },
   ],
   certifications: [
