@@ -92,7 +92,7 @@ function CompetitionCard({ competition, index, onOpen }: { competition: Competit
   }
 
   return (
-    <article data-competition-card="true" tabIndex={0} onClick={handleCardClick} onKeyDown={handleCardKeyDown} style={{ position: 'relative', overflow: 'hidden', background: 'linear-gradient(145deg, rgba(231,194,90,0.1), rgba(255,255,255,0.035) 42%, rgba(255,255,255,0.025))', border: '1px solid rgba(231,194,90,0.2)', borderRadius: '22px', padding: '22px', display: 'flex', flexDirection: 'column', gap: '14px', cursor: 'pointer', minWidth: 0 }}>
+    <article data-competition-card="true" tabIndex={0} onClick={handleCardClick} onKeyDown={handleCardKeyDown} style={{ position: 'relative', overflow: 'hidden', background: 'linear-gradient(145deg, rgba(231,194,90,0.1), rgba(255,255,255,0.035) 42%, rgba(255,255,255,0.025))', border: '1px solid rgba(231,194,90,0.2)', borderRadius: '22px', padding: '22px', display: 'flex', flex: '0 0 auto', flexDirection: 'column', gap: '14px', cursor: 'pointer', minWidth: 0 }}>
       <div aria-hidden="true" style={{ position: 'absolute', top: '-42px', right: '-28px', width: '140px', height: '140px', borderRadius: '50%', border: '1px solid rgba(231,194,90,0.18)', boxShadow: '0 0 0 18px rgba(231,194,90,0.025), 0 0 0 36px rgba(231,194,90,0.018)' }} />
       {gallery[0] ? <div style={{ overflow: 'hidden', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.03)' }}><div style={{ aspectRatio: '16 / 8' }}><CompetitionImage image={gallery[0]} /></div></div> : null}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px', minWidth: 0 }}>

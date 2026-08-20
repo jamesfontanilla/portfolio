@@ -52,6 +52,7 @@ describe('CompetitionsView', () => {
 
     const card = document.querySelector('[data-competition-card="true"]');
     expect(card).toBeTruthy();
+    expect((card as HTMLElement).style.flex).toBe('0 0 auto');
     fireEvent.keyDown(card as HTMLElement, { key: 'Enter' });
 
     expect(document.querySelector('[data-competition-detail="true"]')).toBeTruthy();
