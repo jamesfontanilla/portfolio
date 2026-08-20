@@ -7,6 +7,18 @@ import { createClient } from "@/lib/supabase/client";
 const MEDIA_BUCKET = "portfolio-media";
 const MAX_MEDIA_SIZE = 10 * 1024 * 1024;
 const ALLOWED_MEDIA_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"];
+const CMS_BOOTSTRAP_COMPETITION_SLUGS = new Set([
+  "cryptita-plays-builder-showcase-wocee-2026-aralivo",
+  "egovph-hackathon-2026-epondo-budgettrack",
+]);
+
+const extensionForMimeType = (mimeType: string) => ({
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/gif": "gif",
+  "image/avif": "avif",
+}[mimeType] ?? "img");
 
 type ContentKind = "settings" | "project" | "competition" | "certification" | "event" | "blog";
 type EntryStatus = "draft" | "published" | "archived";
@@ -134,7 +146,28 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
       setLoading(false);
       return;
     }
-    const nextEntries = (data ?? []) as ContentEntry[];
+    let nextEntries = (data ?? []) as ContentEntry[];
+    const existingCompetitionSlugs = new Set(nextEntries.filter((entry) => entry.kind === "competition").map((entry) => entry.slug));
+    const missingBootstrapCompetitions = fallbackHomeData.competitions.filter((competition) => (
+      competition.slug &&
+      CMS_BOOTSTRAP_COMPETITION_SLUGS.has(competition.slug) &&
+      !existingCompetitionSlugs.has(competition.slug)
+    ));
+
+    if (missingBootstrapCompetitions.length) {
+      const payload = missingBootstrapCompetitions.map((competition) => {
+        const { slug, title, featured, ...content } = competition;
+        return { kind: "competition", slug, title, status: "published", featured: Boolean(featured), data: content };
+      });
+      const { data: seeded, error: seedError } = await supabase.from("content_entries").insert(payload).select("*");
+      if (seedError) {
+        setError(`The built-in competition records could not be added to the CMS: ${seedError.message}`);
+      } else {
+        nextEntries = [...nextEntries, ...((seeded ?? []) as ContentEntry[])];
+        setNotice(`${missingBootstrapCompetitions.length} competition records added to your CMS.`);
+      }
+    }
+
     setEntries(nextEntries);
     const nextEntry = nextEntries.find((entry) => entry.kind === selectKind);
     setEditor(nextEntry ? editorFromEntry(nextEntry) : emptyEditor(selectKind));
@@ -381,7 +414,7 @@ function MediaField({
           throw new Error(`${file.name} is larger than 10 MB.`);
         }
 
-        const extension = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+        const extension = extensionForMimeType(file.type);
         const uniqueId = typeof crypto.randomUUID === "function" ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
         const path = `${editor.kind}/${folder}/${uniqueId}.${extension}`;
         const { error: uploadError } = await supabase.storage.from(MEDIA_BUCKET).upload(path, file, {
