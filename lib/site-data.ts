@@ -467,6 +467,105 @@ The showcase reminded me that even an early product can be worth sharing when it
       photos: [],
       featured: false,
     },
+    {
+      slug: "egovph-hackathon-2026-epondo-budgettrack",
+      title: "eGovPH Hackathon 2026 — ePondo / BudgetTrack",
+      summary: "Our team designed and implemented ePondo, a civic-governance platform connecting national budget allocations to barangay-level spending, compliance, project tracking, and citizen oversight.",
+      status: "GovTech Case Study",
+      tags: ["eGovPH", "GovTech", "Civic Technology", "Budget Transparency", "Nuxt", "Fastify", "PostgreSQL", "AI"],
+      body: `# 🇵🇭 eGovPH Hackathon 2026 — ePondo / BudgetTrack
+
+**July 21–22, 2026 — eGovPH Hackathon**
+
+For the eGovPH Hackathon, our team worked on **ePondo**, also documented as **BudgetTrack**: a local-governance financial compliance and public-project tracking platform for Philippine local government units and their component barangays.
+
+The idea came from a visibility gap. National systems can show how large allocations move to an LGU, but the last mile—what happens inside a barangay, which projects receive money, and whether those projects are actually delivered—can remain difficult to follow. We wanted to connect those layers in one accountable workflow.
+
+## 🧭 The problem we were solving
+
+Local officials often manage budgets through manual calculations, fragmented records, and paper-heavy approvals. That creates several risks:
+
+* statutory allocations can be calculated incorrectly;
+* disbursements can be difficult to reconcile with the approved budget;
+* audit evidence can be scattered or changed after the fact; and
+* citizens may have no structured way to flag ghost, delayed, or substandard projects.
+
+ePondo was our response: make compliance automatic, make execution traceable, and make public oversight part of the system instead of an afterthought.
+
+## 🏛️ Two connected experiences
+
+The platform was designed around two different but connected workspaces.
+
+### Official workspace
+
+Treasurers and other government officials can create a barangay budget, enter revenue estimates, submit it for review, and manage project disbursements after approval. City budget officers can compare local budgets against national funding context, while auditors can inspect the activity trail across barangays.
+
+The system also models different responsibilities through role-based access:
+
+* **Barangay Treasurer** prepares budgets and authorizes disbursements.
+* **Barangay Captain** oversees operations and co-signs larger disbursements.
+* **City Budget Officer** reviews budgets and checks them against DBM data.
+* **CBO Auditor** monitors compliance and audit evidence.
+
+### Citizen portal
+
+Citizens can view public projects and spending in their barangay, ask questions about budgets, and report problems through a structured flow. Reports can include location, evidence, and an OTP-verified identity path, giving each complaint a case that can be tracked instead of leaving it as an informal request.
+
+## 🔄 Compliance built into the workflow
+
+The core budget lifecycle follows four states:
+
+**DRAFT → SUBMITTED → OPERATIVE → ARCHIVED**
+
+Before a budget becomes operative, the system can enforce the required review and identity checks. Once approved, project disbursements become available and the budget is treated as an accountable record rather than a loose collection of spreadsheets.
+
+The platform also calculates statutory ceilings automatically, including:
+
+* **10% SK allocation** under RA 10742
+* **5% calamity fund** under RA 10121
+
+The goal was to make invalid allocations difficult to create in the first place, rather than discovering the error during a later audit.
+
+## 🔐 Trust, identity, and auditability
+
+High-impact actions were designed to require stronger proof than a password alone. ePondo's architecture connects:
+
+* **National ID eVerify** for identity validation;
+* **Face Liveness** for anti-spoofing during sensitive actions;
+* **eMessage** for alerts when budgets move through review; and
+* **eGovchain** for anchoring approval and disbursement records.
+
+When a live chain endpoint was unavailable during the prototype stage, the eGovchain layer was represented by a hash-based audit service. That preserved the important design principle: a state transition should leave verifiable evidence of what happened and when.
+
+## 🤖 AI and civic access
+
+The citizen side also uses the eGov AI concept for two practical purposes:
+
+1. extracting useful information from uploaded budget and voucher documents; and
+2. answering budget and regulation questions in natural language, including Filipino and English interactions.
+
+This was not intended to replace an auditor or make legal decisions. AI was positioned as an access layer—helping citizens understand public-finance information and helping officials reduce repetitive document work.
+
+## 🧰 How we approached the build
+
+The prototype was split into a citizen-facing Nuxt/Vue application, an official-facing Nuxt/Vue application, and a Fastify/Node.js API. The backend was designed around PostgreSQL records, generated compliance fields, role-based access, audit logs, and isolated service modules for the government APIs.
+
+The main integration points were **DBM COMPASS**, **National ID eVerify**, **Face Liveness**, **eReport**, **eMessage**, **eGov AI**, and **eGovchain**. All external government calls were routed through the backend so the frontends could remain focused on the user experience and no API credentials needed to live in the browser.
+
+## 🌱 What the project meant to us
+
+ePondo was more than a budget dashboard. It was our attempt to close the accountability loop:
+
+> **Allocation → compliance → approval → disbursement → public project → citizen feedback**
+
+The case study reflects the kind of engineering problem we wanted to work on: one where database rules, identity, security, public information, and human-centered design all have to work together.
+
+Our biggest takeaway was that civic technology should not only digitize an existing process. It should make the process easier to understand, harder to misuse, and more useful to the people affected by it.
+
+**eGovPH Hackathon → ePondo / BudgetTrack → transparent local governance 🇵🇭**`,
+      photos: [],
+      featured: false,
+    },
   ],
   certifications: [
     {
