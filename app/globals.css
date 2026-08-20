@@ -2806,28 +2806,30 @@ img {
 .competition-markdown-compact { font-size: .84rem; line-height: 1.6; }
 .competition-markdown-compact h1, .competition-markdown-compact h2, .competition-markdown-compact h3 { font-size: 1rem; }
 .competition-scroll-area { min-width: 0; min-height: 0; overscroll-behavior-y: contain; scrollbar-gutter: stable; }
-.competition-detail-view { display: flex; flex: 1 1 auto; flex-direction: column; gap: 18px; height: 100%; padding: 22px 24px 28px; box-sizing: border-box; overflow-x: hidden; overflow-y: auto; }
-.competition-detail-view > * { width: min(100%, 1420px); margin-inline: auto; }
-.competition-detail-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; min-width: 0; }
-.competition-detail-hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(230px, .6fr); gap: 24px; padding: 22px; border: 1px solid rgba(231,194,90,.2); border-radius: 18px; background: linear-gradient(135deg, rgba(231,194,90,.12), rgba(112,180,255,.07)), rgba(255,255,255,.04); min-width: 0; }
+.competition-detail-view { display: flex; flex: 1 1 auto; flex-direction: column; gap: 22px; height: 100%; padding: 18px 24px 32px; box-sizing: border-box; overflow-x: hidden; overflow-y: auto; }
+.competition-detail-view > * { width: min(100%, 1380px); margin-inline: auto; }
+.competition-detail-toolbar { position: sticky; top: -18px; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; min-width: 0; padding: 10px 0 12px; background: linear-gradient(180deg, rgba(26,31,43,.98) 60%, rgba(26,31,43,0)); }
+.competition-detail-hero { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; padding: clamp(20px, 3vw, 34px); border: 1px solid rgba(231,194,90,.2); border-radius: 20px; background: radial-gradient(circle at 92% 10%, rgba(231,194,90,.14), transparent 30%), linear-gradient(135deg, rgba(231,194,90,.1), rgba(112,180,255,.06) 58%), rgba(255,255,255,.04); min-width: 0; }
 .competition-detail-hero[data-has-gallery="false"] { grid-template-columns: minmax(0, 1fr); }
 .competition-detail-hero-copy { display: grid; align-content: start; gap: 12px; min-width: 0; }
-.competition-detail-title { max-width: 17ch; margin: 0; color: var(--text); font-family: "Space Grotesk", "Manrope", sans-serif; font-size: clamp(2rem, 3.2vw, 3.2rem); font-weight: 500; letter-spacing: -.06em; line-height: .98; overflow-wrap: anywhere; }
+.competition-detail-title { max-width: 23ch; margin: 0; color: var(--text); font-family: "Space Grotesk", "Manrope", sans-serif; font-size: clamp(2rem, 3.8vw, 3.6rem); font-weight: 500; letter-spacing: -.06em; line-height: .98; overflow-wrap: anywhere; }
 .competition-detail-summary { max-width: 70ch; margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.7; overflow-wrap: anywhere; }
-.competition-detail-facts { display: flex; align-content: start; align-items: flex-start; align-self: start; flex-direction: column; flex-wrap: wrap; gap: 14px; min-width: 0; height: fit-content; padding: 16px; border: 1px solid rgba(255,255,255,.08); border-radius: 14px; background: rgba(0,0,0,.14); }
-.competition-gallery-view { display: grid; gap: 10px; min-width: 0; }
+.competition-detail-facts { display: flex; align-items: stretch; align-self: start; flex-direction: row; flex-wrap: wrap; gap: 8px; min-width: 0; height: fit-content; }
+.competition-detail-facts > div { flex: 0 1 280px; min-width: min(100%, 220px); padding: 13px 15px; border: 1px solid rgba(255,255,255,.08); border-radius: 12px; background: rgba(0,0,0,.14); }
+.competition-gallery-view { display: grid; width: min(100%, 1260px) !important; gap: 10px; min-width: 0; }
 .competition-gallery-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px 12px; flex-wrap: wrap; }
 .competition-gallery-feature { min-width: 0; margin: 0; overflow: hidden; border: 1px solid rgba(255,255,255,.08); border-radius: 16px; background: rgba(255,255,255,.03); }
-.competition-gallery-feature-frame { width: 100%; height: clamp(280px, 52vh, 680px); }
+.competition-gallery-feature-frame { width: 100%; height: clamp(260px, 44vh, 540px); }
 .competition-gallery-thumbs { display: grid; grid-template-columns: repeat(auto-fit, minmax(72px, 1fr)); gap: 8px; min-width: 0; }
 .competition-gallery-thumb { display: block; width: 100%; height: 100%; min-width: 0; padding: 0; aspect-ratio: 1 / .72; overflow: hidden; border-radius: 10px; background: rgba(255,255,255,.03); cursor: pointer; }
-.competition-detail-story { display: grid; gap: 14px; width: min(100%, 1060px) !important; min-width: 0; padding: 22px; border: 1px solid rgba(255,255,255,.08); border-radius: 16px; background: rgba(255,255,255,.035); }
+.competition-detail-story { display: grid; gap: 18px; width: min(100%, 1040px) !important; min-width: 0; padding: clamp(20px, 3vw, 34px); border: 1px solid rgba(255,255,255,.08); border-radius: 16px; background: rgba(255,255,255,.035); }
 .competition-detail-story .competition-markdown { max-width: 78ch; font-size: clamp(.9rem, 1.1vw, .98rem); }
-.competition-detail-view.is-mobile { height: auto; padding: 16px 16px 28px; overflow-y: visible; }
+.competition-detail-view.is-mobile { height: auto; padding: 12px 16px 28px; overflow-y: visible; }
 .competition-detail-view.is-mobile .competition-detail-toolbar { align-items: flex-start; flex-direction: column; }
 .competition-detail-hero[data-layout="mobile"] { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 16px; }
 .competition-detail-hero[data-layout="mobile"] .competition-detail-title { max-width: 100%; font-size: clamp(1.8rem, 11vw, 2.8rem); }
-.competition-detail-hero[data-layout="mobile"] .competition-detail-facts { align-items: center; flex-direction: row; gap: 14px 22px; padding: 14px; }
+.competition-detail-hero[data-layout="mobile"] .competition-detail-facts { align-items: stretch; flex-direction: row; gap: 8px; }
+.competition-detail-hero[data-layout="mobile"] .competition-detail-facts > div { flex: 1 1 150px; }
 .competition-gallery-view.is-mobile .competition-gallery-header { align-items: flex-start; flex-direction: column; }
 .competition-gallery-view.is-mobile .competition-gallery-feature-frame { height: auto; aspect-ratio: 4 / 3; }
 
