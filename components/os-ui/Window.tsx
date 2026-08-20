@@ -407,6 +407,8 @@ export function Window({
         style={{
           flex: 1,
           overflow: 'auto',
+          minWidth: 0,
+          minHeight: 0,
           position: 'relative',
         }}
       >
