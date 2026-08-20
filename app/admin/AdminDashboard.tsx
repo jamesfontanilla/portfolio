@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ChangeEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type ChangeEvent, type DragEvent as ReactDragEvent } from "react";
 import { fallbackHomeData } from "@/lib/site-data";
 import { createClient } from "@/lib/supabase/client";
 
@@ -357,12 +357,13 @@ function MediaField({
 }) {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
+  const dragDepth = useRef(0);
   const multiple = fieldKey === "photos";
   const urls = value.split(",").map((item) => item.trim()).filter(Boolean);
 
-  async function uploadFiles(event: ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(event.target.files ?? []);
-    event.target.value = "";
+  async function uploadFiles(fileList: FileList | File[]) {
+    const files = Array.from(fileList);
     if (!files.length) return;
 
     setUploading(true);
@@ -403,6 +404,39 @@ function MediaField({
     }
   }
 
+  function handleDragEnter(event: ReactDragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    if (!event.dataTransfer.types.includes("Files") || uploading) return;
+    dragDepth.current += 1;
+    setIsDragging(true);
+  }
+
+  function handleDragOver(event: ReactDragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    if (!uploading && event.dataTransfer.types.includes("Files")) {
+      event.dataTransfer.dropEffect = "copy";
+      setIsDragging(true);
+    }
+  }
+
+  function handleDragLeave(event: ReactDragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    dragDepth.current = Math.max(0, dragDepth.current - 1);
+    if (dragDepth.current === 0) setIsDragging(false);
+  }
+
+  function handleDrop(event: ReactDragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    dragDepth.current = 0;
+    setIsDragging(false);
+    if (!uploading) void uploadFiles(event.dataTransfer.files);
+  }
+
+  function handleFileInput(event: ChangeEvent<HTMLInputElement>) {
+    void uploadFiles(event.target.files ?? []);
+    event.target.value = "";
+  }
+
   async function removeUrl(url: string) {
     updateField(fieldKey, urls.filter((item) => item !== url).join(", "));
     if (!url.startsWith("http")) return;
@@ -423,13 +457,27 @@ function MediaField({
   return (
     <div className="admin-media-field admin-field-wide">
       <span>{fieldKey === "photos" ? `${editor.kind === "competition" ? "Competition" : "Project"} gallery` : fieldKey.replace(/([A-Z])/g, " $1")}</span>
-      <div className="admin-upload-row">
+      <div
+        className={`admin-dropzone${isDragging ? " is-dragging" : ""}`}
+        onDragEnter={handleDragEnter}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        aria-label={multiple ? "Drop photos to upload them" : "Drop an image to upload it"}
+      >
+        <div className="admin-dropzone-copy">
+          <span className="admin-dropzone-icon" aria-hidden="true">↥</span>
+          <div>
+            <strong>{uploading ? "Uploading…" : isDragging ? "Release to upload" : multiple ? "Drag photos here" : "Drag an image here"}</strong>
+            <small>or choose from your device</small>
+          </div>
+        </div>
         <label className="admin-upload-button">
-          <input className="admin-upload-input" type="file" accept={ALLOWED_MEDIA_TYPES.join(",")} multiple={multiple} onChange={uploadFiles} disabled={uploading} />
-          {uploading ? "Uploading…" : multiple ? "Upload photos" : "Upload image"}
+          <input className="admin-upload-input" type="file" accept={ALLOWED_MEDIA_TYPES.join(",")} multiple={multiple} onChange={handleFileInput} disabled={uploading} />
+          {uploading ? "Uploading…" : "Browse files"}
         </label>
-        <small className="admin-media-help">JPG, PNG, WebP, GIF, or AVIF · up to 10 MB each</small>
       </div>
+      <small className="admin-media-help">JPG, PNG, WebP, GIF, or AVIF · up to 10 MB each</small>
       <input value={value} onChange={(event) => updateField(fieldKey, event.target.value)} placeholder={multiple ? "Or paste image URLs, separated by commas" : "Or paste an image URL"} />
       {urls.length ? (
         <div className="admin-media-previews">
