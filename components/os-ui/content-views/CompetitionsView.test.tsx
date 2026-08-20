@@ -38,7 +38,9 @@ describe('CompetitionsView', () => {
     expect(screen.getAllByAltText('VEX team').length).toBeGreaterThan(0);
 
     const hero = document.querySelector('[data-competition-detail-hero]') as HTMLElement;
-    expect(hero.style.gridTemplateColumns).toContain('1fr');
+    expect(hero.dataset.layout).toBe('mobile');
+    expect(hero.classList.contains('competition-detail-hero')).toBe(true);
+    expect(document.querySelector('[data-competition-story]')?.classList.contains('competition-detail-story')).toBe(true);
 
     fireEvent.click(screen.getByRole('button', { name: 'Show photo 2: VEX team' }));
     expect(screen.getByText('VEX team')).toBeTruthy();
