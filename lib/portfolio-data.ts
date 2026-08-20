@@ -156,10 +156,25 @@ function mapContentEntries(entries: ContentEntry[]): HomeData {
       featured: Boolean(entry.data.featured ?? entry.featured),
     }));
 
+  const competitionsWithFallback = competitions.length
+    ? [
+        ...competitions,
+        ...fallbackHomeData.competitions.filter(
+          (fallbackCompetition) =>
+            !competitions.some(
+              (liveCompetition) =>
+                liveCompetition.slug &&
+                fallbackCompetition.slug &&
+                liveCompetition.slug === fallbackCompetition.slug,
+            ),
+        ),
+      ]
+    : fallbackHomeData.competitions;
+
   return {
     settings,
     projects: projects.length ? projects : fallbackHomeData.projects,
-    competitions: competitions.length ? competitions : fallbackHomeData.competitions,
+    competitions: competitionsWithFallback,
     certifications: certifications.length ? certifications : fallbackHomeData.certifications,
     events: events.length ? events : fallbackHomeData.events,
     blogPosts: blogPosts.length ? blogPosts : fallbackHomeData.blogPosts,

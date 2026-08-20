@@ -396,6 +396,77 @@ For me, the hackathon was an opportunity to practice engineering in a team, buil
       photos: [],
       featured: false,
     },
+    {
+      slug: "cryptita-plays-builder-showcase-wocee-2026-aralivo",
+      title: "Cryptita Plays Builder Showcase @ WOCEE 2026 — Aralivo",
+      summary: "As a solo builder, James Fontanilla was selected as one of 20 finalists to present Aralivo at the Cryptita Plays Builder Showcase @ WOCEE 2026.",
+      status: "Top 20 Finalist · Solo Builder",
+      tags: ["Builder Showcase", "Education Technology", "React", "FastAPI", "Supabase", "Stellar", "Solo Builder", "Aralivo"],
+      body: `# 💜 Cryptita Plays Builder Showcase @ WOCEE 2026
+
+**August 8, 2026 — SMX Convention Center Manila**
+
+I was selected as one of the **20 finalists** for the first **Cryptita Plays Builder Showcase @ WOCEE 2026**, presenting **Aralivo** as a solo builder.
+
+The showcase brought together students, startups, developers, researchers, creators, and innovators to put existing projects in front of industry leaders, ecosystem partners, and the wider technology community. Cryptita Plays described the event as a builder showcase rather than an on-site hackathon—an opportunity to show what had already been built, receive feedback, and open the door to what could come next.
+
+## 📚 The project: Aralivo
+
+**Aralivo** is a private, free-first college learning workspace built around one simple loop:
+
+> **Learn a concept → retrieve it → receive useful feedback → save progress → continue.**
+
+The product is designed for undergraduate students who need a steady place to study without the pressure of public leaderboards, paywalls, or a noisy social layer.
+
+## 🧭 The learning workspace
+
+Aralivo brings the core study journey into one connected space:
+
+* **Today** keeps the next useful learning action close.
+* **Subjects, units, and lessons** give learning a clear progression.
+* **Practice and flashcards** support retrieval instead of passive reading.
+* **Focus** helps students protect time for deliberate work.
+* **Planner** turns intentions into tasks and supports calendar export.
+* **Resources and notes** keep supporting material close to the lesson.
+* **Receipts** let learners keep optional, privacy-safe records of milestones.
+
+The system also treats loading, empty, offline, retry, saved, and error states as part of the learning experience—not as edge cases to hide.
+
+## 🧰 How it is built
+
+Aralivo's repository combines a responsive **React/Vite** product shell with a **FastAPI** API and explicit **Alembic** database migrations.
+
+Its architecture includes:
+
+* **Supabase Auth and Postgres** for identity and persistence
+* **Row-level security and ownership checks** for user-owned learning data
+* **Validated content contracts** for lessons and question banks
+* **Idempotent completion, XP, focus, calendar, and receipt operations**
+* Optional provider adapters for AI-assisted workflows, scholarly metadata, open learning resources, email delivery, and Google Calendar
+* A **Stellar** receipt path that anchors only a hash while keeping the readable learning record private
+
+Those boundaries matter because Aralivo is intentionally not an LMS, grading authority, social network, marketplace, or paid subscription product. Learning receipts are personal records—not official credentials.
+
+## 🏅 Top 20 finalist — solo builder
+
+Being selected among the 20 finalists gave Aralivo a chance to be evaluated beyond the repository and the interface. I had to communicate the problem, the product boundary, and the reason for designing a quieter, privacy-conscious learning workspace.
+
+The experience reinforced something I care about in engineering: a good product is not just a collection of features. It is a set of deliberate decisions about what the product should protect, what it should make easier, and what it should refuse to become.
+
+## 🌱 What I took from the showcase
+
+Aralivo started as an attempt to keep learning practical and personal. Presenting it as a solo builder turned that idea into a conversation with other builders, judges, and people working on technology for real communities.
+
+The showcase reminded me that even an early product can be worth sharing when its constraints are intentional and its purpose is clear.
+
+**Solo builder → Aralivo → Cryptita Plays Builder Showcase @ WOCEE 2026**
+
+[1]: https://luma.com/uz2h06kc "Cryptita Plays Builder Showcase @ WOCEE 2026"
+[2]: https://ph.linkedin.com/company/cryptitaplays "Cryptita Plays on LinkedIn"
+[3]: https://github.com/jamesfontanilla/Aralivo "Aralivo on GitHub"`,
+      photos: [],
+      featured: false,
+    },
   ],
   certifications: [
     {
