@@ -1096,10 +1096,15 @@ img {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
-  will-change: transform, filter;
+  will-change: transform;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
   animation-direction: alternate;
+}
+
+/* Keep the same slow ambient movement while sampling it at roughly 30fps. */
+@media (prefers-reduced-motion: no-preference) {
+  .wallpaper-orb { animation-timing-function: steps(600, end) !important; }
 }
 
 /* ============================================================
