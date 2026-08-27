@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useLayoutMode, usePortfolioData } from '../OSUIProvider';
 import { buildImageUrl } from '@/lib/image';
 import type { Competition, PortfolioImage } from '@/lib/types';
-import { MarkdownContent } from './MarkdownContent';
+import { MarkdownContent, YouTubeEmbed } from './MarkdownContent';
 
 function Tag({ label, gold = false }: { label: string; gold?: boolean }) {
   return (
@@ -122,6 +122,7 @@ function CompetitionDetail({ competition, onBack, isMobile }: { competition: Com
         <div data-competition-detail-facts="true" className="competition-detail-facts"><div><span style={{ display: 'block', color: 'var(--muted)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Record</span><strong style={{ display: 'block', marginTop: '4px', lineHeight: 1.4, overflowWrap: 'anywhere' }}>Long-form case study</strong></div>{hasGallery ? <div><span style={{ display: 'block', color: 'var(--muted)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Photos</span><strong style={{ display: 'block', marginTop: '4px' }}>{gallery.length}</strong></div> : null}</div>
       </section>
       {gallery.length ? <CompetitionGallery competition={competition} isMobile={isMobile} /> : null}
+      <YouTubeEmbed url={competition.videoUrl} title={`${competition.title} video`} />
       <article data-competition-story="true" className="competition-detail-story"><div className="competition-detail-story-heading"><span style={{ color: 'var(--gold)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>The record</span><h3 style={{ margin: '4px 0 0', fontSize: '1.25rem', fontWeight: 500 }}>From the field</h3></div><MarkdownContent source={competition.body} /></article>
     </div>
   );

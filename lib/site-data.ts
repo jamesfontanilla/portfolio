@@ -336,6 +336,7 @@ And this was only the beginning of my VEX journey.
 
 **QCU2 → Philippine National Championship → VEX Robotics World Championship 🇵🇭🌎**`,
       photos: [],
+      videoUrl: "https://youtu.be/vCTTTVjsKRw?si=FgFsq7XQwVy4S82s",
       featured: false,
     },
     {

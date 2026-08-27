@@ -53,6 +53,7 @@ export type Competition = {
   body: string;
   coverImage?: PortfolioImage;
   photos?: PortfolioImage[];
+  videoUrl?: string;
   featured?: boolean;
   // Kept for backwards compatibility with older competition entries.
   role?: string;

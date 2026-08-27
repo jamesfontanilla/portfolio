@@ -119,6 +119,7 @@ function mapContentEntries(entries: ContentEntry[]): HomeData {
       body: competitionBody(entry.data),
       coverImage: asImage(entry.data.coverImage, entry.title),
       photos: asImages(entry.data.photos, entry.title),
+      videoUrl: asText(entry.data.videoUrl) || (entry.slug === "vex-robotics-world-championship-qcu2" ? "https://youtu.be/vCTTTVjsKRw?si=FgFsq7XQwVy4S82s" : undefined),
       impact: asText(entry.data.impact) || undefined,
       role: asText(entry.data.role) || undefined,
       period: asText(entry.data.period) || undefined,
